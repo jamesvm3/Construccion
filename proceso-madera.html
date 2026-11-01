@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Proceso: estructura de madera</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#f4efe9; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#d9d0c6; --soft:#f8f4ef;
+  --accent:#8f2d3a; --accent-soft:#f3e1e3; --accent-ink:#ffffff;
+  --rebar:#2f3b42; --concrete:#d9dcd8; --concrete-edge:#8e9692; --soil:#c9bba3; --soil-edge:#9c8d73; --water:#3b86a8; --wood:#e6cc9f; --wood-edge:#a07a48; --steel:#c3ccd4; --steel-edge:#5d6b77;
+  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
+  --sans:"IBM Plex Sans",system-ui,sans-serif; --cond:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1c1715; --panel:#262019; --ink:#e4e9e7; --muted:#9aa6a8; --line:#463b33; --soft:#2d2620;
+  --accent:#e08a95; --accent-soft:#3d1f25; --accent-ink:#2a1216;
+  --rebar:#c9d3d8; --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#4a4333; --soil-edge:#7a6f58; --water:#6db3d1; --wood:#4d3b25; --wood-edge:#9b7a50; --steel:#46525c; --steel-edge:#8a99a6;
+  --ok:#6fcf8b; --ok-soft:#1b3326; --warn:#e3a74f; --warn-soft:#3a2d14; --bad:#e5705f; --bad-soft:#3a1f1b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1c1715; --panel:#262019; --ink:#e4e9e7; --muted:#9aa6a8; --line:#463b33; --soft:#2d2620;
+  --accent:#e08a95; --accent-soft:#3d1f25; --accent-ink:#2a1216;
+  --rebar:#c9d3d8; --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#4a4333; --soil-edge:#7a6f58; --water:#6db3d1; --wood:#4d3b25; --wood-edge:#9b7a50; --steel:#46525c; --steel-edge:#8a99a6;
+  --ok:#6fcf8b; --ok-soft:#1b3326; --warn:#e3a74f; --warn-soft:#3a2d14; --bad:#e5705f; --bad-soft:#3a1f1b; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans);padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.back{display:inline-flex;gap:6px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--accent);font-size:13px;font-weight:500;text-decoration:none}
+.back:hover{background:var(--accent-soft)}
+.eyebrow{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font:700 30px/1.15 var(--cond);margin:4px 0 6px;text-wrap:balance}
+.lead{color:var(--muted);margin:0;max-width:65ch}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tab{font:500 14px var(--sans);padding:8px 14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;min-width:0}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px}
+@media(max-width:720px){.grid{grid-template-columns:minmax(0,1fr)}}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.chip{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--soft);color:var(--muted);font:500 13px var(--mono);cursor:pointer}
+.chip[aria-current="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.chip.done{color:var(--accent);border-color:var(--accent)}
+svg.sec{width:100%;height:auto;display:block;background:var(--soft);border:1px solid var(--line);border-radius:8px}
+svg text{font:500 10px var(--mono);fill:var(--muted)}
+.g{opacity:0;transition:opacity .35s}.g.on{opacity:1}
+h2{font:700 21px/1.2 var(--cond);margin:0 0 8px}
+h3{font:600 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:14px 0 4px}
+p{margin:0 0 8px}
+.pill{display:inline-block;font:500 11px var(--mono);padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.pill.bp{background:var(--soft);color:var(--muted);border:1px solid var(--line)}
+.why{border-left:3px solid var(--accent);background:var(--accent-soft);padding:8px 12px;border-radius:0 6px 6px 0}
+ul.ctl{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
+ul.ctl li{display:flex;gap:8px}ul.ctl li::before{content:"☐";color:var(--accent)}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:16px}
+.btn{font:500 14px var(--sans);padding:8px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.btn.sec{background:var(--panel);color:var(--accent)}
+.btn:disabled{opacity:.4;cursor:default}
+.ord{list-style:none;margin:12px 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.ord li{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--soft);border-radius:8px;padding:8px 10px}
+.ord li.ok{border-color:var(--ok);background:var(--ok-soft)}.ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord .t{flex:1;min-width:0}
+.mv{display:flex;gap:4px}.mv button{width:32px;height:32px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;cursor:pointer}
+.fb{margin-top:12px;padding:10px 12px;border-radius:8px;border:1px solid var(--line)}
+.fb.ok{background:var(--ok-soft);border-color:var(--ok)}.fb.bad{background:var(--bad-soft);border-color:var(--bad)}.fb.warn{background:var(--warn-soft);border-color:var(--warn)}
+.opts{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.opt{text-align:left;font:400 14px var(--sans);padding:10px 12px;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:8px;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.ok{background:var(--ok-soft);border-color:var(--ok)}.opt.no{background:var(--bad-soft);border-color:var(--bad)}
+.sym{background:var(--warn-soft);border:1px solid var(--warn);border-radius:8px;padding:10px 12px}
+.meta{display:flex;justify-content:space-between;font:500 12px var(--mono);color:var(--muted);margin-bottom:10px}
+.score{font:700 40px var(--cond)}
+footer{font-size:12px;color:var(--muted);max-width:75ch}
+.mode{display:flex;align-items:center;gap:10px;background:var(--accent);color:var(--accent-ink);border-radius:8px;padding:8px 14px;font:600 12px var(--mono);letter-spacing:.1em;text-transform:uppercase}.mode span{font-weight:400;opacity:.85;letter-spacing:.04em;text-transform:none}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="mute.css">
+<link rel="stylesheet" href="proceso.css">
+
+</head><body>
+<div class="wrap">
+  <div style="display:flex;flex-wrap:wrap;gap:8px"><a class="back" href="index.html#M">← Menú de calculadoras</a><a class="back" href="viga-madera.html">Calcular la viga →</a><a class="back" href="pilar-madera.html">Calcular el soporte →</a><a class="back" href="fuego-madera.html">Calcular al fuego →</a></div>
+  <header class="top mat-M"><div><div class="mbadge"><b>M</b><span>PROCESO</span></div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Madera · Montaje</small>Estructura de madera</h1></div></div><p class="lead">Cuatro formas de repasar cómo se ejecuta una estructura de madera en obra: de la recepción y el control de la humedad a la protección de las caras expuestas y el mantenimiento. La madera cambia con la humedad: lo que se decide en obra es cómo se recibe, cómo se apoya y cómo se une.</p></header>
+  <div class="mode">Proceso constructivo <span>· cómo se ejecuta en obra</span></div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <main id="main"></main>
+  <footer>Herramienta de estudio de la asignatura Construcción (ETSIE y ETSA, UGR). Material orientativo para el repaso: en obra rigen el proyecto, el estudio geotécnico y las indicaciones de la dirección facultativa. Las referencias normativas indicadas son las verificadas; el resto de pasos son buena práctica constructiva. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</div>
+
+<script>
+var STEPS=[
+{id:1,t:"Recibir el suministro y comprobar la madera",
+ q:"A la llegada, la dirección de ejecución comprueba el aspecto y el estado general del suministro y que el albarán identifica el producto: especie y clase resistente, dimensiones y contenido de humedad; en madera laminada, el marcado según UNE-EN 14080; en madera tratada, el certificado del tratamiento con la clase de uso que cubre. En madera aserrada se comprueba, salvo especificación en contra, que el contenido de humedad es ≤ 20 %, medido con xilohigrómetro, y que las dimensiones respetan las tolerancias de la UNE-EN 336.",
+ w:"La madera es un material vivo: su resistencia y su forma dependen de la especie, de la clase resistente y de la humedad con que llega. Lo que no se comprueba en la recepción se descubre después, cuando la pieza ya está colocada y la merma abre las juntas.",
+ c:["Albarán con especie, clase resistente, dimensiones y humedad","Contenido de humedad ≤ 20 % medido con xilohigrómetro (salvo otra especificación)","Madera laminada con marcado UNE-EN 14080","Certificado del tratamiento protector, con la clase de uso que cubre"],
+ r:"DB SE-M 13.1.1 (identificación del suministro) y 13.1.2 (control de recepción en obra)",ref:true,
+ antes:"Es el primer paso: sin comprobar el suministro no se debe colocar ninguna pieza."},
+{id:2,t:"Acopiar y proteger la madera en obra",
+ q:"Durante el transporte, la manipulación y el montaje, las piezas no deben quedar expuestas a una clase de uso superior a la prevista para su servicio final; si no es posible, se les da una protección adicional. Lo habitual es acopiarlas separadas del suelo sobre tacos, ventiladas y cubiertas. Además, antes de usarla la madera debe secarse, en lo posible, hasta la humedad de equilibrio de la obra acabada; si las mermas no son importantes, se admite más humedad durante el montaje siempre que la madera pueda secarse después.",
+ w:"Una viga tirada sobre el barro o cubierta con un plástico cerrado se moja o no seca, y empieza a pudrirse o a deformarse antes de colocarse. La protección que se le dio en el taller se pierde si en la obra vive peor de lo que va a vivir en servicio.",
+ c:["Piezas separadas del suelo, sobre tacos","Cubiertas pero ventiladas","Sin exposición a una clase de uso superior a la de servicio","Humedad controlada hasta el montaje"],
+ r:"DB SE-M 3.2.1.3 (exposición durante transporte y montaje) y 11.1.1 (secado de la madera)",ref:true,
+ antes:"Necesita el suministro ya recibido y aceptado."},
+{id:3,t:"Preparar los apoyos y los arranques",
+ q:"La madera no debe tocar el terreno ni quedar embebida: se mantiene una distancia mínima de 20 cm al terreno, con un material hidrófugo (barrera antihumedad), y los arranques de soportes no se embeben en el hormigón ni en la fábrica, sino que se colocan a distancia suficiente del suelo o sobre capas impermeables. Los encuentros de vigas con muros se ventilan, con una separación mínima de 15 mm entre la madera y el muro y un material separador que no transmita la humedad.",
+ w:"La madera dura siglos si está seca y se pudre en pocos años si está húmeda de forma continua. El hormigón y los muros guardan humedad: el pie de un pilar embebido en ellos no se puede secar y es el punto donde suele empezar la pudrición.",
+ c:["Arranque a ≥ 20 cm del terreno con barrera antihumedad","Soporte sin embeber en hormigón ni fábrica","Encuentro con muro ventilado: ≥ 15 mm y material separador","Base sin zonas donde se acumule el agua"],
+ r:"DB SE-M 11.1.2 (buenas prácticas que mejoran la durabilidad)",ref:true,
+ antes:"Se prepara el apoyo antes de colocar nada sobre él: necesita la madera ya recibida y acopiada."},
+{id:4,t:"Colocar pilares y vigas, aplomar y arriostrar",
+ q:"Se colocan los pilares sobre sus apoyos, se aploman y se arriostran provisionalmente antes de soltar la grúa; después se presentan las vigas. En una serie de piezas paralelas que necesitan restricción lateral, el arriostramiento debe resistir una carga lineal qd (que depende del número de piezas, del axil de compresión y de la longitud) y su deformación horizontal no puede exceder L/500.",
+ w:"Una pieza alta y estrecha de madera pandea lateralmente con facilidad: sin arriostrar, una viga puede volcar de canto. El arriostramiento es lo que la mantiene recta mientras el resto de la estructura no la sujeta.",
+ c:["Pilares aplomados sobre su apoyo","Arriostramiento provisional antes de soltar la grúa","Vigas paralelas con restricción lateral en los puntos previstos","Deformación horizontal del arriostramiento ≤ L/500"],
+ r:"DB SE-M 10.5.2 (sistemas de vigas con arriostramiento); el arriostramiento provisional es buena práctica",ref:true,
+ antes:"Necesita los apoyos ya preparados: los pilares nacen de ellos."},
+{id:5,t:"Ejecutar las uniones sin coartar los movimientos",
+ q:"Se ejecutan las uniones previstas (carpinteras, con clavijas, conectores o placas de acero), evitando las que puedan acumular agua. La madera se hincha y merma con la humedad: en conífera, por cada 1 % de variación del contenido de humedad, la madera aserrada, laminada o microlaminada varía un 0,01 % en dirección longitudinal y un 0,2 % en la transversal. Por eso, en piezas de canto superior a 80 cm no se hacen empalmes ni nudos rígidos con placas de acero que coarten ese movimiento. Los elementos metálicos de fijación llevan la protección contra la corrosión que marca la tabla 3.2 según la clase de servicio.",
+ w:"Si una unión rígida impide que la madera se mueva, la merma no desaparece: se descarga en forma de fendas y roturas. Y un herraje sin la protección adecuada se corroe y deja de unir.",
+ c:["Uniones sin zonas donde se acumule el agua","Sin empalmes ni nudos rígidos con placas en piezas de canto > 80 cm","Placas y pernos solo si los cambios higrotérmicos son pequeños y el canto ≤ 80 cm","Fijaciones metálicas protegidas según la clase de servicio (tabla 3.2)"],
+ r:"DB SE-M 11.1.2 (variaciones dimensionales y uniones) y 3.3 (tabla 3.2, protección contra la corrosión)",ref:true,
+ antes:"Necesita las piezas ya colocadas y arriostradas: las uniones cierran lo que el arriostramiento sostenía de forma provisional."},
+{id:6,t:"Proteger las caras expuestas y tratar la madera",
+ q:"Se protege la cara superior de los elementos expuestos a la intemperie en los que pueda acumularse el agua, con una albardilla (normalmente de chapa metálica) que además permita airear la madera, y se ocultan las testas con una pieza de remate cuando sea necesario. Se facilita la evacuación del agua de lluvia y de las condensaciones. El nivel de protección química depende de la clase de uso (tabla 3.1): en clase 3.1, NP2 (al menos 3 mm de penetración en la albura de todas las caras) y en clase 3.2, NP3 (al menos 6 mm). En el exterior se usan protectores que dejan intercambiar vapor; si forman película (pinturas, barnices) hay que establecer y seguir un programa de mantenimiento.",
+ w:"Las testas absorben agua por la fibra y la cara superior la acumula: son los puntos por donde la madera expuesta se moja y se pudre. Una protección que impide secar la pieza, o que nadie mantiene, hace más daño que beneficio.",
+ c:["Cara superior protegida con albardilla ventilada","Testas ocultas con pieza de remate","Evacuación rápida del agua y de las condensaciones","Tratamiento y protector según la clase de uso (tabla 3.1)"],
+ r:"DB SE-M 11.1.2 (albardillas y testas), 3.2.1.3 (tabla 3.1) y 3.2 (protectores superficiales)",ref:true,
+ antes:"Se protege cuando las piezas y sus uniones ya están en su sitio: necesita las uniones ejecutadas."},
+{id:7,t:"Controlar la geometría y fijar el mantenimiento",
+ q:"Se comprueba la combadura de columnas y vigas, medida en el punto medio del vano, donde puedan presentarse problemas de inestabilidad lateral o en barras de pórticos: como máximo 1/500 de la longitud del vano en piezas de madera laminada y microlaminada y 1/300 en madera maciza. Se revisan apoyos, uniones y protecciones y se deja establecido el programa de mantenimiento si hay películas de pintura o barniz. La resistencia al fuego se verifica en el cálculo con el método de la sección reducida: se descuenta de las caras expuestas la profundidad de carbonización (velocidad nominal × tiempo) más una capa adicional de 7 mm (ver la calculadora de fuego). En obra se comprueba que se ha ejecutado lo proyectado: por ejemplo, que el revestimiento de protección no tiene juntas con holguras sin rellenar mayores de 2 mm, que adelantan el inicio de la carbonización.",
+ w:"Una estructura de madera sigue moviéndose después de terminada, y su durabilidad depende del mantenimiento. Comprobar la geometría detecta piezas combadas antes de que se carguen, y dejar el mantenimiento por escrito evita que nadie lo vuelva a mirar.",
+ c:["Combadura a mitad de vano ≤ 1/500 (laminada) o 1/300 (maciza)","Apoyos, uniones y protecciones revisados","Programa de mantenimiento si hay pinturas o barnices","Ejecución conforme al proyecto, incluida la protección frente al fuego"],
+ r:"DB SE-M 12.2 (combadura) y 3.2 (programa de mantenimiento); DB SI anejo E (E.2 sección reducida y E.2.3.2.1 juntas del revestimiento)",ref:true,
+ antes:"Es el último paso: se controla cuando la estructura está montada y protegida."}
+];
+var FAILS=[
+{s:"A los pocos años, el pie de un pilar de madera, apoyado directamente sobre la solera, está blando y descompuesto.",
+ o:["El pilar estaba en contacto con el terreno o el hormigón sin barrera","El pilar era de madera laminada","El pilar tenía sección rectangular","El pilar estaba aplomado"],a:0,
+ cons:"La humedad se acumula en el pie, que no puede secar, y la pudrición reduce la sección resistente.",
+ prev:"Paso 3: arranque a ≥ 20 cm del terreno, con barrera antihumedad y sin embeber en hormigón."},
+{s:"La cabeza de una viga empotrada en un muro de fábrica aparece podrida y con hongos.",
+ o:["La viga estaba pegada a la fábrica sin ventilar ni material separador","La viga tenía poco canto","El muro era de ladrillo","La viga era de conífera"],a:0,
+ cons:"La fábrica cede su humedad a la madera, que no puede ventilar, y se pudre por el extremo.",
+ prev:"Paso 3: separación mínima de 15 mm con la fábrica y un material separador que no transmita la humedad."},
+{s:"En una viga laminada de 1,2 m de canto con un empalme rígido de placas de acero y pernos aparecen grandes fendas junto a la unión.",
+ o:["La placa de acero impidió el movimiento de la madera al variar su humedad","Los pernos eran del diámetro correcto","La viga estaba aplomada","La placa estaba galvanizada"],a:0,
+ cons:"La merma, coartada por el acero, se descarga como fendas y roturas en la madera.",
+ prev:"Paso 5: en piezas de canto superior a 80 cm no se usan empalmes ni nudos rígidos con placas que coarten el movimiento."},
+{s:"Las piezas se montaron recién llegadas, sin comprobar su humedad, y al cabo de unos meses las juntas se han abierto y las vigas se han deformado.",
+ o:["No se midió el contenido de humedad en la recepción","El albarán estaba firmado","Las piezas eran de clase resistente C24","Las piezas estaban acopiadas"],a:0,
+ cons:"La madera húmeda merma al secarse en la obra y arrastra deformaciones, fendas y juntas abiertas.",
+ prev:"Pasos 1 y 2: comprobar la humedad (≤ 20 %, salvo otra especificación) y dejar secar hasta la humedad de equilibrio."},
+{s:"Una viga que vuela al exterior tiene la cara superior y las testas sin proteger: a los pocos años la madera está podrida en esa zona.",
+ o:["Faltaba la albardilla ventilada y el remate de las testas","La viga era de sección rectangular","La viga tenía un canto grande","La madera era laminada"],a:0,
+ cons:"El agua de lluvia se acumula sobre la cara superior y entra por la fibra de las testas, y la madera no puede secar.",
+ prev:"Paso 6: proteger la cara superior con albardilla que deje airear y ocultar las testas con una pieza de remate."},
+{s:"En una cubierta de madera exterior, los clavos y las placas de unión están oxidados y manchan la madera.",
+ o:["Los elementos metálicos no tenían la protección contra la corrosión de su clase de servicio","Los clavos eran de acero","Las placas tenían 3 mm de espesor","La madera era conífera"],a:0,
+ cons:"El herraje se corroe, pierde sección y deja de transmitir las cargas de la unión.",
+ prev:"Paso 5: proteger los elementos metálicos según la tabla 3.2 (por ejemplo, galvanizado o inoxidable en clase de servicio 3)."},
+{s:"Un grupo de vigas altas y estrechas, sin arriostrar, vuelca de canto durante el montaje antes de colocar la cubierta.",
+ o:["No se arriostraron las vigas antes de soltarlas","La grúa era pequeña","Las vigas eran de madera maciza","La luz era corta"],a:0,
+ cons:"Las vigas pandean lateralmente y caen, con riesgo para las personas y para la propia estructura.",
+ prev:"Paso 4: arriostrar provisionalmente los pilares y disponer el arriostramiento lateral de las vigas antes de soltar la grúa."}
+];
+var EXAM=[
+{q:"¿Qué contenido de humedad debe tener la madera aserrada en la recepción, salvo especificación en contra?",o:["≤ 20 %, medido con xilohigrómetro","≥ 40 %","Exactamente el 12 %","No se mide"],a:0,e:"DB SE-M 13.1.2: contenido de humedad ≤ 20 %, medido con xilohigrómetro."},
+{q:"¿Qué debe figurar en el certificado de la madera tratada con productos protectores?",o:["El protector empleado, el método, la clase de uso que cubre y la retención","Solo el color","El precio","Nada"],a:0,e:"DB SE-M 13.1.1: también la identificación del aplicador, la especie, la fecha del tratamiento y las precauciones ante mecanizaciones posteriores."},
+{q:"¿Qué norma fija las tolerancias dimensionales de la madera aserrada de conífera?",o:["UNE-EN 336","UNE-EN 14080","UNE-EN 312","UNE-EN 300"],a:0,e:"UNE-EN 336; la 14080 es para madera laminada encolada."},
+{q:"Durante el transporte y el montaje, ¿a qué clase de uso pueden exponerse las piezas?",o:["No a una superior a la prevista en servicio, o con protección adicional","A cualquiera","Siempre a la 5","Solo a la 1"],a:0,e:"DB SE-M 3.2.1.3."},
+{q:"¿Qué distancia mínima debe haber entre la madera y el terreno?",o:["20 cm, con barrera antihumedad","2 cm","5 mm","No hay mínima"],a:0,e:"DB SE-M 11.1.2: además, los arranques no se embeben en hormigón."},
+{q:"¿Qué separación mínima se deja entre una viga y el muro en que apoya?",o:["15 mm, con un material separador que no transmita la humedad","Ninguna","1 mm","1 m"],a:0,e:"DB SE-M 11.1.2: así se ventila el encuentro."},
+{q:"¿Qué deformación máxima admite el arriostramiento de un sistema de vigas?",o:["L/500","L/50","L/5","No se limita"],a:0,e:"DB SE-M 10.5.2: la deformación horizontal del arriostramiento no debe exceder L/500."},
+{q:"En piezas de canto superior a 80 cm, ¿qué no deben hacerse?",o:["Empalmes ni nudos rígidos con placas de acero que coarten el movimiento","Ninguna unión","Uniones carpinteras","Tratamientos"],a:0,e:"DB SE-M 11.1.2: la madera cambia de dimensiones con la humedad."},
+{q:"Por cada 1 % de variación del contenido de humedad, ¿cuánto varía la madera de conífera en dirección transversal?",o:["0,2 %","2 %","20 %","0,001 %"],a:0,e:"DB SE-M 11.1.2: 0,01 % en dirección longitudinal y 0,2 % en la transversal."},
+{q:"¿Qué debe hacerse con una albardilla que protege la cara superior de una viga expuesta?",o:["Permitir que se airee la madera que cubre","Sellarla del todo","Pintarla de negro","Quitarla"],a:0,e:"DB SE-M 11.1.2."},
+{q:"¿Qué nivel de penetración exige la tabla 3.1 para la clase de uso 3.2?",o:["NP3: al menos 6 mm en la albura de todas las caras","NP1","Ninguno","NP6"],a:0,e:"DB SE-M 3.2.1.3, tabla 3.1: la clase 3.1 exige NP2 (al menos 3 mm)."},
+{q:"En el método de la sección reducida del DB SI, ¿qué se descuenta de las caras expuestas?",o:["La profundidad de carbonización más una capa adicional de 7 mm (k0·d0)","Solo el 10 % del canto","Nada si la madera es laminada","La mitad de la sección"],a:0,e:"DB SI anejo E.2.1: def = dchar,n + k0·d0, con d0 = 7 mm y k0 = 1 para t ≥ 20 min."},
+{q:"¿Qué combadura máxima se admite en una viga de madera maciza, medida a mitad de vano?",o:["1/300 de la luz","1/500 de la luz","1/50 de la luz","No se limita"],a:0,e:"DB SE-M 12.2: 1/500 en laminada y microlaminada, 1/300 en maciza."}
+];
+var $=function(s){return document.querySelector(s)};
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
+
+var MODES=[["rec","Recorrido paso a paso"],["ord","Ordena el proceso"],["fal","¿Qué falla?"],["exa","Repaso tipo examen"]];
+var mode="rec",cur=0;
+
+function tabs(){
+  $("#tabs").innerHTML=MODES.map(function(m){return '<button class="tab" role="tab" aria-selected="'+(m[0]===mode)+'" data-m="'+m[0]+'">'+m[1]+'</button>'}).join("");
+  document.querySelectorAll(".tab").forEach(function(b){b.onclick=function(){mode=b.dataset.m;tabs();render()}});
+}
+
+function svg(n){
+  var on=function(i){return n>=i?" on":""};
+  var P=[90,310];
+  var base=P.map(function(x){return '<rect x="'+(x-14)+'" y="206" width="28" height="44" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/>'}).join("");
+  var pil=P.map(function(x){return '<rect x="'+(x-8)+'" y="100" width="16" height="104" fill="var(--wood)" stroke="var(--wood-edge)" stroke-width="1.5"/>'}).join("");
+  return '<svg class="sec" viewBox="0 0 400 270" role="img" aria-label="Alzado de un pórtico de madera: pilares sobre una peana separada del terreno, viga con uniones y albardilla">'+
+  '<line x1="0" y1="250" x2="400" y2="250" stroke="var(--concrete-edge)" stroke-width="2"/>'+
+  '<g class="g'+on(1)+'"><rect x="290" y="10" width="96" height="62" rx="2" fill="var(--soft)" stroke="var(--wood-edge)"/><text x="296" y="22" style="font-size:8px;font-weight:700">ALBARÁN</text><line x1="296" y1="28" x2="352" y2="28" stroke="var(--muted)" stroke-width=".8"/><line x1="296" y1="35" x2="346" y2="35" stroke="var(--muted)" stroke-width=".8"/><text x="296" y="52" style="font-size:8px">C24 · GL24h</text><text x="296" y="64" style="font-size:8px">H ≤ 20 %</text><g transform="rotate(-14 368 34)"><circle cx="368" cy="34" r="11" fill="none" stroke="'+(n===1?'var(--accent)':'var(--muted)')+'" stroke-width="1.8"/><path d="M362 34 l4 4.5 l8 -9" fill="none" stroke="'+(n===1?'var(--accent)':'var(--muted)')+'" stroke-width="2"/></g><text x="388" y="86" text-anchor="end" style="font-size:9px">albarán: especie, clase y humedad</text></g>'+'<g class="g on" style="opacity:'+(n===1?1:0)+'"><rect x="150" y="238" width="100" height="12" fill="var(--wood)" stroke="var(--wood-edge)" stroke-width="1.2"/><rect x="160" y="226" width="100" height="12" fill="var(--wood)" stroke="var(--wood-edge)" stroke-width="1.2"/><path d="M160 232 h100 M150 244 h100" stroke="var(--wood-edge)" stroke-width=".5" stroke-dasharray="14 6"/><text x="152" y="218">madera recibida</text></g>'+
+  '<g class="g'+on(2)+'"><rect x="140" y="244" width="12" height="6" fill="var(--wood-edge)"/><rect x="248" y="244" width="12" height="6" fill="var(--wood-edge)"/><rect x="132" y="234" width="136" height="10" fill="var(--wood)" stroke="var(--wood-edge)" stroke-width="1.2"/><rect x="132" y="224" width="136" height="10" fill="var(--wood)" stroke="var(--wood-edge)" stroke-width="1.2"/><path d="M126 220 L200 208 L274 220" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 3"/><text x="130" y="262" style="font-size:9px">acopio sobre tacos, cubierto y ventilado</text></g>'+
+  '<g class="g'+on(3)+'">'+base+P.map(function(x){return '<line x1="'+(x-18)+'" y1="206" x2="'+(x+18)+'" y2="206" stroke="var(--water)" stroke-width="3"/>'}).join("")+'<line x1="52" y1="206" x2="52" y2="250" stroke="var(--accent)" stroke-width="1.5"/><path d="M48 210 l4-5 l4 5 M48 246 l4 5 l4-5" fill="none" stroke="var(--accent)" stroke-width="1.5"/><text x="4" y="224" style="font-size:9px">≥ 20 cm</text><text x="356" y="214" style="font-size:9px">barrera</text></g>'+
+  '<g class="g'+on(4)+'">'+pil+'<rect x="98" y="96" width="204" height="16" fill="var(--wood)" stroke="var(--wood-edge)" stroke-width="1.5"/><text x="170" y="86">viga</text></g>'+
+  '<g class="g'+on(4)+'" style="opacity:'+(n>=7?.25:n>=4?1:0)+'"><line x1="82" y1="180" x2="30" y2="246" stroke="var(--accent)" stroke-width="2" stroke-dasharray="5 3"/><line x1="318" y1="180" x2="370" y2="246" stroke="var(--accent)" stroke-width="2" stroke-dasharray="5 3"/><text x="396" y="160" text-anchor="end" style="font-size:8px">arriostr. provisional</text></g>'+
+  '<g class="g'+on(5)+'">'+[[100,128],[300,128]].map(function(c){var x=c[0];return '<rect x="'+(x-5)+'" y="92" width="10" height="36" fill="var(--steel)" stroke="var(--steel-edge)" stroke-width="1.5"/>'+[100,120].map(function(y){return '<circle cx="'+x+'" cy="'+y+'" r="2.4" fill="var(--accent)"/>'}).join("")}).join("")+'<text x="112" y="140" style="font-size:9px">uniones: sin coartar la merma</text></g>'+
+  '<g class="g'+on(6)+'"><path d="M92 96 L98 90 H302 L308 96" fill="none" stroke="var(--accent)" stroke-width="2.5"/><text x="104" y="60" style="font-size:9px">albardilla ventilada</text><text x="104" y="72" style="font-size:9px">y testas cubiertas</text></g>'+
+  '<g class="g'+on(7)+'"><circle cx="200" cy="160" r="14" fill="none" stroke="var(--ok)" stroke-width="2"/><path d="M193 160 l5 6 l10-12" stroke="var(--ok)" stroke-width="2.5" fill="none"/><text x="112" y="190" style="font-size:9px">combadura ≤ 1/500 (1/300 maciza)</text></g>'+
+  '</svg>';
+}
+
+function renderRec(){
+  var s=STEPS[cur];
+  var chips='<div class="chips">'+STEPS.map(function(x,i){return '<button class="chip'+(i<cur?' done':'')+'" aria-current="'+(i===cur)+'" data-i="'+i+'" aria-label="Paso '+x.id+'">'+x.id+'</button>'}).join("")+'</div>';
+  $("#main").innerHTML='<div class="box">'+chips+'<div class="grid"><div>'+svg(s.id)+'</div><div>'+
+   '<span class="pill'+(s.ref?'':' bp')+'">'+(s.ref?'Referencia: ':'')+esc(s.r)+'</span>'+
+   '<h2 style="margin-top:8px">'+s.id+'. '+esc(s.t)+'</h2><p>'+esc(s.q)+'</p>'+
+   '<h3>Por qué se hace así</h3><div class="why">'+esc(s.w)+'</div>'+
+   '<h3>Control antes de pasar al siguiente</h3><ul class="ctl">'+s.c.map(function(c){return '<li>'+esc(c)+'</li>'}).join("")+'</ul>'+
+   '</div></div><div class="nav"><button class="btn sec" id="prev" '+(cur===0?'disabled':'')+'>← Anterior</button><button class="btn" id="next" '+(cur===STEPS.length-1?'disabled':'')+'>Siguiente →</button></div></div>';
+  document.querySelectorAll(".chip").forEach(function(b){b.onclick=function(){cur=+b.dataset.i;renderRec()}});
+  $("#prev").onclick=function(){cur--;renderRec()};$("#next").onclick=function(){cur++;renderRec()};
+}
+
+var order=[];
+function newOrder(){do{order=shuffle(STEPS.map(function(s){return s.id}))}while(order.every(function(v,i){return v===i+1}))}
+function renderOrd(res){
+  var html='<div class="box"><h2>Ordena el proceso</h2><p>Coloca los pasos de montaje de la estructura en el orden correcto con las flechas.</p><ol class="ord">'+
+   order.map(function(id,i){var s=STEPS[id-1];var cl=res?(id===i+1?' class="ok"':' class="no"'):'';
+    return '<li'+cl+'><span class="t">'+esc(s.t)+'</span><span class="mv"><button data-i="'+i+'" data-d="-1" aria-label="Subir">↑</button><button data-i="'+i+'" data-d="1" aria-label="Bajar">↓</button></span></li>'}).join("")+'</ol>';
+  if(res){
+    var firstBad=-1;order.forEach(function(id,i){if(firstBad<0&&id!==i+1)firstBad=i});
+    if(firstBad<0){html+='<div class="fb ok"><strong>Orden correcto.</strong> Cada paso prepara el siguiente: recepción, acopio, apoyos, pilares y vigas, uniones, protección y control.</div>'}
+    else{var wrongId=firstBad+1;var st=STEPS[wrongId-1];
+      html+='<div class="fb bad"><strong>El paso '+wrongId+' debería ir en la posición '+wrongId+'.</strong> Ahora tienes «'+esc(STEPS[order[firstBad]-1].t)+'» en esa posición. Recuerda: '+esc(st.antes)+'</div>'}
+  }
+  html+='<div class="nav"><button class="btn sec" id="rs">Mezclar de nuevo</button><button class="btn" id="ck">Comprobar</button></div></div>';
+  $("#main").innerHTML=html;
+  document.querySelectorAll(".mv button").forEach(function(b){b.onclick=function(){var i=+b.dataset.i,j=i+(+b.dataset.d);if(j<0||j>=order.length)return;var t=order[i];order[i]=order[j];order[j]=t;renderOrd(false)}});
+  $("#rs").onclick=function(){newOrder();renderOrd(false)};$("#ck").onclick=function(){renderOrd(true)};
+}
+
+var fi=0,fdone=false;
+function renderFal(){
+  var f=FAILS[fi];
+  var opts=f.o.map(function(o,i){return '<button class="opt" data-i="'+i+'">'+esc(o)+'</button>'}).join("");
+  $("#main").innerHTML='<div class="box"><div class="meta"><span>CASO '+(fi+1)+' / '+FAILS.length+'</span></div><h2>¿Qué falla?</h2><div class="sym">'+esc(f.s)+'</div><h3>¿Cuál es la causa más probable?</h3><div class="opts">'+opts+'</div><div id="fb"></div>'+
+   '<div class="nav"><button class="btn sec" id="fp" '+(fi===0?'disabled':'')+'>← Caso anterior</button><button class="btn" id="fn" '+(fi===FAILS.length-1?'disabled':'')+'>Caso siguiente →</button></div></div>';
+  document.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){
+    var i=+b.dataset.i;document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});
+    document.querySelectorAll(".opt")[f.a].classList.add("ok");if(i!==f.a)b.classList.add("no");
+    $("#fb").innerHTML='<div class="fb '+(i===f.a?'ok':'bad')+'"><strong>'+(i===f.a?'Correcto.':'No es esa.')+'</strong> Causa: «'+esc(f.o[f.a])+'».<br><strong>Consecuencia:</strong> '+esc(f.cons)+'<br><strong>Cómo se evita:</strong> '+esc(f.prev)+'</div>'}});
+  $("#fp").onclick=function(){fi--;renderFal()};$("#fn").onclick=function(){fi++;renderFal()};
+}
+
+var ex=null;
+function startExam(){ex={qs:shuffle(EXAM).slice(0,8).map(function(q){var idx=shuffle(q.o.map(function(_,i){return i}));return{q:q.q,o:idx.map(function(i){return q.o[i]}),a:idx.indexOf(q.a),e:q.e}}),i:0,s:0,ans:null}}
+function renderExa(){
+  if(!ex)startExam();
+  if(ex.i>=ex.qs.length){
+    var p=Math.round(ex.s/ex.qs.length*100);
+    $("#main").innerHTML='<div class="box"><h2>Resultado</h2><div class="score">'+ex.s+' / '+ex.qs.length+'</div><p>'+(p>=80?'Muy bien: dominas el orden y el porqué de cada paso.':p>=50?'Vas bien. Repasa en el recorrido los pasos donde has fallado.':'Conviene repasar el recorrido paso a paso y volver a intentarlo.')+'</p><div class="nav"><button class="btn sec" id="rv">Ir al recorrido</button><button class="btn" id="rt">Nuevo examen</button></div></div>';
+    $("#rt").onclick=function(){startExam();renderExa()};$("#rv").onclick=function(){mode="rec";cur=0;tabs();render()};return}
+  var q=ex.qs[ex.i];
+  $("#main").innerHTML='<div class="box"><div class="meta"><span>PREGUNTA '+(ex.i+1)+' / '+ex.qs.length+'</span><span>ACIERTOS '+ex.s+'</span></div><h2>'+esc(q.q)+'</h2><div class="opts">'+q.o.map(function(o,i){return '<button class="opt" data-i="'+i+'">'+esc(o)+'</button>'}).join("")+'</div><div id="fb"></div><div class="nav"><span></span><button class="btn" id="nx" style="visibility:hidden">'+(ex.i===ex.qs.length-1?'Ver resultado':'Siguiente →')+'</button></div></div>';
+  document.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){
+    var i=+b.dataset.i;document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});
+    document.querySelectorAll(".opt")[q.a].classList.add("ok");if(i!==q.a)b.classList.add("no");else ex.s++;
+    $("#fb").innerHTML='<div class="fb '+(i===q.a?'ok':'bad')+'"><strong>'+(i===q.a?'Correcto.':'Incorrecto.')+'</strong> '+esc(q.e)+'</div>';
+    $("#nx").style.visibility="visible"}});
+  $("#nx").onclick=function(){ex.i++;renderExa()};
+}
+
+function render(){ if(mode==="rec")renderRec(); else if(mode==="ord"){if(!order.length)newOrder();renderOrd(false)} else if(mode==="fal")renderFal(); else renderExa(); }
+tabs();render();
+</script>
+</body></html>

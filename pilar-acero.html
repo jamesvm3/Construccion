@@ -1,0 +1,352 @@
+<!doctype html><html><head><meta charset=utf8>
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.pick{font-family:var(--mono);font-size:12.5px;border-collapse:collapse;width:100%}
+.pick td,.pick th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}
+.pick th{color:var(--muted);font-weight:500}
+.pick td:first-child,.pick th:first-child{text-align:left}
+.tbl{overflow-x:auto}
+</style></head><body>
+<title>Soporte de acero</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#eef0ee; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#cfd5d3;
+  --soft:#f5f7f6; --accent:#1f5f7a; --accent-soft:#e1edf2; --rebar:#b0392b;
+  --concrete:#d9dcd8; --concrete-edge:#8e9692; --steel:#c3ccd4; --steel-edge:#5d6b77; --load:#a86608;
+  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+    --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+    --concrete:#3a4446; --concrete-edge:#6e7b7d; --steel:#46525c; --steel-edge:#8a99a6; --load:#e3a849;
+    --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+  --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+  --concrete:#3a4446; --concrete-edge:#6e7b7d; --steel:#46525c; --steel-edge:#8a99a6; --load:#e3a849;
+  --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 60px}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--cond);font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance;letter-spacing:-.01em}
+.src{font-size:13px;color:var(--muted);max-width:44ch}
+.mode{display:flex;align-items:center;gap:10px;font-size:14px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:6px}
+.grid{display:grid;grid-template-columns:350px 1fr;gap:22px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;flex-direction:column;gap:14px}
+@media (max-width:860px){aside{position:static}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
+.box h2{font-family:var(--cond);font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--accent)}
+.field{display:grid;grid-template-columns:1fr 124px 46px;align-items:center;gap:8px;padding-block:5px;border-bottom:1px dashed var(--line)}
+.field:last-child{border-bottom:0}
+.field label{font-size:13.5px}
+.field .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
+input[type=number],select{width:100%;font-family:var(--mono);font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--soft);color:var(--ink);text-align:right}
+select{text-align:left}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+.helper{margin-top:10px;font-size:13px}
+.helper summary{cursor:pointer;color:var(--accent);font-weight:500}
+.helper .field{grid-template-columns:1fr 84px 46px}
+button{font-family:var(--sans);font-size:13px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:6px 12px;border-radius:4px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+.summary{background:var(--ink);color:var(--bg);border-radius:6px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:18px 32px;align-items:baseline}
+.summary .big{font-family:var(--cond);font-size:26px;font-weight:700;letter-spacing:.01em}
+.summary .lab{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;display:block}
+.drawing{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:620px){.drawing{grid-template-columns:1fr}}
+.drawing .box{padding:10px 12px}
+.drawing h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:500}
+svg{display:block;width:100%;height:auto}
+main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.step-h{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--soft)}
+.num{font-family:var(--mono);font-weight:600;font-size:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--accent);color:var(--accent);flex:none}
+.step-h h2{font-family:var(--cond);font-size:19px;margin:0;font-weight:700}
+.step-h .tag{margin-left:auto}
+.step-b{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.why{font-size:14px;color:var(--muted);max-width:70ch;margin:0}
+.calc{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 14px;align-items:baseline;padding:8px 10px;border-radius:4px;background:var(--soft)}
+@media (max-width:520px){.row{grid-template-columns:1fr}}
+.row .k{font-size:13.5px;font-weight:500}
+.f{font-family:var(--mono);font-size:13.5px;overflow-wrap:anywhere}
+.f .gen{color:var(--muted)}
+.f .res{color:var(--accent);font-weight:600}
+.f sub{font-size:.75em}
+.practice .res,.practice .sug,.practice .step-h .tag,.practice .summary,.practice .drawing svg,.practice .row .pill{filter:blur(7px);user-select:none}
+.try{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;border-top:1px dashed var(--line);padding-top:10px}
+.try input{width:110px}
+.pill{font-family:var(--mono);font-size:11.5px;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.info{background:var(--accent-soft);color:var(--accent)}
+.decide{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px;border:1.5px solid var(--accent);border-radius:4px;background:var(--accent-soft)}
+.decide label{font-weight:600;font-size:14px}
+.decide input,.decide select{width:110px}
+.decide .sug{font-size:13px;color:var(--muted)}
+.note{font-size:13px;border-left:3px solid var(--warn);padding:6px 10px;background:var(--warn-soft);color:var(--ink);border-radius:0 4px 4px 0}
+.note.extra{border-left-color:var(--accent);background:var(--accent-soft)}
+footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px}
+@media (prefers-reduced-motion:no-preference){.res,.pill{transition:filter .25s ease}}
+.pick{font-family:var(--mono);font-size:12.5px;border-collapse:collapse;width:100%}
+.pick td,.pick th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}
+.pick th{color:var(--muted);font-weight:500}
+.pick td:first-child,.pick th:first-child{text-align:left}
+.tbl{overflow-x:auto}
+ </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="mute.css">
+
+<div class="wrap">
+<a href="index.html#A" style="display:inline-flex;align-items:center;margin-bottom:14px;font:600 14px var(--sans);color:var(--panel);background:var(--ink);border:1px solid var(--ink);border-radius:6px;padding:6px 14px 6px 11px;text-decoration:none">← Menú de calculadoras</a>
+<header class="top mat-A">
+  <div>
+    <div class="mbadge">SA</div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Acero · Vigas y soportes</small>Soporte de acero (pandeo)</h1></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+    <label class="mode" for="practica"><input type="checkbox" id="practica"> Modo práctica: ocultar resultados</label>
+    <div class="hint" style="margin:0">Calcula tú, escribe tu resultado en cada paso y comprueba.</div>
+    <div class="src">Ficha AS «Acero. Compresión. Soportes» de <em>Cálculo rápido de estructuras</em> (S. Mute), con el DB SE-A (6.3.2).</div>
+  </div>
+</header>
+
+<div class="grid">
+<aside>
+  <div class="box">
+    <h2>Datos de partida</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"><button type="button" id="clear">Limpiar datos</button></div>
+    <div class="field"><label for="Nk">Axil característico N<sub>k</sub></label><input id="Nk" type="number" step="any"><span class="u">kN</span></div>
+    <div class="field"><label for="Mk">Momento característico M<sub>k</sub> (opcional, eje fuerte)</label><input id="Mk" type="number" step="any" placeholder="0"><span class="u">kN·m</span></div>
+    <div class="field"><label for="H">Altura del soporte H</label><input id="H" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="beta">Apoyos en los extremos</label><select id="beta"><option value="1">β = 1 · art.-art.</option><option value="0.7">β = 0,7 · emp.-art.</option><option value="0.5">β = 0,5 · emp.-emp.</option><option value="2">β = 2 · ménsula</option></select><span class="u"></span></div>
+    <div class="field"><label for="ser">Serie de perfiles</label><select id="ser"><option>HEB</option><option>HEA</option><option>SHS</option></select><span class="u"></span></div>
+    <div class="field"><label for="fy">Acero</label><select id="fy"><option value="235">S235</option><option value="275" selected>S275</option><option value="355">S355</option></select><span class="u"></span></div>
+    <p class="hint">Escribe los datos de tu ejercicio. «Limpiar datos» lo deja todo en blanco.</p>
+  </div>
+</aside>
+
+<main>
+  <section>
+    <div class="summary" id="summary"></div>
+    <div class="drawing">
+      <div class="box"><h3>Longitud de pandeo</h3><svg id="sec" viewBox="0 0 360 230" role="img" aria-label="Soporte con su deformada de pandeo"></svg></div>
+      <div class="box"><h3>Sección del perfil</h3><svg id="pl" viewBox="0 0 360 230" role="img" aria-label="Sección del perfil elegido"></svg></div>
+    </div>
+  </section>
+
+  <article class="step" id="s1">
+    <div class="step-h"><span class="num">1</span><h2>Esfuerzos de cálculo</h2><span class="tag" id="t1"></span></div>
+    <div class="step-b">
+      <p class="why">Se mayoran el axil y, si lo hay, el momento con γ<sub>f</sub> = 1,5. Si el soporte solo recibe cargas en cabeza y centradas (estructura articulada), el momento es nulo y basta con el axil.</p>
+      <div class="calc">
+        <div class="row"><span class="k">N<sub>d</sub></span><span class="f" id="f11"></span></div>
+        <div class="row"><span class="k">M<sub>d</sub></span><span class="f" id="f12"></span></div>
+      </div>
+      <div class="note">Mute usa 1,4 como coeficiente medio de mayoración; en la asignatura usamos 1,5, del lado de la seguridad.</div>
+      <div class="try"><span>Tu N<sub>d</sub>:</span><input type="number" step="any" id="try1" aria-label="Tu axil de cálculo en kN"><span class="u">kN</span><span id="c1"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s2">
+    <div class="step-h"><span class="num">2</span><h2>Longitud de pandeo</h2><span class="tag" id="t2"></span></div>
+    <div class="step-b">
+      <p class="why">La longitud de pandeo es la distancia entre los puntos de inflexión de la deformada: L<sub>k</sub> = β·H. Articulado en los dos extremos β = 1 (el caso más habitual); empotrado y articulado 0,7; empotrado en los dos 0,5; en ménsula (empotrado y libre) 2.</p>
+      <div class="calc"><div class="row"><span class="k">L<sub>k</sub></span><span class="f" id="f21"></span></div></div>
+      <div class="try"><span>Tu L<sub>k</sub>:</span><input type="number" step="any" id="try2" aria-label="Tu longitud de pandeo en m"><span class="u">m</span><span id="c2"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s3">
+    <div class="step-h"><span class="num">3</span><h2>Sección aproximada</h2><span class="tag" id="t3"></span></div>
+    <div class="step-b">
+      <p class="why">Obtener la sección necesaria a pandeo directamente es complejo, así que se parte de una estimación y luego se comprueba. Mute propone A ≈ (N<sub>d</sub> + 1,4·α·L<sub>k</sub>²)/f<sub>yd</sub>, donde α depende del perfil y del eje en que pandea: α = 10 kN/m² en tubos cuadrados y 40 kN/m² en HEB y HEA pandeando por el eje débil (el que manda si L<sub>k</sub> es igual en las dos direcciones).</p>
+      <div class="calc">
+        <div class="row"><span class="k">f<sub>yd</sub></span><span class="f" id="f31"></span></div>
+        <div class="row"><span class="k">A aproximada</span><span class="f" id="f32"></span></div>
+      </div>
+      <div class="note extra">La fórmula está pensada para longitudes de pandeo del orden de 3 m. Unidades: N<sub>d</sub> en kN, α en kN/m², L<sub>k</sub> en m y f<sub>yd</sub> en kN/cm² dan A en cm².</div>
+      <div class="try"><span>Tu A:</span><input type="number" step="any" id="try3" aria-label="Tu área aproximada en cm²"><span class="u">cm²</span><span id="c3"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s4">
+    <div class="step-h"><span class="num">4</span><h2>Perfil de tanteo</h2><span class="tag" id="t4"></span></div>
+    <div class="step-b">
+      <p class="why">Se toma del catálogo el perfil más ligero con área mayor que la aproximada y se comprueba (pasos 5 y 6). Si no cumple, o sobra mucho, se cambia de perfil y se repite: es un tanteo.</p>
+      <div class="calc"><div class="row"><span class="k">Más ligero con A ≥ A<sub>aprox</sub></span><span class="f" id="f41"></span></div></div>
+      <div class="decide"><label for="pDef">Perfil a comprobar</label><select id="pDef" style="width:150px"></select><span class="sug" id="sug4"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s5">
+    <div class="step-h"><span class="num">5</span><h2>Esbeltez reducida y coeficiente χ</h2><span class="tag" id="t5"></span></div>
+    <div class="step-b">
+      <p class="why">La esbeltez reducida compara la esbeltez del soporte con la del acero: λ̄ = L<sub>k</sub>/(i·λ<sub>1</sub>), con λ<sub>1</sub> = 93,9·√(235/f<sub>y</sub>). Con λ̄ y la curva de pandeo del perfil (a, b o c, según forma y eje) se obtiene el coeficiente de reducción χ ≤ 1. Se calcula en los dos ejes y manda el menor χ. En soportes, λ̄ no debe pasar de 2.</p>
+      <div class="calc">
+        <div class="row"><span class="k">λ<sub>1</sub></span><span class="f" id="f51"></span></div>
+        <div class="row"><span class="k">Eje fuerte (y)</span><span class="f" id="f52"></span></div>
+        <div class="row"><span class="k">Eje débil (z)</span><span class="f" id="f53"></span></div>
+      </div>
+      <div class="note extra" id="n5"></div>
+      <div class="try"><span>Tu χ (el menor):</span><input type="number" step="any" id="try5" aria-label="Tu coeficiente chi"><span id="c5"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s6">
+    <div class="step-h"><span class="num">6</span><h2>Comprobación</h2><span class="tag" id="t6"></span></div>
+    <div class="step-b">
+      <p class="why">La tensión en el soporte, contando la reducción por pandeo, no puede superar la de cálculo del acero: σ = N<sub>d</sub>/(χ·A) + M<sub>d</sub>/W ≤ f<sub>yd</sub>. Sin momento, queda σ = N<sub>d</sub>/(χ·A). Si la tensión es mucho menor, se prueba un perfil más pequeño; si es mayor, uno más grande.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Tensión</span><span class="f" id="f61"></span></div>
+        <div class="row"><span class="k">Aprovechamiento</span><span class="f" id="f62"></span></div>
+      </div>
+      <div class="note extra">Con momento, esta suma es la comprobación simplificada de Mute; el DB SE-A (6.3.4) añade coeficientes de interacción que en un predimensionado no se calculan.</div>
+      <div class="try"><span>Tu σ:</span><input type="number" step="any" id="try6" aria-label="Tu tensión en N/mm²"><span class="u">N/mm²</span><span id="c6"></span></div>
+    </div>
+  </article>
+
+  <div class="box" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px"><p style="margin:0;flex:1 1 240px;font-size:13.5px;color:var(--muted)">Ya sabes qué perfil necesita el soporte. ¿Y cómo se monta en obra? Repasa el proceso paso a paso.</p><a href="proceso-acero.html" style="font:600 14px var(--sans);color:var(--panel);background:var(--bad);border:1px solid var(--bad);border-radius:4px;padding:9px 16px;text-decoration:none">Proceso constructivo</a></div>
+  <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con el DB SE-A. Tampoco sustituye a la comprobación de la sección extrema, el pandeo lateral ni la interacción completa de flexocompresión. Unidades: kN, m, cm y N/mm². Errores o sugerencias: <a href="mailto:jaimevergara@ugr.es">jaimevergara@ugr.es</a>. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</main>
+</div>
+</div>
+
+<script src="acero-perfiles.js"></script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const nf=(x,d=2)=>isFinite(x)?x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const v=id=>parseFloat($(id).value);
+const R=s=>`<span class="res">${s}</span>`;
+const G=s=>`<span class="gen">${s}</span>`;
+const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+function check(tryId,outId,val,tol){
+  const t=parseFloat(String($(tryId).value).replace(',','.'));
+  if(!isFinite(t)||!isFinite(val)){$(outId).innerHTML='';return;}
+  const ok=Math.abs(t-val)<=Math.max(Math.abs(val)*tol,1e-9);
+  $(outId).innerHTML=ok?pill('ok','Correcto'):pill('bad','Revisa: no coincide');
+}
+const IMP={a:0.21,b:0.34,c:0.49};
+function chi(lb,curve){if(lb<=0.2)return 1;const a=IMP[curve],ph=0.5*(1+a*(lb-0.2)+lb*lb);return Math.min(1,1/(ph+Math.sqrt(ph*ph-lb*lb)));}
+const CURVES={HEB:{y:'b',z:'c'},HEA:{y:'b',z:'c'},SHS:{y:'c',z:'c'}};
+const ALPHA={HEB:40,HEA:40,SHS:10};
+const OUT=['f11','f12','f21','f31','f32','f41','f51','f52','f53','f61','f62','t1','t2','t3','t4','t5','t6','c1','c2','c3','c5','c6'];
+function empty(){
+  OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
+  $('sug4').textContent='';$('n5').innerHTML='';$('pDef').innerHTML='<option value="">auto</option>';
+  $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce N<sub>k</sub> y la altura H</span></div>';
+  $('sec').innerHTML='';$('pl').innerHTML='';
+}
+function evalP(p,ser,Nd,Md,Lk,fy){
+  const fyd=fy/1.05/10, l1=93.9*Math.sqrt(235/fy), Lc=Lk*100;
+  const ly=Lc/(p.iy*l1), lz=Lc/(p.iz*l1), cy=chi(ly,CURVES[ser].y), cz=chi(lz,CURVES[ser].z), cm=Math.min(cy,cz);
+  const s=Nd/(cm*p.A)+(Md>0?Md*100/p.Wply:0);
+  return {fyd,l1,ly,lz,cy,cz,cm,s,ok:s<=fyd+1e-9&&Math.max(ly,lz)<=2+1e-9};
+}
+function calc(){
+  const Nk=v('Nk'),Mk=v('Mk')>0?v('Mk'):0,H=v('H'),beta=v('beta'),ser=$('ser').value,fy=v('fy');
+  if(!(Nk>0&&H>0)){empty();return;}
+  const Nd=1.5*Nk, Md=1.5*Mk;
+  $('f11').innerHTML=`${G('N<sub>d</sub> = 1,5·N<sub>k</sub>')} = 1,5·${nf(Nk)} = ${R(nf(Nd,1)+' kN')}`;
+  $('f12').innerHTML=Mk>0?`${G('M<sub>d</sub> = 1,5·M<sub>k</sub>')} = 1,5·${nf(Mk)} = ${R(nf(Md)+' kN·m')}`:`${R('0')} ${pill('info','sin momento')}`;
+  $('t1').innerHTML=pill('info',nf(Nd,0)+' kN');
+  check('try1','c1',Nd,0.01);
+  const Lk=beta*H;
+  $('f21').innerHTML=`${G('L<sub>k</sub> = β·H')} = ${nf(beta,1)}·${nf(H)} = ${R(nf(Lk)+' m')}`;
+  $('t2').innerHTML=pill('info',nf(Lk)+' m');
+  check('try2','c2',Lk,0.01);
+  const fyd=fy/1.05/10, al=ALPHA[ser], Aap=(Nd+1.4*al*Lk*Lk)/fyd;
+  $('f31').innerHTML=`${G('f<sub>yd</sub> = f<sub>y</sub>/1,05')} = ${fy}/1,05 = ${R(nf(fyd*10,1)+' N/mm² = '+nf(fyd)+' kN/cm²')}`;
+  $('f32').innerHTML=`${G('A ≈ (N<sub>d</sub> + 1,4·α·L<sub>k</sub>²)/f<sub>yd</sub>')}, α = ${al} → (${nf(Nd,1)} + 1,4·${al}·${nf(Lk)}²)/${nf(fyd)} = ${R(nf(Aap,1)+' cm²')}`;
+  $('t3').innerHTML=pill('info',nf(Aap,1)+' cm²');
+  check('try3','c3',Aap,0.02);
+  const T=window.PERFILES[ser];
+  const lightest=f=>{let k=-1;T.forEach((p,i)=>{if(f(p)&&(k<0||p.G<T[k].G))k=i;});return k;};
+  const i0=lightest(p=>p.A>=Aap-1e-9);
+  const iF=lightest(p=>evalP(p,ser,Nd,Md,Lk,fy).ok);
+  $('f41').innerHTML=i0>=0?`${R(T[i0].n)} (A = ${nf(T[i0].A,1)} cm²)`:pill('bad','ninguno del catálogo');
+  const sel=$('pDef'), opts=['<option value="">auto</option>'].concat(T.map((p,i)=>`<option value="${i}">${p.n}</option>`));
+  if(sel.dataset.ser!==ser){sel.innerHTML=opts.join('');sel.dataset.ser=ser;sel.value='';}
+  const iU=sel.value===''?(iF>=0?iF:i0):parseInt(sel.value,10);
+  $('sug4').textContent=iF>=0?`El ${ser} más ligero que cumple es el ${T[iF].n}`+(i0>=0&&iF!==i0?` (el tanteo inicial, ${T[i0].n}, ${iF>i0?'no cumple':'queda sobrado'})`:''):`Ningún ${ser} del catálogo cumple`;
+  if(iU<0||!T[iU]){['f51','f52','f53','f61','f62'].forEach(id=>$(id).innerHTML='<span class="gen">—</span>');$('t4').innerHTML=pill('bad','Sin perfil');$('summary').innerHTML=`<div><span class="lab">Soporte</span><span class="big">Ningún ${ser} cumple</span></div>`;draw(beta,H,Lk,null,ser);return;}
+  const p=T[iU], r=evalP(p,ser,Nd,Md,Lk,fy);
+  $('t4').innerHTML=pill('info',p.n);
+  $('f51').innerHTML=`${G('λ<sub>1</sub> = 93,9·√(235/f<sub>y</sub>)')} = ${R(nf(r.l1,1))}`;
+  const rowAx=(ax,i,lb,c,cv)=>`${G('λ̄ = L<sub>k</sub>/(i·λ<sub>1</sub>)')} = ${nf(Lk*100,0)}/(${nf(i,2)}·${nf(r.l1,1)}) = ${R(nf(lb,2))} · curva ${cv} → χ = ${R(nf(c,3))}`+(lb>2?' '+pill('bad','λ̄ > 2'):'');
+  $('f52').innerHTML=rowAx('y',p.iy,r.ly,r.cy,CURVES[ser].y);
+  $('f53').innerHTML=rowAx('z',p.iz,r.lz,r.cz,CURVES[ser].z);
+  $('n5').innerHTML=ser==='SHS'?'En tubos el radio de giro es igual en los dos ejes. Mute los asigna a la curva c (secciones huecas). χ se obtiene con la fórmula del DB SE-A (6.3.2.1), que da los mismos valores que la tabla de Mute.':'En HEB y HEA (h/b ≤ 1,2) el eje fuerte va con la curva b y el débil con la c. χ se obtiene con la fórmula del DB SE-A (6.3.2.1), que da los mismos valores que la tabla de Mute.';
+  $('t5').innerHTML=pill(Math.max(r.ly,r.lz)>2?'bad':'info',`χ = ${nf(r.cm,3)}`);
+  check('try5','c5',r.cm,0.02);
+  const sN=Nd/(r.cm*p.A), sM=Md>0?Md*100/p.Wply:0;
+  $('f61').innerHTML=Md>0?`${G('σ = N<sub>d</sub>/(χ·A) + M<sub>d</sub>·100/W<sub>pl,y</sub>')} = ${nf(Nd,1)}/(${nf(r.cm,3)}·${nf(p.A,1)}) + ${nf(Md)}·100/${nf(p.Wply,1)} = ${R(nf(r.s*10,0)+' N/mm²')}`:`${G('σ = N<sub>d</sub>/(χ·A)')} = ${nf(Nd,1)}/(${nf(r.cm,3)}·${nf(p.A,1)}) = ${R(nf(r.s*10,0)+' N/mm²')}`;
+  const ap=100*r.s/fyd;
+  $('f62').innerHTML=`${G('σ/f<sub>yd</sub>')} = ${nf(r.s*10,0)}/${nf(fyd*10,0)} = ${R(nf(ap,0)+' %')} `+(r.ok?(ap<60?pill('warn','muy sobrado: prueba uno menor'):pill('ok','cumple')):pill('bad',Math.max(r.ly,r.lz)>2?'demasiado esbelto':'no cumple: perfil mayor'));
+  $('t6').innerHTML=r.ok?pill('ok','Cumple'):pill('bad','No cumple');
+  check('try6','c6',r.s*10,0.02);
+  $('summary').innerHTML=`
+    <div><span class="lab">Soporte · L<sub>k</sub> = ${nf(Lk)} m</span><span class="big">${p.n} (${$('fy').selectedOptions[0].text})</span></div>
+    <div><span class="lab">Coef. de pandeo</span><span class="big">${nf(r.cm,3)}</span></div>
+    <div><span class="lab">Aprovechamiento</span><span class="big">${nf(ap,0)} %</span></div>
+    <div><span class="lab">Peso</span><span class="big">${nf(p.G,1)} kg/m</span></div>`;
+  draw(beta,H,Lk,p,ser);
+}
+function draw(beta,H,Lk,p,ser){
+  const xb=90, y0=20, y1=205, h=y1-y0; let g='';
+  const sup=(y,top)=>`<path d="M${xb} ${y} l-9 ${top?-12:12} h18 z" fill="none" stroke="var(--ink)" stroke-width="1.3"/>`;
+  const fix=y=>`<line x1="${xb-22}" y1="${y}" x2="${xb+22}" y2="${y}" stroke="var(--ink)" stroke-width="2.2"/>`+[0,1,2,3,4].map(i=>`<line x1="${xb-20+i*10}" y1="${y}" x2="${xb-26+i*10}" y2="${y+(y<100?-7:7)}" stroke="var(--ink)" stroke-width="1"/>`).join('');
+  g+=`<line x1="${xb}" y1="${y0}" x2="${xb}" y2="${y1}" stroke="var(--steel-edge)" stroke-width="2" stroke-dasharray="4 3"/>`;
+  // deformada
+  const N=40,pts=[];for(let i=0;i<=N;i++){const t=i/N;let d;
+    if(beta===1)d=Math.sin(Math.PI*t);else if(beta===0.5)d=(1-Math.cos(2*Math.PI*t))/2;else if(beta===0.7)d=Math.sin(1.43*Math.PI*t)*(1-t)*1.6;else d=1-Math.cos(Math.PI*(1-t)/2);
+    pts.push([xb+d*26,y1-h*t]);}
+  g+=`<path d="M${pts.map(q=>q.join(' ')).join(' L')}" fill="none" stroke="var(--accent)" stroke-width="3"/>`;
+  if(beta===1){g+=sup(y1+0.5,false)+`<circle cx="${xb}" cy="${y0}" r="4" fill="var(--panel)" stroke="var(--ink)"/>`;}
+  else if(beta===0.7){g+=fix(y1)+`<circle cx="${xb}" cy="${y0}" r="4" fill="var(--panel)" stroke="var(--ink)"/>`;}
+  else if(beta===0.5){g+=fix(y1)+fix(y0);}
+  else{g+=fix(y1);}
+  g+=`<g stroke="var(--muted)" stroke-width="1"><line x1="${xb+60}" y1="${y0}" x2="${xb+60}" y2="${y1}"/><line x1="${xb+55}" y1="${y0}" x2="${xb+65}" y2="${y0}"/><line x1="${xb+55}" y1="${y1}" x2="${xb+65}" y2="${y1}"/></g>`;
+  g+=`<text x="${xb+70}" y="${(y0+y1)/2-6}" font-family="IBM Plex Mono,monospace" font-size="12" fill="var(--ink)">H = ${nf(H)} m</text><text x="${xb+70}" y="${(y0+y1)/2+12}" font-family="IBM Plex Mono,monospace" font-size="12" fill="var(--accent)">L<tspan font-size="9" dy="2">k</tspan><tspan dy="-2"> = ${nf(beta,1)}·H = ${nf(Lk)} m</tspan></text>`;
+  $('sec').innerHTML=g;
+  if(!p){$('pl').innerHTML='';return;}
+  const cx=120, cy=115; let q='';
+  if(ser==='SHS'){const s=150/p.h, B=p.h*s, t=Math.max(p.t*s,2.5);q+=`<rect x="${cx-B/2}" y="${cy-B/2}" width="${B}" height="${B}" rx="${t*1.5}" fill="var(--steel)" stroke="var(--steel-edge)" stroke-width="1.2"/><rect x="${cx-B/2+t}" y="${cy-B/2+t}" width="${B-2*t}" height="${B-2*t}" rx="${t*0.8}" fill="var(--panel)" stroke="var(--steel-edge)" stroke-width="1"/>`;}
+  else{const s=Math.min(170/p.h,170/p.b), H2=p.h*s, B=p.b*s, tf=Math.max(p.tf*s,2), tw=Math.max(p.tw*s,1.5);
+    q+=`<path d="M${cx-B/2} ${cy-H2/2} h${B} v${tf} h${-(B-tw)/2} v${H2-2*tf} h${(B-tw)/2} v${tf} h${-B} v${-tf} h${(B-tw)/2} v${-(H2-2*tf)} h${-(B-tw)/2} z" fill="var(--steel)" stroke="var(--steel-edge)" stroke-width="1.2"/>`;
+    q+=`<line x1="${cx-B/2-12}" y1="${cy}" x2="${cx+B/2+12}" y2="${cy}" stroke="var(--muted)" stroke-dasharray="3 2"/><text x="${cx+B/2+14}" y="${cy+4}" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--muted)">y</text>`;
+    q+=`<line x1="${cx}" y1="${cy-H2/2-12}" x2="${cx}" y2="${cy+H2/2+12}" stroke="var(--muted)" stroke-dasharray="3 2"/><text x="${cx+4}" y="${cy-H2/2-14}" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--muted)">z</text>`;}
+  const tx=235;
+  q+=`<text x="${tx}" y="44" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="600" fill="var(--ink)">${p.n}</text>`;
+  [`A = ${nf(p.A,1)} cm²`,`i_y = ${nf(p.iy,2)} cm`,`i_z = ${nf(p.iz,2)} cm`,`W_pl,y = ${nf(p.Wply,1)} cm³`,`G = ${nf(p.G,1)} kg/m`].forEach((t,i)=>q+=`<text x="${tx}" y="${68+i*18}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">${t.replace(/_([a-z,]+)/g,'$1')}</text>`);
+  $('pl').innerHTML=q;
+}
+$('clear').addEventListener('click',()=>{
+  ['Nk','Mk','H','try1','try2','try3','try5','try6'].forEach(id=>{$(id).value='';});
+  $('beta').value='1';$('ser').value='HEB';$('fy').value='275';$('pDef').value='';
+  calc();$('Nk').focus();
+});
+$('practica').addEventListener('change',()=>document.querySelector('.wrap').classList.toggle('practice',$('practica').checked));
+document.querySelectorAll('input,select').forEach(el=>{if(el.id!=='practica')el.addEventListener('input',calc);});
+calc();
+})();
+</script>
+
+<script src="pdf.js"></script>
+</body></html>

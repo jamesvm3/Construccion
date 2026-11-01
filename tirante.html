@@ -1,0 +1,303 @@
+<!doctype html><html><head><meta charset=utf8>
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.pick{font-family:var(--mono);font-size:12.5px;border-collapse:collapse;width:100%}
+.pick td,.pick th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}
+.pick th{color:var(--muted);font-weight:500}
+.pick td:first-child,.pick th:first-child{text-align:left}
+.tbl{overflow-x:auto}
+</style></head><body>
+<title>Tirante de arriostramiento</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#eef0ee; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#cfd5d3;
+  --soft:#f5f7f6; --accent:#1f5f7a; --accent-soft:#e1edf2; --rebar:#b0392b;
+  --concrete:#d9dcd8; --concrete-edge:#8e9692; --steel:#c3ccd4; --steel-edge:#5d6b77; --load:#a86608;
+  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+    --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+    --concrete:#3a4446; --concrete-edge:#6e7b7d; --steel:#46525c; --steel-edge:#8a99a6; --load:#e3a849;
+    --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+  --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+  --concrete:#3a4446; --concrete-edge:#6e7b7d; --steel:#46525c; --steel-edge:#8a99a6; --load:#e3a849;
+  --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 60px}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--cond);font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance;letter-spacing:-.01em}
+.src{font-size:13px;color:var(--muted);max-width:44ch}
+.mode{display:flex;align-items:center;gap:10px;font-size:14px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:6px}
+.grid{display:grid;grid-template-columns:350px 1fr;gap:22px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;flex-direction:column;gap:14px}
+@media (max-width:860px){aside{position:static}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
+.box h2{font-family:var(--cond);font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--accent)}
+.field{display:grid;grid-template-columns:1fr 124px 46px;align-items:center;gap:8px;padding-block:5px;border-bottom:1px dashed var(--line)}
+.field:last-child{border-bottom:0}
+.field label{font-size:13.5px}
+.field .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
+input[type=number],select{width:100%;font-family:var(--mono);font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--soft);color:var(--ink);text-align:right}
+select{text-align:left}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+.helper{margin-top:10px;font-size:13px}
+.helper summary{cursor:pointer;color:var(--accent);font-weight:500}
+.helper .field{grid-template-columns:1fr 84px 46px}
+button{font-family:var(--sans);font-size:13px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:6px 12px;border-radius:4px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+.summary{background:var(--ink);color:var(--bg);border-radius:6px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:18px 32px;align-items:baseline}
+.summary .big{font-family:var(--cond);font-size:26px;font-weight:700;letter-spacing:.01em}
+.summary .lab{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;display:block}
+.drawing{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:620px){.drawing{grid-template-columns:1fr}}
+.drawing .box{padding:10px 12px}
+.drawing h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:500}
+svg{display:block;width:100%;height:auto}
+main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.step-h{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--soft)}
+.num{font-family:var(--mono);font-weight:600;font-size:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--accent);color:var(--accent);flex:none}
+.step-h h2{font-family:var(--cond);font-size:19px;margin:0;font-weight:700}
+.step-h .tag{margin-left:auto}
+.step-b{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.why{font-size:14px;color:var(--muted);max-width:70ch;margin:0}
+.calc{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 14px;align-items:baseline;padding:8px 10px;border-radius:4px;background:var(--soft)}
+@media (max-width:520px){.row{grid-template-columns:1fr}}
+.row .k{font-size:13.5px;font-weight:500}
+.f{font-family:var(--mono);font-size:13.5px;overflow-wrap:anywhere}
+.f .gen{color:var(--muted)}
+.f .res{color:var(--accent);font-weight:600}
+.f sub{font-size:.75em}
+.practice .res,.practice .sug,.practice .step-h .tag,.practice .summary,.practice .drawing svg,.practice .row .pill{filter:blur(7px);user-select:none}
+.try{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;border-top:1px dashed var(--line);padding-top:10px}
+.try input{width:110px}
+.pill{font-family:var(--mono);font-size:11.5px;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.info{background:var(--accent-soft);color:var(--accent)}
+.decide{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px;border:1.5px solid var(--accent);border-radius:4px;background:var(--accent-soft)}
+.decide label{font-weight:600;font-size:14px}
+.decide input,.decide select{width:110px}
+.decide .sug{font-size:13px;color:var(--muted)}
+.note{font-size:13px;border-left:3px solid var(--warn);padding:6px 10px;background:var(--warn-soft);color:var(--ink);border-radius:0 4px 4px 0}
+.note.extra{border-left-color:var(--accent);background:var(--accent-soft)}
+footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px}
+@media (prefers-reduced-motion:no-preference){.res,.pill{transition:filter .25s ease}}
+.pick{font-family:var(--mono);font-size:12.5px;border-collapse:collapse;width:100%}
+.pick td,.pick th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}
+.pick th{color:var(--muted);font-weight:500}
+.pick td:first-child,.pick th:first-child{text-align:left}
+.tbl{overflow-x:auto}
+ </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="mute.css">
+
+<div class="wrap">
+<a href="index.html#A" style="display:inline-flex;align-items:center;margin-bottom:14px;font:600 14px var(--sans);color:var(--panel);background:var(--ink);border:1px solid var(--ink);border-radius:6px;padding:6px 14px 6px 11px;text-decoration:none">← Menú de calculadoras</a>
+<header class="top mat-A">
+  <div>
+    <div class="mbadge">TA</div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Acero · Arriostramiento</small>Tirante de arriostramiento</h1></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+    <label class="mode" for="practica"><input type="checkbox" id="practica"> Modo práctica: ocultar resultados</label>
+    <div class="hint" style="margin:0">Calcula tú, escribe tu resultado en cada paso y comprueba.</div>
+    <div class="src">Ficha AA «Acero. Tracción. Arriostramientos» de <em>Cálculo rápido de estructuras</em> (S. Mute), con el DB SE-A (5.4.1 y 6.2.3).</div>
+  </div>
+</header>
+
+<div class="grid">
+<aside>
+  <div class="box">
+    <h2>Datos de partida</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"><button type="button" id="clear">Limpiar datos</button></div>
+    <div class="field"><label for="Nk">Suma de axiles característicos de los soportes que arriostra ΣN<sub>k</sub></label><input id="Nk" type="number" step="any"><span class="u">kN</span></div>
+    <div class="field"><label for="Wk">Viento característico en cabeza W<sub>k</sub></label><input id="Wk" type="number" step="any" placeholder="0"><span class="u">kN</span></div>
+    <div class="field"><label for="H">Altura del recuadro H</label><input id="H" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="B">Ancho del recuadro B</label><input id="B" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="lam">Desplome admisible</label><select id="lam"><option value="250" selected>H/250 (planta)</option><option value="500">H/500 (edificio)</option></select><span class="u"></span></div>
+    <div class="field"><label for="fy">Acero</label><select id="fy"><option value="235">S235</option><option value="275" selected>S275</option><option value="355">S355</option></select><span class="u"></span></div>
+    <p class="hint">El recuadro es el vano entre dos soportes donde va la cruz (cruz de San Andrés). Cada diagonal trabaja solo a tracción: una para cada sentido.</p>
+  </div>
+</aside>
+
+<main>
+  <section>
+    <div class="summary" id="summary"></div>
+    <div class="drawing">
+      <div class="box"><h3>Recuadro arriostrado</h3><svg id="sec" viewBox="0 0 360 230" role="img" aria-label="Recuadro con la cruz de arriostramiento y las fuerzas"></svg></div>
+      <div class="box"><h3>Disposición en planta</h3><svg id="pl" viewBox="0 0 360 230" role="img" aria-label="Planta con los planos de arriostramiento"></svg></div>
+    </div>
+  </section>
+
+  <article class="step" id="s1">
+    <div class="step-h"><span class="num">1</span><h2>Cargas de cálculo</h2><span class="tag" id="t1"></span></div>
+    <div class="step-b">
+      <p class="why">Se mayoran con γ<sub>f</sub> = 1,5 los axiles de los soportes que dependen de este arriostramiento y el viento que llega a su cabeza.</p>
+      <div class="calc">
+        <div class="row"><span class="k">ΣN<sub>d</sub></span><span class="f" id="f11"></span></div>
+        <div class="row"><span class="k">W<sub>d</sub></span><span class="f" id="f12"></span></div>
+      </div>
+      <div class="try"><span>Tu ΣN<sub>d</sub>:</span><input type="number" step="any" id="try1" aria-label="Tu axil de cálculo en kN"><span class="u">kN</span><span id="c1"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s2">
+    <div class="step-h"><span class="num">2</span><h2>Fuerza horizontal en cabeza</h2><span class="tag" id="t2"></span></div>
+    <div class="step-b">
+      <p class="why">Ningún soporte está perfectamente vertical. El DB SE-A supone un desplome inicial φ<sub>0</sub> = 1/200, que convierte el axil en un empuje horizontal N′<sub>q</sub> = φ<sub>0</sub>·N<sub>d</sub>. A ese empuje se suma el viento: N′ = ΣN′<sub>q</sub> + W<sub>d</sub>.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Por desplome</span><span class="f" id="f21"></span></div>
+        <div class="row"><span class="k">Total N′</span><span class="f" id="f22"></span></div>
+      </div>
+      <div class="try"><span>Tu N′:</span><input type="number" step="any" id="try2" aria-label="Tu fuerza horizontal en kN"><span class="u">kN</span><span id="c2"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s3">
+    <div class="step-h"><span class="num">3</span><h2>Tracción en la diagonal</h2><span class="tag" id="t3"></span></div>
+    <div class="step-b">
+      <p class="why">La diagonal, inclinada un ángulo α con la horizontal, equilibra la fuerza horizontal: su componente horizontal es T·cos α = N′, así que T = N′/cos α. Cuanto más tumbada (α pequeño), menos tracción, pero más larga.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Ángulo α</span><span class="f" id="f31"></span></div>
+        <div class="row"><span class="k">Tracción T</span><span class="f" id="f32"></span></div>
+      </div>
+      <div class="try"><span>Tu T:</span><input type="number" step="any" id="try3" aria-label="Tu tracción en kN"><span class="u">kN</span><span id="c3"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s4">
+    <div class="step-h"><span class="num">4</span><h2>Área necesaria</h2><span class="tag" id="t4"></span></div>
+    <div class="step-b">
+      <p class="why">Dos condiciones: que el acero no pase de su tensión de cálculo, A ≥ T/f<sub>yd</sub>, y que la cruz sea bastante rígida para que el desplome no pase de H/λ (λ = 500 para el edificio entero, 250 entre plantas). La segunda, según Mute, es A ≥ 2·λ·T/(sen 2α·E). Manda la mayor.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Por resistencia</span><span class="f" id="f41"></span></div>
+        <div class="row"><span class="k">Por rigidez</span><span class="f" id="f42"></span></div>
+      </div>
+      <div class="note extra">Unidades: T en kN, f<sub>yd</sub> y E = 21 000 en kN/cm² dan A en cm².</div>
+      <div class="try"><span>Tu A:</span><input type="number" step="any" id="try4" aria-label="Tu área en cm²"><span class="u">cm²</span><span id="c4"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s5">
+    <div class="step-h"><span class="num">5</span><h2>Redondo del tirante</h2><span class="tag" id="t5"></span></div>
+    <div class="step-b">
+      <p class="why">Los tirantes de las cruces suelen ser redondos macizos (con tensor para ponerlos en carga) o angulares. Se elige el menor redondo con área suficiente. Si la rosca del tensor reduce la sección, conviene tomar el diámetro siguiente.</p>
+      <div class="tbl"><table class="pick" id="pick"></table></div>
+    </div>
+  </article>
+
+  <div class="box" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px"><p style="margin:0;flex:1 1 240px;font-size:13.5px;color:var(--muted)">Ya sabes qué tirante necesita el arriostramiento. ¿Y cómo se monta en obra? Repasa el proceso paso a paso.</p><a href="proceso-acero.html" style="font:600 14px var(--sans);color:var(--panel);background:var(--bad);border:1px solid var(--bad);border-radius:4px;padding:9px 16px;text-decoration:none">Proceso constructivo</a></div>
+  <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con el DB SE-A. Tampoco sustituye al cálculo del reparto del viento entre arriostramientos, la sección neta en roscas ni las uniones. Unidades: kN, m, cm y N/mm². Errores o sugerencias: <a href="mailto:jaimevergara@ugr.es">jaimevergara@ugr.es</a>. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const nf=(x,d=2)=>isFinite(x)?x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const v=id=>parseFloat($(id).value);
+const R=s=>`<span class="res">${s}</span>`;
+const G=s=>`<span class="gen">${s}</span>`;
+const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+const E=21000;
+function check(tryId,outId,val,tol){
+  const t=parseFloat(String($(tryId).value).replace(',','.'));
+  if(!isFinite(t)||!isFinite(val)){$(outId).innerHTML='';return;}
+  const ok=Math.abs(t-val)<=Math.max(Math.abs(val)*tol,1e-9);
+  $(outId).innerHTML=ok?pill('ok','Correcto'):pill('bad','Revisa: no coincide');
+}
+const DIAM=[10,12,14,16,20,25,32,40];
+const OUT=['f11','f12','f21','f22','f31','f32','f41','f42','t1','t2','t3','t4','t5','c1','c2','c3','c4'];
+function empty(){
+  OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
+  $('pick').innerHTML='';
+  $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce ΣN<sub>k</sub>, H y B</span></div>';
+  $('sec').innerHTML='';$('pl').innerHTML='';
+}
+function calc(){
+  const Nk=v('Nk'),Wk=v('Wk')>0?v('Wk'):0,H=v('H'),B=v('B'),lam=v('lam'),fy=v('fy');
+  if(!(Nk>0&&H>0&&B>0)){empty();return;}
+  const Nd=1.5*Nk, Wd=1.5*Wk;
+  $('f11').innerHTML=`${G('ΣN<sub>d</sub> = 1,5·ΣN<sub>k</sub>')} = 1,5·${nf(Nk)} = ${R(nf(Nd,1)+' kN')}`;
+  $('f12').innerHTML=`${G('W<sub>d</sub> = 1,5·W<sub>k</sub>')} = 1,5·${nf(Wk)} = ${R(nf(Wd,2)+' kN')}`;
+  $('t1').innerHTML=pill('info',nf(Nd,0)+' kN');
+  check('try1','c1',Nd,0.01);
+  const Nq=Nd/200, Np=Nq+Wd;
+  $('f21').innerHTML=`${G('N′<sub>q</sub> = ΣN<sub>d</sub>/200')} = ${nf(Nd,1)}/200 = ${R(nf(Nq,2)+' kN')}`;
+  $('f22').innerHTML=`${G('N′ = N′<sub>q</sub> + W<sub>d</sub>')} = ${nf(Nq,2)} + ${nf(Wd,2)} = ${R(nf(Np,2)+' kN')}`;
+  $('t2').innerHTML=pill('info',nf(Np,1)+' kN');
+  check('try2','c2',Np,0.02);
+  const al=Math.atan(H/B), T=Np/Math.cos(al);
+  $('f31').innerHTML=`${G('α = arctg(H/B)')} = arctg(${nf(H)}/${nf(B)}) = ${R(nf(al*180/Math.PI,1)+'°')}`+(al*180/Math.PI>60||al*180/Math.PI<30?' '+pill('warn','mejor entre 30° y 60°'):'');
+  $('f32').innerHTML=`${G('T = N′/cos α')} = ${nf(Np,2)}/${nf(Math.cos(al),3)} = ${R(nf(T,2)+' kN')}`;
+  $('t3').innerHTML=pill('info',nf(T,1)+' kN');
+  check('try3','c3',T,0.02);
+  const fyd=fy/1.05/10, A1=T/fyd, A2=2*lam*T/(Math.sin(2*al)*E), An=Math.max(A1,A2);
+  $('f41').innerHTML=`${G('A ≥ T/f<sub>yd</sub>')} = ${nf(T,2)}/${nf(fyd,2)} = ${R(nf(A1,2)+' cm²')}`;
+  $('f42').innerHTML=`${G('A ≥ 2·λ·T/(sen 2α·E)')} = 2·${lam}·${nf(T,2)}/(${nf(Math.sin(2*al),3)}·21000) = ${R(nf(A2,2)+' cm²')} `+(A2>A1?pill('info','manda la rigidez'):pill('info','manda la resistencia'));
+  $('t4').innerHTML=pill('info',nf(An,2)+' cm²');
+  check('try4','c4',An,0.02);
+  const area=d=>Math.PI*d*d/400, dS=DIAM.find(d=>area(d)>=An-1e-9);
+  $('pick').innerHTML='<tr><th>Redondo</th><th>Área</th><th></th></tr>'+DIAM.map(d=>`<tr><td>Ø${d}</td><td>${nf(area(d),2)} cm²</td><td>${d===dS?pill('ok','elegido'):(area(d)<An?'<span class="gen">insuficiente</span>':'')}</td></tr>`).join('');
+  $('t5').innerHTML=dS?pill('ok','Ø'+dS):pill('bad','> Ø40: usa un perfil');
+  $('summary').innerHTML=`
+    <div><span class="lab">Tirante de la cruz</span><span class="big">${dS?'Redondo Ø'+dS:'Más de Ø40'}</span></div>
+    <div><span class="lab">Tracción</span><span class="big">${nf(T,1)} kN</span></div>
+    <div><span class="lab">Ángulo</span><span class="big">${nf(al*180/Math.PI,0)}°</span></div>`;
+  draw(H,B,al,Np,dS);
+}
+function draw(H,B,al,Np,dS){
+  const S=Math.min(220/B,150/H), W=B*S, Hh=H*S, x0=(360-W)/2+10, y1=200, y0=y1-Hh;
+  let g=`<rect x="0" y="${y1}" width="360" height="22" fill="var(--concrete)" opacity=".5"/>`;
+  g+=`<line x1="${x0}" y1="${y1}" x2="${x0}" y2="${y0}" stroke="var(--steel-edge)" stroke-width="5"/><line x1="${x0+W}" y1="${y1}" x2="${x0+W}" y2="${y0}" stroke="var(--steel-edge)" stroke-width="5"/><line x1="${x0-4}" y1="${y0}" x2="${x0+W+4}" y2="${y0}" stroke="var(--steel-edge)" stroke-width="4"/>`;
+  g+=`<line x1="${x0}" y1="${y1}" x2="${x0+W}" y2="${y0}" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+  g+=`<line x1="${x0+W}" y1="${y1}" x2="${x0}" y2="${y0}" stroke="var(--load)" stroke-width="3"/>`;
+  g+=`<line x1="${x0-70}" y1="${y0}" x2="${x0-8}" y2="${y0}" stroke="var(--bad)" stroke-width="2.5"/><path d="M${x0-16} ${y0-5} L${x0-6} ${y0} L${x0-16} ${y0+5}" fill="var(--bad)"/>`;
+  g+=`<text x="${x0-70}" y="${y0-8}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--bad)">N′ = ${nf(Np,1)} kN</text>`;
+  g+=`<text x="${x0+W/2+8}" y="${(y0+y1)/2-6}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--load)">T${dS?' · Ø'+dS:''}</text>`;
+  g+=`<path d="M${x0+W-34} ${y1} A34 34 0 0 1 ${x0+W-34*Math.cos(al)} ${y1-34*Math.sin(al)}" fill="none" stroke="var(--ink)"/><text x="${x0+W-50}" y="${y1-8}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--ink)">α</text>`;
+  g+=`<text x="${x0+W/2}" y="${y1+15}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">B = ${nf(B)} m</text><text x="${x0+W+10}" y="${(y0+y1)/2}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">H = ${nf(H)} m</text>`;
+  $('sec').innerHTML=g;
+  // planta: retícula 4x3 con 3 planos no concurrentes
+  const gx=70, gy=40, dx=60, dy=55; let q='';
+  for(let i=0;i<4;i++)for(let j=0;j<3;j++)q+=`<rect x="${gx+i*dx-4}" y="${gy+j*dy-4}" width="8" height="8" fill="var(--steel-edge)"/>`;
+  const br=(xa,ya,xb,yb)=>`<line x1="${xa}" y1="${ya}" x2="${xb}" y2="${yb}" stroke="var(--accent)" stroke-width="4"/>`;
+  q+=br(gx,gy,gx+dx,gy)+br(gx+3*dx,gy+dy*0.0,gx+3*dx,gy+dy)+br(gx+dx,gy+2*dy,gx+2*dx,gy+2*dy);
+  q+=`<text x="180" y="${gy+2*dy+32}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">Al menos 3 planos: no paralelos todos,</text><text x="180" y="${gy+2*dy+46}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">que no se corten en un punto y alejados</text>`;
+  $('pl').innerHTML=q;
+}
+$('clear').addEventListener('click',()=>{
+  ['Nk','Wk','H','B','try1','try2','try3','try4'].forEach(id=>{$(id).value='';});
+  $('lam').value='250';$('fy').value='275';
+  calc();$('Nk').focus();
+});
+$('practica').addEventListener('change',()=>document.querySelector('.wrap').classList.toggle('practice',$('practica').checked));
+document.querySelectorAll('input,select').forEach(el=>{if(el.id!=='practica')el.addEventListener('input',calc);});
+calc();
+})();
+</script>
+
+<script src="pdf.js"></script>
+</body></html>

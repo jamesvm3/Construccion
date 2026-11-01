@@ -1,0 +1,404 @@
+<!doctype html><html><head><meta charset=utf8>
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.pick{font-family:var(--mono);font-size:12.5px;border-collapse:collapse;width:100%}
+.pick td,.pick th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}
+.pick th{color:var(--muted);font-weight:500}
+.pick td:first-child,.pick th:first-child{text-align:left}
+.tbl{overflow-x:auto}
+</style></head><body>
+<title>Viga de madera</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#eef0ee; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#cfd5d3;
+  --soft:#f5f7f6; --accent:#1f5f7a; --accent-soft:#e1edf2; --rebar:#b0392b;
+  --concrete:#d9dcd8; --concrete-edge:#8e9692; --steel:#c3ccd4; --steel-edge:#5d6b77; --wood:#e6cc9f; --wood-edge:#a07a48; --char:#3b3330; --load:#a86608;
+  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+    --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+    --concrete:#3a4446; --concrete-edge:#6e7b7d; --steel:#46525c; --steel-edge:#8a99a6; --wood:#4d3b25; --wood-edge:#9b7a50; --char:#111; --load:#e3a849;
+    --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+  --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+  --concrete:#3a4446; --concrete-edge:#6e7b7d; --steel:#46525c; --steel-edge:#8a99a6; --wood:#4d3b25; --wood-edge:#9b7a50; --char:#111; --load:#e3a849;
+  --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 60px}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--cond);font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance;letter-spacing:-.01em}
+.src{font-size:13px;color:var(--muted);max-width:44ch}
+.mode{display:flex;align-items:center;gap:10px;font-size:14px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:6px}
+.grid{display:grid;grid-template-columns:350px 1fr;gap:22px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;flex-direction:column;gap:14px}
+@media (max-width:860px){aside{position:static}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
+.box h2{font-family:var(--cond);font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--accent)}
+.field{display:grid;grid-template-columns:1fr 124px 46px;align-items:center;gap:8px;padding-block:5px;border-bottom:1px dashed var(--line)}
+.field:last-child{border-bottom:0}
+.field label{font-size:13.5px}
+.field .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
+input[type=number],select{width:100%;font-family:var(--mono);font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--soft);color:var(--ink);text-align:right}
+select{text-align:left}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+.helper{margin-top:10px;font-size:13px}
+.helper summary{cursor:pointer;color:var(--accent);font-weight:500}
+.helper .field{grid-template-columns:1fr 84px 46px}
+button{font-family:var(--sans);font-size:13px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:6px 12px;border-radius:4px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+.summary{background:var(--ink);color:var(--bg);border-radius:6px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:18px 32px;align-items:baseline}
+.summary .big{font-family:var(--cond);font-size:26px;font-weight:700;letter-spacing:.01em}
+.summary .lab{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;display:block}
+.drawing{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:620px){.drawing{grid-template-columns:1fr}}
+.drawing .box{padding:10px 12px}
+.drawing h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:500}
+svg{display:block;width:100%;height:auto}
+main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.step-h{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--soft)}
+.num{font-family:var(--mono);font-weight:600;font-size:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--accent);color:var(--accent);flex:none}
+.step-h h2{font-family:var(--cond);font-size:19px;margin:0;font-weight:700}
+.step-h .tag{margin-left:auto}
+.step-b{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.why{font-size:14px;color:var(--muted);max-width:70ch;margin:0}
+.calc{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 14px;align-items:baseline;padding:8px 10px;border-radius:4px;background:var(--soft)}
+@media (max-width:520px){.row{grid-template-columns:1fr}}
+.row .k{font-size:13.5px;font-weight:500}
+.f{font-family:var(--mono);font-size:13.5px;overflow-wrap:anywhere}
+.f .gen{color:var(--muted)}
+.f .res{color:var(--accent);font-weight:600}
+.f sub{font-size:.75em}
+.practice .res,.practice .sug,.practice .step-h .tag,.practice .summary,.practice .drawing svg,.practice .row .pill{filter:blur(7px);user-select:none}
+.try{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;border-top:1px dashed var(--line);padding-top:10px}
+.try input{width:110px}
+.pill{font-family:var(--mono);font-size:11.5px;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.info{background:var(--accent-soft);color:var(--accent)}
+.decide{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px;border:1.5px solid var(--accent);border-radius:4px;background:var(--accent-soft)}
+.decide label{font-weight:600;font-size:14px}
+.decide input,.decide select{width:110px}
+.decide .sug{font-size:13px;color:var(--muted)}
+.note{font-size:13px;border-left:3px solid var(--warn);padding:6px 10px;background:var(--warn-soft);color:var(--ink);border-radius:0 4px 4px 0}
+.note.extra{border-left-color:var(--accent);background:var(--accent-soft)}
+footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px}
+@media (prefers-reduced-motion:no-preference){.res,.pill{transition:filter .25s ease}}
+.pick{font-family:var(--mono);font-size:12.5px;border-collapse:collapse;width:100%}
+.pick td,.pick th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}
+.pick th{color:var(--muted);font-weight:500}
+.pick td:first-child,.pick th:first-child{text-align:left}
+.tbl{overflow-x:auto}
+ </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="mute.css">
+
+<div class="wrap">
+<a href="index.html#M" style="display:inline-flex;align-items:center;margin-bottom:14px;font:600 14px var(--sans);color:var(--panel);background:var(--ink);border:1px solid var(--ink);border-radius:6px;padding:6px 14px 6px 11px;text-decoration:none">← Menú de calculadoras</a>
+<header class="top mat-M">
+  <div>
+    <div class="mbadge">VM</div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Madera · Vigas y soportes</small>Viga de madera</h1></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+    <label class="mode" for="practica"><input type="checkbox" id="practica"> Modo práctica: ocultar resultados</label>
+    <div class="hint" style="margin:0">Calcula tú, escribe tu resultado en cada paso y comprueba.</div>
+    <div class="src">Fichas MT y MV «Madera. Materiales» y «Madera. Vigas» de <em>Cálculo rápido de estructuras</em> (S. Mute), con el DB SE-M.</div>
+  </div>
+</header>
+
+<div class="grid">
+<aside>
+  <div class="box">
+    <h2>Datos de partida</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"><button type="button" id="clear">Limpiar datos</button></div>
+    <div class="field"><label for="esq">Tipo de viga</label><select id="esq"><option value="bi">Biapoyada</option><option value="ae">Apoyada-empotrada</option><option value="ee">Biempotrada</option><option value="vo">Voladizo</option></select><span class="u"></span></div>
+    <div class="field"><label for="L">Luz L</label><input id="L" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="qk">Carga lineal característica q<sub>k</sub> (sin peso propio)</label><input id="qk" type="number" step="any"><span class="u">kN/m</span></div>
+    <div class="field" id="rowP"><label for="Pk">Carga puntual característica P<sub>k</sub> <span id="Ppos">(en el centro)</span></label><input id="Pk" type="number" step="any" placeholder="0"><span class="u">kN</span></div>
+    <details class="helper">
+      <summary>¿No tienes q<sub>k</sub>? Estímala</summary>
+      <p class="hint">q<sub>k</sub> = carga superficial sin mayorar × separación entre vigas (o ancho de carga)</p>
+      <div class="field"><label for="hq">Carga superficial</label><input id="hq" type="number" step="any"><span class="u">kN/m²</span></div>
+      <div class="field"><label for="hb">Separación / ancho</label><input id="hb" type="number" step="any"><span class="u">m</span></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:6px"><span class="f" id="hres"></span><button type="button" id="huse" class="ghost">Usar</button></div>
+    </details>
+    <div class="field"><label for="cl">Clase resistente</label><select id="cl"><option>C18</option><option selected>C24</option><option>D30</option><option>GL24h</option></select><span class="u"></span></div>
+    <div class="field"><label for="srv">Clase de servicio</label><select id="srv"><option value="0.6">1 · interior</option><option value="0.8">2 · exterior bajo cubierta</option><option value="2">3 · resto (intemperie)</option></select><span class="u"></span></div>
+    <div class="field"><label for="prop">Ancho b</label><select id="prop"><option value="2">b ≈ h/2</option><option value="3">b ≈ h/3</option><option value="0">b fijo</option></select><span class="u"></span></div>
+    <div class="field" id="rowB"><label for="bF">Ancho fijo b</label><input id="bF" type="number" step="any"><span class="u">cm</span></div>
+    <div class="field"><label for="lim">Límite de flecha (L/500 tabiques frágiles, L/400 ordinarios, L/300 resto)</label><select id="lim"><option value="500">L/500</option><option value="400">L/400</option><option value="300" selected>L/300</option></select><span class="u"></span></div>
+    <p class="hint">Escribe los datos de tu ejercicio. «Limpiar datos» lo deja todo en blanco.</p>
+  </div>
+</aside>
+
+<main>
+  <section>
+    <div class="summary" id="summary"></div>
+    <div class="drawing">
+      <div class="box"><h3>Esquema y momentos</h3><svg id="sec" viewBox="0 0 360 230" role="img" aria-label="Esquema de la viga con la ley de momentos"></svg></div>
+      <div class="box"><h3>Sección</h3><svg id="pl" viewBox="0 0 360 230" role="img" aria-label="Sección de madera elegida"></svg></div>
+    </div>
+  </section>
+
+  <article class="step" id="s1">
+    <div class="step-h"><span class="num">1</span><h2>Cargas de cálculo</h2><span class="tag" id="t1"></span></div>
+    <div class="step-b">
+      <p class="why">Para la resistencia se usan las cargas mayoradas; para la flecha, sin mayorar. El peso propio de la viga se añade en la comprobación final (paso 8), cuando ya se conoce la sección. Mute propone empezar con 1 kN/m e iterar; aquí se calcula con la densidad de la madera.</p>
+      <div class="calc">
+        <div class="row"><span class="k">q<sub>d</sub></span><span class="f" id="f11"></span></div>
+        <div class="row" id="rowPd"><span class="k">P<sub>d</sub></span><span class="f" id="f12"></span></div>
+      </div>
+      <div class="note">Mute usa 1,4 como coeficiente medio de mayoración; en la asignatura usamos 1,5, del lado de la seguridad.</div>
+      <div class="try"><span>Tu q<sub>d</sub>:</span><input type="number" step="any" id="try1" aria-label="Tu carga de cálculo en kN/m"><span class="u">kN/m</span><span id="c1"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s2">
+    <div class="step-h"><span class="num">2</span><h2>Momento y cortante máximos</h2><span class="tag" id="t2"></span></div>
+    <div class="step-b">
+      <p class="why" id="why2"></p>
+      <div class="calc">
+        <div class="row"><span class="k">M<sub>d</sub> máximo</span><span class="f" id="f21"></span></div>
+        <div class="row"><span class="k">V<sub>d</sub> máximo</span><span class="f" id="f22"></span></div>
+      </div>
+      <div class="try"><span>Tu M<sub>d</sub>:</span><input type="number" step="any" id="try2" aria-label="Tu momento de cálculo en kN·m"><span class="u">kN·m</span><span id="c2"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s3">
+    <div class="step-h"><span class="num">3</span><h2>Tensiones de cálculo de la madera</h2><span class="tag" id="t3"></span></div>
+    <div class="step-b">
+      <p class="why">La madera se nombra por su resistencia característica a flexión (C24: 24 N/mm²). La tensión de cálculo es f<sub>d</sub> = f<sub>k</sub>·k<sub>mod</sub>/γ<sub>M</sub>. Mute agrupa los dos coeficientes en γ<sub>M</sub>/k<sub>mod</sub> ≈ 1,6 para cargas ordinarias, así que f<sub>d</sub> = f<sub>k</sub>/1,6. En madera solo se usa el cálculo elástico.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Flexión f<sub>m,d</sub></span><span class="f" id="f31"></span></div>
+        <div class="row"><span class="k">Cortante f<sub>v,d</sub></span><span class="f" id="f32"></span></div>
+        <div class="row"><span class="k">Módulo E y k<sub>def</sub></span><span class="f" id="f33"></span></div>
+      </div>
+      <div class="note extra">El DB SE-M da γ<sub>M</sub> = 1,30 en madera maciza y 1,25 en laminada, y k<sub>mod</sub> según la duración de la carga y la clase de servicio (0,80 para carga media en clases 1 y 2): 1,30/0,80 ≈ 1,6.</div>
+      <div class="try"><span>Tu f<sub>m,d</sub>:</span><input type="number" step="any" id="try3" aria-label="Tu tensión de cálculo en kN/cm²"><span class="u">kN/cm²</span><span id="c3"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s4">
+    <div class="step-h"><span class="num">4</span><h2>Canto por flexión</h2><span class="tag" id="t4"></span></div>
+    <div class="step-b">
+      <p class="why">El módulo resistente necesario es W ≥ M<sub>d</sub>/f<sub>m,d</sub>. En sección rectangular W = b·h²/6. Para no tener dos incógnitas, Mute fija el ancho en función del canto (b ≈ h/2 o h/3) o se fija un ancho comercial, y se despeja h.</p>
+      <div class="calc">
+        <div class="row"><span class="k">W necesario</span><span class="f" id="f41"></span></div>
+        <div class="row"><span class="k">h por flexión</span><span class="f" id="f42"></span></div>
+      </div>
+      <div class="try"><span>Tu W:</span><input type="number" step="any" id="try4" aria-label="Tu módulo resistente en cm³"><span class="u">cm³</span><span id="c4"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s5">
+    <div class="step-h"><span class="num">5</span><h2>Canto por cortante</h2><span class="tag" id="t5"></span></div>
+    <div class="step-b">
+      <p class="why">El área a cortante necesaria es A<sub>v</sub> ≥ V<sub>d</sub>/f<sub>v,d</sub>, y en sección rectangular A<sub>v</sub> = (2/3)·b·h (la tensión tangencial máxima es 1,5 veces la media). En madera el cortante manda más a menudo que en acero, sobre todo en luces cortas.</p>
+      <div class="calc">
+        <div class="row"><span class="k">A<sub>v</sub> necesaria</span><span class="f" id="f51"></span></div>
+        <div class="row"><span class="k">h por cortante</span><span class="f" id="f52"></span></div>
+      </div>
+      <div class="try"><span>Tu A<sub>v</sub>:</span><input type="number" step="any" id="try5" aria-label="Tu área a cortante en cm²"><span class="u">cm²</span><span id="c5"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s6">
+    <div class="step-h"><span class="num">6</span><h2>Canto por flecha</h2><span class="tag" id="t6"></span></div>
+    <div class="step-b">
+      <p class="why" id="why6"></p>
+      <div class="calc">
+        <div class="row"><span class="k">Flecha admisible</span><span class="f" id="f61"></span></div>
+        <div class="row"><span class="k">I necesaria</span><span class="f" id="f62"></span></div>
+        <div class="row"><span class="k">h por flecha</span><span class="f" id="f63"></span></div>
+      </div>
+      <div class="note extra">Unidades: q<sub>k</sub> en kN/cm (kN/m ÷ 100), L y δ en cm, P<sub>k</sub> en kN y E en kN/cm². Sale I en cm⁴.</div>
+      <div class="try"><span>Tu I:</span><input type="number" step="any" id="try6" aria-label="Tu inercia en cm⁴"><span class="u">cm⁴</span><span id="c6"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s7">
+    <div class="step-h"><span class="num">7</span><h2>Sección elegida</h2><span class="tag" id="t7"></span></div>
+    <div class="step-b">
+      <p class="why">Se toma el mayor de los tres cantos y se redondea a 2 cm; el ancho, según la proporción elegida, también a 2 cm. Puedes escribir otra sección para comprobarla.</p>
+      <div class="decide"><label for="bDef">Sección b × h</label><input id="bDef" type="number" step="1" placeholder="auto" aria-label="Ancho b en cm"><span>×</span><input id="hDef" type="number" step="1" placeholder="auto" aria-label="Canto h en cm"><span class="u">cm</span><span class="sug" id="sug7"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s8">
+    <div class="step-h"><span class="num">8</span><h2>Comprobación con el peso propio</h2><span class="tag" id="t8"></span></div>
+    <div class="step-b">
+      <p class="why">Con la sección elegida se suma su peso (densidad × b × h) y se comprueban la flexión σ = M<sub>d</sub>/W ≤ f<sub>m,d</sub>, el cortante τ = 1,5·V<sub>d</sub>/(b·h) ≤ f<sub>v,d</sub> y la flecha final con fluencia.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Carga con peso propio</span><span class="f" id="f81"></span></div>
+        <div class="row"><span class="k">Flexión</span><span class="f" id="f82"></span></div>
+        <div class="row"><span class="k">Cortante</span><span class="f" id="f83"></span></div>
+        <div class="row"><span class="k">Flecha final</span><span class="f" id="f84"></span></div>
+      </div>
+      <div class="note extra">Se supone la viga arriostrada lateralmente por el forjado (sin vuelco lateral), algo importante en vigas de madera altas y estrechas.</div>
+      <div class="try"><span>Tu σ:</span><input type="number" step="any" id="try8" aria-label="Tu tensión en N/mm²"><span class="u">N/mm²</span><span id="c8"></span></div>
+    </div>
+  </article>
+
+  <div class="box" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px"><p style="margin:0;flex:1 1 240px;font-size:13.5px;color:var(--muted)">Ya sabes qué sección necesita la viga. ¿Y cómo se ejecuta en obra? Repasa el proceso paso a paso.</p><a href="proceso-madera.html" style="font:600 14px var(--sans);color:var(--panel);background:var(--bad);border:1px solid var(--bad);border-radius:4px;padding:9px 16px;text-decoration:none">Proceso constructivo</a></div>
+  <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con el DB SE-M. Tampoco sustituye a la comprobación de vuelco lateral, compresión perpendicular en apoyos, uniones ni resistencia al fuego. Unidades: kN, m, cm y N/mm². Errores o sugerencias: <a href="mailto:jaimevergara@ugr.es">jaimevergara@ugr.es</a>. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</main>
+</div>
+</div>
+
+<script src="madera.js"></script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const nf=(x,d=2)=>isFinite(x)?x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const v=id=>parseFloat($(id).value);
+const R=s=>`<span class="res">${s}</span>`;
+const G=s=>`<span class="gen">${s}</span>`;
+const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+function check(tryId,outId,val,tol){
+  const t=parseFloat(String($(tryId).value).replace(',','.'));
+  if(!isFinite(t)||!isFinite(val)){$(outId).innerHTML='';return;}
+  const ok=Math.abs(t-val)<=Math.max(Math.abs(val)*tol,1e-9);
+  $(outId).innerHTML=ok?pill('ok','Correcto'):pill('bad','Revisa: no coincide');
+}
+const ESQ={
+  bi:{n:'biapoyada',M:(q,P,L)=>q*L*L/8+P*L/4,Mf:'q<sub>d</sub>·L²/8 + P<sub>d</sub>·L/4',Mf0:'q<sub>d</sub>·L²/8',V:(q,P,L)=>q*L/2+P/2,Vf:'q<sub>d</sub>·L/2 + P<sub>d</sub>/2',Vf0:'q<sub>d</sub>·L/2',
+      Ic:(q,P,L)=>5*q*L**4/384+P*L**3/48,If:'(1 + k<sub>def</sub>)·(5·q<sub>k</sub>·L⁴/384 + P<sub>k</sub>·L³/48)/(E·δ)',If0:'(1 + k<sub>def</sub>)·5·q<sub>k</sub>·L⁴/(384·E·δ)',P:true,Ppos:'(en el centro)',
+      txt:'Viga biapoyada: momento máximo en el centro del vano y cortante máximo en los apoyos. La carga puntual se supone en el centro.'},
+  ae:{n:'apoyada-empotrada',M:(q,P,L)=>q*L*L/8,Mf:'q<sub>d</sub>·L²/8',V:(q,P,L)=>5*q*L/8,Vf:'5·q<sub>d</sub>·L/8',Ic:(q,P,L)=>q*L**4/185,If:'(1 + k<sub>def</sub>)·q<sub>k</sub>·L⁴/(185·E·δ)',P:false,
+      txt:'Viga apoyada en un extremo y empotrada en el otro: el momento máximo es el del empotramiento (qL²/8) y el cortante máximo, 5qL/8.'},
+  ee:{n:'biempotrada',M:(q,P,L)=>q*L*L/12,Mf:'q<sub>d</sub>·L²/12',V:(q,P,L)=>q*L/2,Vf:'q<sub>d</sub>·L/2',Ic:(q,P,L)=>q*L**4/384,If:'(1 + k<sub>def</sub>)·q<sub>k</sub>·L⁴/(384·E·δ)',P:false,
+      txt:'Viga biempotrada: el momento máximo es el de los empotramientos (qL²/12). En madera los empotramientos reales son difíciles de conseguir: úsalo con cuidado.'},
+  vo:{n:'voladizo',M:(q,P,L)=>q*L*L/2+P*L,Mf:'q<sub>d</sub>·L²/2 + P<sub>d</sub>·L',Mf0:'q<sub>d</sub>·L²/2',V:(q,P,L)=>q*L+P,Vf:'q<sub>d</sub>·L + P<sub>d</sub>',Vf0:'q<sub>d</sub>·L',
+      Ic:(q,P,L)=>q*L**4/8+P*L**3/3,If:'(1 + k<sub>def</sub>)·(q<sub>k</sub>·L⁴/8 + P<sub>k</sub>·L³/3)/(E·δ)',If0:'(1 + k<sub>def</sub>)·q<sub>k</sub>·L⁴/(8·E·δ)',P:true,Ppos:'(en el extremo)',
+      txt:'Voladizo: momento y cortante máximos en el empotramiento; la carga puntual, en el extremo libre.'}
+};
+const OUT=['f11','f12','f21','f22','f31','f32','f33','f41','f42','f51','f52','f61','f62','f63','f81','f82','f83','f84','t1','t2','t3','t4','t5','t6','t7','t8','c1','c2','c3','c4','c5','c6','c8'];
+function empty(){
+  OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
+  $('sug7').textContent='';
+  $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce la luz y la carga q<sub>k</sub></span></div>';
+  $('sec').innerHTML='';$('pl').innerHTML='';
+}
+function setUI(){
+  const e=ESQ[$('esq').value];
+  $('rowP').hidden=!e.P;$('rowPd').hidden=!e.P;if(e.P)$('Ppos').textContent=e.Ppos;
+  $('rowB').hidden=$('prop').value!=='0';
+  $('why2').textContent=e.txt;
+  const vo=$('esq').value==='vo';
+  $('why6').innerHTML='La madera sigue deformándose con el tiempo bajo carga (fluencia). La flecha final es la instantánea multiplicada por (1 + k<sub>def</sub>), con k<sub>def</sub> = 0,6 en interior, 0,8 en exterior bajo cubierta y 2,0 en el resto. Se limita a L/500, L/400 o L/300'+(vo?' (en voladizos, con el doble de la luz)':'')+' y se despeja la inercia; en sección rectangular I = b·h³/12.';
+}
+const up2=x=>Math.ceil(x/2-1e-9)*2;
+function calc(){
+  setUI();
+  const L=v('L'),qk=v('qk'),Pk0=v('Pk'),cl=$('cl').value,m=window.MADERA[cl],kdef=v('srv'),k=parseInt($('prop').value,10),bF=v('bF'),lim=v('lim'),esq=$('esq').value,e=ESQ[esq];
+  const Pk=e.P&&Pk0>0?Pk0:0, ps=Pk>0;
+  if(!(L>0&&qk>0)||(k===0&&!(bF>0))){empty();if(L>0&&qk>0&&k===0)$('summary').innerHTML='<div><span class="lab">Falta un dato</span><span class="big">Escribe el ancho fijo b</span></div>';return;}
+  const qd=1.5*qk, Pd=1.5*Pk;
+  $('f11').innerHTML=`${G('q<sub>d</sub> = 1,5·q<sub>k</sub>')} = 1,5·${nf(qk)} = ${R(nf(qd)+' kN/m')}`;
+  $('f12').innerHTML=`${G('P<sub>d</sub> = 1,5·P<sub>k</sub>')} = 1,5·${nf(Pk)} = ${R(nf(Pd)+' kN')}`;
+  $('t1').innerHTML=pill('info',nf(qd)+' kN/m');check('try1','c1',qd,0.01);
+  const Md=e.M(qd,Pd,L), Vd=e.V(qd,Pd,L);
+  $('f21').innerHTML=`${G('M<sub>d</sub> = '+(ps?e.Mf:(e.Mf0||e.Mf)))} = ${R(nf(Md)+' kN·m')}`;
+  $('f22').innerHTML=`${G('V<sub>d</sub> = '+(ps?e.Vf:(e.Vf0||e.Vf)))} = ${R(nf(Vd)+' kN')}`;
+  $('t2').innerHTML=pill('info',`M<sub>d</sub> ${nf(Md,1)} kN·m`);check('try2','c2',Md,0.02);
+  const fmd=m.fm/1.6, fvd=m.fv/1.6;
+  $('f31').innerHTML=`${G('f<sub>m,d</sub> = f<sub>m,k</sub>/1,6')} = ${nf(m.fm)}/1,6 = ${R(nf(fmd,3)+' kN/cm²')}`;
+  $('f32').innerHTML=`${G('f<sub>v,d</sub> = f<sub>v,k</sub>/1,6')} = ${nf(m.fv)}/1,6 = ${R(nf(fvd,3)+' kN/cm²')}`;
+  $('f33').innerHTML=`E<sub>0,medio</sub> = ${R(nf(m.E,0)+' kN/cm²')} · k<sub>def</sub> = ${R(nf(kdef,1))}`;
+  $('t3').innerHTML=pill('info',cl);check('try3','c3',fmd,0.02);
+  const Wn=Md*100/fmd;
+  const hW=k?Math.cbrt(6*k*Wn):Math.sqrt(6*Wn/bF);
+  $('f41').innerHTML=`${G('W ≥ M<sub>d</sub>·100/f<sub>m,d</sub>')} = ${nf(Md)}·100/${nf(fmd,3)} = ${R(nf(Wn,0)+' cm³')}`;
+  $('f42').innerHTML=k?`${G('W = b·h²/6 = h³/('+6*k+')')} → h = ∛(${6*k}·${nf(Wn,0)}) = ${R(nf(hW,1)+' cm')}`:`${G('W = b·h²/6')} → h = √(6·${nf(Wn,0)}/${nf(bF,1)}) = ${R(nf(hW,1)+' cm')}`;
+  $('t4').innerHTML=pill('info','h ≥ '+nf(hW,1)+' cm');check('try4','c4',Wn,0.02);
+  const Avn=Vd/fvd, hV=k?Math.sqrt(1.5*k*Avn):1.5*Avn/bF;
+  $('f51').innerHTML=`${G('A<sub>v</sub> ≥ V<sub>d</sub>/f<sub>v,d</sub>')} = ${nf(Vd)}/${nf(fvd,3)} = ${R(nf(Avn,1)+' cm²')}`;
+  $('f52').innerHTML=k?`${G('A<sub>v</sub> = (2/3)·b·h = 2·h²/'+3*k)} → h = √(${nf(1.5*k,1)}·${nf(Avn,1)}) = ${R(nf(hV,1)+' cm')}`:`${G('A<sub>v</sub> = (2/3)·b·h')} → h = 1,5·${nf(Avn,1)}/${nf(bF,1)} = ${R(nf(hV,1)+' cm')}`;
+  $('t5').innerHTML=pill('info','h ≥ '+nf(hV,1)+' cm');check('try5','c5',Avn,0.02);
+  const vo=esq==='vo', kk=vo?lim/2:lim, Lc=L*100, dl=Lc/kk;
+  const In=(1+kdef)*e.Ic(qk/100,Pk,Lc)/(m.E*dl), hI=k?Math.pow(12*k*In,0.25):Math.cbrt(12*In/bF);
+  $('f61').innerHTML=`${G('δ = L/'+kk)} = ${nf(Lc,0)}/${kk} = ${R(nf(dl,2)+' cm')}`;
+  $('f62').innerHTML=`${G('I ≥ '+(ps?e.If:(e.If0||e.If)))} = ${R(nf(In,0)+' cm⁴')}`;
+  $('f63').innerHTML=k?`${G('I = b·h³/12 = h⁴/'+12*k)} → h = ⁴√(${12*k}·${nf(In,0)}) = ${R(nf(hI,1)+' cm')}`:`${G('I = b·h³/12')} → h = ∛(12·${nf(In,0)}/${nf(bF,1)}) = ${R(nf(hI,1)+' cm')}`;
+  $('t6').innerHTML=pill('info','h ≥ '+nf(hI,1)+' cm');check('try6','c6',In,0.02);
+  // sección sugerida (iterar si no cumple con peso propio)
+  const verify=(b,h)=>{const g=m.rho*b*h/1e4*9.81/1000,q2=1.5*(qk+g),M2=e.M(q2,Pd,L),V2=e.V(q2,Pd,L),W=b*h*h/6,I=b*h**3/12,s=M2*100/W,t=1.5*V2/(b*h),d=(1+kdef)*e.Ic((qk+g)/100,Pk,Lc)/(m.E*I);return {g,q2,M2,V2,W,I,s,t,d,ok:s<=fmd+1e-9&&t<=fvd+1e-9&&d<=dl+1e-9};};
+  let hS=up2(Math.max(hW,hV,hI)), bS=k?up2(hS/k):bF;
+  for(let i=0;i<40&&!verify(bS,hS).ok;i++){hS+=2;if(k)bS=up2(hS/k);}
+  const bI=v('bDef'),hIn=v('hDef'), b=bI>0?bI:bS, h=hIn>0?hIn:hS;
+  const gov=[['flexión',hW],['cortante',hV],['flecha',hI]].sort((x,y)=>y[1]-x[1])[0][0];
+  $('sug7').textContent=`Sugerido: ${nf(bS,0)} × ${nf(hS,0)} cm (manda la ${gov})`;
+  const r=verify(b,h);
+  $('t7').innerHTML=pill(r.ok?'ok':'bad',`${nf(b,0)} × ${nf(h,0)} cm`);
+  $('f81').innerHTML=`${G('g = ρ·b·h')} = ${m.rho}·${nf(b/100,2)}·${nf(h/100,2)}·9,81/1000 = ${nf(r.g,3)} kN/m → q<sub>d</sub> = ${R(nf(r.q2)+' kN/m')} · M<sub>d</sub> = ${R(nf(r.M2)+' kN·m')} · V<sub>d</sub> = ${R(nf(r.V2)+' kN')}`;
+  $('f82').innerHTML=`${G('σ = M<sub>d</sub>·100/(b·h²/6)')} = ${nf(r.M2)}·100/${nf(r.W,0)} = ${R(nf(r.s*10,1)+' N/mm²')} ≤ ${nf(fmd*10,1)} → ${R(nf(100*r.s/fmd,0)+' %')} `+(r.s<=fmd+1e-9?pill('ok','cumple'):pill('bad','no cumple'));
+  $('f83').innerHTML=`${G('τ = 1,5·V<sub>d</sub>/(b·h)')} = 1,5·${nf(r.V2)}/(${nf(b,0)}·${nf(h,0)}) = ${R(nf(r.t*10,2)+' N/mm²')} ≤ ${nf(fvd*10,2)} `+(r.t<=fvd+1e-9?pill('ok','cumple'):pill('bad','no cumple'));
+  $('f84').innerHTML=`${G('δ<sub>final</sub> = δ<sub>inst</sub>·(1 + k<sub>def</sub>)')} = ${R(nf(r.d,2)+' cm')} ≤ ${nf(dl,2)} cm (L/${nf(Lc/r.d,0)}) `+(r.d<=dl+1e-9?pill('ok','cumple'):pill('bad','no cumple'));
+  $('t8').innerHTML=r.ok?pill('ok','Cumple'):pill('bad','No cumple: más canto');
+  check('try8','c8',r.s*10,0.02);
+  $('summary').innerHTML=`
+    <div><span class="lab">Viga ${e.n} · L = ${nf(L)} m</span><span class="big">${nf(b,0)} × ${nf(h,0)} cm ${cl}</span></div>
+    <div><span class="lab">Flexión</span><span class="big">${nf(100*r.s/fmd,0)} %</span></div>
+    <div><span class="lab">Flecha final</span><span class="big">L/${nf(Lc/r.d,0)}</span></div>`;
+  draw(esq,L,qd,Pd,b,h);
+}
+function draw(esq,L,qd,Pd,b,h){
+  const x0=40,x1=320,y=70;let g='';const vo=esq==='vo';
+  g+=`<rect x="${x0}" y="${y-5}" width="${x1-x0}" height="10" fill="var(--wood)" stroke="var(--wood-edge)"/>`;
+  for(let i=0;i<=14;i++){const x=x0+(x1-x0)*i/14;g+=`<line x1="${x}" y1="${y-30}" x2="${x}" y2="${y-8}" stroke="var(--load)" stroke-width="1.2"/><path d="M${x-3} ${y-12} L${x} ${y-7} L${x+3} ${y-12}" fill="none" stroke="var(--load)" stroke-width="1.2"/>`;}
+  g+=`<line x1="${x0}" y1="${y-30}" x2="${x1}" y2="${y-30}" stroke="var(--load)" stroke-width="1.2"/><text x="${(x0+x1)/2}" y="${y-36}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--load)">q<tspan font-size="8" dy="2">d</tspan><tspan dy="-2"> = ${nf(qd,1)} kN/m</tspan></text>`;
+  const pin=x=>`<path d="M${x} ${y+6} l-8 13 h16 z" fill="none" stroke="var(--ink)" stroke-width="1.3"/>`;
+  const fix=x=>`<line x1="${x}" y1="${y-20}" x2="${x}" y2="${y+20}" stroke="var(--ink)" stroke-width="2"/>`+[0,1,2,3,4].map(i=>`<line x1="${x}" y1="${y-16+i*8}" x2="${x+(x===x0?-7:7)}" y2="${y-20+i*8}" stroke="var(--ink)" stroke-width="1"/>`).join('');
+  if(esq==='bi')g+=pin(x0)+pin(x1);else if(esq==='ae')g+=pin(x0)+fix(x1);else if(esq==='ee')g+=fix(x0)+fix(x1);else g+=fix(x0);
+  if(Pd>0){const xp=vo?x1:(x0+x1)/2;g+=`<line x1="${xp}" y1="${y-60}" x2="${xp}" y2="${y-8}" stroke="var(--bad)" stroke-width="2"/><path d="M${xp-5} ${y-16} L${xp} ${y-7} L${xp+5} ${y-16}" fill="var(--bad)"/>`;}
+  g+=`<text x="${(x0+x1)/2}" y="${y+32}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">L = ${nf(L)} m</text>`;
+  const ym=165,N=60,pts=[],Pn=qd>0?Pd/(qd*L):0;
+  for(let i=0;i<=N;i++){const t=i/N;let mm;if(esq==='bi')mm=0.5*t*(1-t)+Pn*(t<=0.5?t/2:(1-t)/2);else if(esq==='ae')mm=t*(3/8)-t*t/2;else if(esq==='ee')mm=t*(1-t)/2-1/12;else mm=-((1-t)*(1-t)/2+Pn*(1-t));pts.push([t,mm]);}
+  const mx=Math.max(...pts.map(q=>Math.abs(q[1])))||1,sc=48/mx;
+  g+=`<line x1="${x0}" y1="${ym}" x2="${x1}" y2="${ym}" stroke="var(--muted)"/><path d="M${x0} ${ym} `+pts.map(([t,mm])=>`L${x0+(x1-x0)*t} ${ym+mm*sc}`).join(' ')+` L${x1} ${ym} Z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/><text x="${x0-16}" y="${ym+4}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--accent)">M</text>`;
+  $('sec').innerHTML=g;
+  const s=Math.min(180/h,150/b),W=b*s,H=h*s,cx=110,cy=115;
+  let q=`<rect x="${cx-W/2}" y="${cy-H/2}" width="${W}" height="${H}" fill="var(--wood)" stroke="var(--wood-edge)" stroke-width="1.5"/>`;
+  for(let i=1;i<=3;i++)q+=`<ellipse cx="${cx-W*0.15}" cy="${cy+H*0.25}" rx="${W*0.12*i}" ry="${H*0.08*i}" fill="none" stroke="var(--wood-edge)" stroke-width=".8" opacity=".6"/>`;
+  q+=`<text x="${cx}" y="${cy+H/2+16}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">b = ${nf(b,0)} cm</text><text x="${cx+W/2+8}" y="${cy+4}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">h = ${nf(h,0)} cm</text>`;
+  q+=`<text x="225" y="60" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="600" fill="var(--ink)">${nf(b,0)} × ${nf(h,0)}</text>`;
+  [`W = ${nf(b*h*h/6,0)} cm³`,`I = ${nf(b*h**3/12,0)} cm⁴`,`A = ${nf(b*h,0)} cm²`].forEach((t,i)=>q+=`<text x="225" y="${84+i*18}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">${t}</text>`);
+  $('pl').innerHTML=q;
+}
+function helper(){const r=v('hq')*v('hb');$('hres').innerHTML=`q<sub>k</sub> ≈ ${nf(r)} kN/m`;return r;}
+$('huse').addEventListener('click',()=>{const r=helper();if(isFinite(r)&&r>0){$('qk').value=r.toFixed(2);calc();}});
+['hq','hb'].forEach(id=>$(id).addEventListener('input',helper));
+$('clear').addEventListener('click',()=>{
+  ['L','qk','Pk','hq','hb','bF','bDef','hDef','try1','try2','try3','try4','try5','try6','try8'].forEach(id=>{$(id).value='';});
+  $('esq').value='bi';$('cl').value='C24';$('srv').value='0.6';$('prop').value='2';$('lim').value='300';
+  helper();calc();$('L').focus();
+});
+$('practica').addEventListener('change',()=>document.querySelector('.wrap').classList.toggle('practice',$('practica').checked));
+document.querySelectorAll('input,select').forEach(el=>{if(!['practica','hq','hb'].includes(el.id))el.addEventListener('input',calc);});
+helper();calc();
+})();
+</script>
+
+<script src="pdf.js"></script>
+</body></html>

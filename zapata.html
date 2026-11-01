@@ -1,0 +1,519 @@
+<!doctype html><html><head><meta charset=utf8>
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Zapata centrada C2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#eef0ee; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#cfd5d3;
+  --soft:#f5f7f6; --accent:#1f5f7a; --accent-soft:#e1edf2; --rebar:#b0392b;
+  --concrete:#d9dcd8; --concrete-edge:#8e9692;
+  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+    --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+    --concrete:#3a4446; --concrete-edge:#6e7b7d;
+    --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+  --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+  --concrete:#3a4446; --concrete-edge:#6e7b7d;
+  --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 60px}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--cond);font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance;letter-spacing:-.01em}
+.src{font-size:13px;color:var(--muted);max-width:44ch}
+.mode{display:flex;align-items:center;gap:10px;font-size:14px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:6px}
+.grid{display:grid;grid-template-columns:350px 1fr;gap:22px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;flex-direction:column;gap:14px}
+@media (max-width:860px){aside{position:static}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
+.box h2{font-family:var(--cond);font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--accent)}
+.field{display:grid;grid-template-columns:1fr 124px 46px;align-items:center;gap:8px;padding-block:5px;border-bottom:1px dashed var(--line)}
+.field:last-child{border-bottom:0}
+.field label{font-size:13.5px}
+.field .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
+input[type=number],select{width:100%;font-family:var(--mono);font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--soft);color:var(--ink);text-align:right}
+select{text-align:left}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+.helper{margin-top:10px;font-size:13px}
+.helper summary{cursor:pointer;color:var(--accent);font-weight:500}
+.helper .field{grid-template-columns:1fr 84px 46px}
+button{font-family:var(--sans);font-size:13px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:6px 12px;border-radius:4px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+.summary{background:var(--ink);color:var(--bg);border-radius:6px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:18px 32px;align-items:baseline}
+.summary .big{font-family:var(--cond);font-size:26px;font-weight:700;letter-spacing:.01em}
+.summary .lab{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;display:block}
+.drawing{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:620px){.drawing{grid-template-columns:1fr}}
+.drawing .box{padding:10px 12px}
+.drawing h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:500}
+svg{display:block;width:100%;height:auto}
+main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.step-h{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--soft)}
+.num{font-family:var(--mono);font-weight:600;font-size:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--accent);color:var(--accent);flex:none}
+.step-h h2{font-family:var(--cond);font-size:19px;margin:0;font-weight:700}
+.step-h .tag{margin-left:auto}
+.step-b{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.why{font-size:14px;color:var(--muted);max-width:70ch;margin:0}
+.calc{display:flex;flex-direction:column;gap:8px}
+.scheme-w{text-align:center;margin:4px 0 12px}
+.scheme{display:inline-block;width:340px;max-width:100%;height:auto;vertical-align:top}
+.row{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 14px;align-items:baseline;padding:8px 10px;border-radius:4px;background:var(--soft)}
+@media (max-width:520px){.row{grid-template-columns:1fr}}
+.row .k{font-size:13.5px;font-weight:500}
+.f{font-family:var(--mono);font-size:13.5px;overflow-wrap:anywhere}
+.f .gen{color:var(--muted)}
+.f .res{color:var(--accent);font-weight:600}
+.f sub{font-size:.75em}
+.practice .res,.practice .sug,.practice .step-h .tag,.practice .summary,.practice .drawing svg,.practice .row .pill{filter:blur(7px);user-select:none}
+.try{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;border-top:1px dashed var(--line);padding-top:10px}
+.try input{width:110px}
+.pill{font-family:var(--mono);font-size:11.5px;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.info{background:var(--accent-soft);color:var(--accent)}
+.decide{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px;border:1.5px solid var(--accent);border-radius:4px;background:var(--accent-soft)}
+.decide label{font-weight:600;font-size:14px}
+.decide input,.decide select{width:110px}
+.decide select#beta{width:auto;max-width:100%}
+.decide .sug{font-size:13px;color:var(--muted)}
+.note{font-size:13px;border-left:3px solid var(--warn);padding:6px 10px;background:var(--warn-soft);color:var(--ink);border-radius:0 4px 4px 0}
+.note.extra{border-left-color:var(--accent);background:var(--accent-soft)}
+footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px}
+@media (prefers-reduced-motion:no-preference){.res,.pill{transition:filter .25s ease}}
+ </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="mute.css">
+
+<div class="wrap">
+<a href="index.html#H" style="display:inline-flex;align-items:center;margin-bottom:14px;font:600 14px var(--sans);color:var(--panel);background:var(--ink);border:1px solid var(--ink);border-radius:6px;padding:6px 14px 6px 11px;text-decoration:none">← Menú de calculadoras</a>
+<header class="top mat-H">
+  <div>
+    <div class="mbadge">ZC</div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Hormigón · Cimentaciones superficiales</small>Zapata centrada</h1></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+    <label class="mode" for="practica"><input type="checkbox" id="practica"> Modo práctica: ocultar resultados</label>
+    <div class="hint" style="margin:0">Calcula tú, escribe tu resultado en cada paso y comprueba.</div>
+    <div class="src">Procedimiento de <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo).</div>
+  </div>
+</header>
+
+<div class="grid">
+<aside>
+  <div class="box">
+    <h2>Datos de partida</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"><button type="button" id="clear">Limpiar datos</button></div>
+    <div class="field"><label for="Nk">Axil característico N<sub>k</sub> (sin mayorar)</label><input id="Nk" type="number" step="any"><span class="u">kN</span></div>
+    <label class="chk" style="padding-block:7px;border-bottom:1px dashed var(--line)"><input type="checkbox" id="inc" checked> Aumentar N<sub>k</sub> un 20 % para el área</label>
+    <div class="field"><label for="sig">Tensión admisible σ<sub>adm</sub></label><input id="sig" type="number" step="any"><span class="u">kN/m²</span></div>
+    <div class="field"><label for="l">Lado del pilar l</label><input id="l" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="phiP">Diámetro armadura del pilar φ</label><input id="phiP" type="number" step="any"><span class="u">mm</span></div>
+    <div class="field"><label for="fyk">Límite elástico acero f<sub>yk</sub></label><select id="fyk"><option value="400">400 (B400S)</option><option value="500" selected>500 (B500S)</option></select><span class="u">N/mm²</span></div>
+    <div class="field"><label for="fck">Hormigón f<sub>ck</sub></label><select id="fck"><option value="25" selected>25 (HA-25)</option><option value="30">30 (HA-30)</option></select><span class="u">N/mm²</span></div>
+    <details class="helper">
+      <summary>¿No tienes N<sub>k</sub>? Estímalo</summary>
+      <p class="hint">N<sub>k</sub> ≈ nº de plantas × área de influencia × carga total sin mayorar</p>
+      <div class="field"><label for="hp">Nº de plantas</label><input id="hp" type="number"><span class="u"></span></div>
+      <div class="field"><label for="ha">Área de influencia</label><input id="ha" type="number" step="any"><span class="u">m²</span></div>
+      <div class="field"><label for="hq">Carga superficial</label><input id="hq" type="number" step="any"><span class="u">kN/m²</span></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:6px"><span class="f" id="hres"></span><button type="button" id="huse" class="ghost">Usar</button></div>
+    </details>
+    <p class="hint">Escribe los datos de tu ejercicio. «Limpiar datos» lo deja todo en blanco para empezar otro.</p>
+  </div>
+  <div class="box">
+    <h2>Comprobaciones extra</h2>
+    <label class="chk"><input type="checkbox" id="useMin" checked> Aplicar armadura mínima</label>
+    <p class="hint">Arroyo insiste: «No olvidar comprobar la armadura mínima».</p>
+  </div>
+</aside>
+
+<main>
+  <section>
+    <div class="summary" id="summary"></div>
+    <div class="drawing">
+      <div class="box"><h3>Sección</h3><svg id="sec" viewBox="0 0 360 230" role="img" aria-label="Sección de la zapata"></svg></div>
+      <div class="box"><h3>Planta</h3><svg id="pl" viewBox="0 0 360 230" role="img" aria-label="Planta de la zapata"></svg></div>
+    </div>
+  </section>
+
+  <article class="step" id="s1">
+    <div class="step-h"><span class="num">1</span><h2>Área y lado de la zapata</h2><span class="tag" id="t1"></span></div>
+    <div class="step-b">
+      <p class="why">La zapata reparte el axil del pilar sobre el terreno. Buscamos la superficie que hace que la tensión no supere la admisible. Se usa N<sub>k</sub> sin mayorar porque la σ<sub>adm</sub> ya lleva incluido un coeficiente de seguridad (σ<sub>adm</sub> ≈ σ<sub>rotura</sub>/3). Para el área el axil se aumenta un 20 %: así se cubren el peso propio de la zapata, las tierras que tiene encima y los pequeños momentos, que todavía no conocemos. En el paso 3 se comprueba con el peso real.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Área necesaria</span><span class="f" id="f11"></span></div>
+        <div class="row"><span class="k">Lado teórico</span><span class="f" id="f12"></span></div>
+      </div>
+      <div class="decide"><label for="aDef">Lado definitivo a</label><input id="aDef" type="number" step="0.05" placeholder="auto"><span class="u">m</span><span class="sug" id="sug1"></span></div>
+      <div class="calc">
+        <div class="row"><span class="k">Vuelo</span><span class="f" id="f13"></span></div>
+      </div>
+      <div class="try"><span>Tu lado teórico:</span><input type="number" step="any" id="try1" aria-label="Tu lado teórico en metros"><span class="u">m</span><span id="c1"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s2">
+    <div class="step-h"><span class="num">2</span><h2>Canto de la zapata</h2><span class="tag" id="t2"></span></div>
+    <div class="step-b">
+      <p class="why">El canto se elige como el mayor de tres condiciones. <b>Mínimo constructivo</b>: 50 cm. <b>Anclaje</b>: las barras del pilar tienen que poder anclarse dentro de la zapata. <b>Rigidez</b>: si el vuelo no pasa de dos veces el canto (v ≤ 2h), la zapata es rígida: la carga baja por bielas comprimidas hasta el terreno. Por eso h = v/2. Para predimensionar, la armamos con el equilibrio de media zapata (pasos 4 y 5) y lo comparamos con el modelo de bielas y tirantes (paso 6).</p>
+      <div class="calc">
+        <div class="row"><span class="k">h mínimo</span><span class="f" id="f21"></span></div>
+        <div class="row"><span class="k">h por anclaje</span><span class="f" id="f22"></span></div>
+        <div class="row"><span class="k">h por vuelo</span><span class="f" id="f23"></span></div>
+      </div>
+      <div class="decide"><label for="hDef">Canto definitivo h</label><input id="hDef" type="number" step="5" placeholder="auto"><span class="u">cm</span><span class="sug" id="sug2"></span></div>
+      <div class="note">En <em>Números gordos</em> (Arroyo) la condición de anclaje es 10φ² + 10, porque la longitud se reduce a 2/3 al estar la zona multicomprimida. En la asignatura usamos 15φ² + 10, que queda del lado de la seguridad. φ va en cm.</div>
+      <div class="try"><span>Tu canto definitivo:</span><input type="number" step="any" id="try2" aria-label="Tu canto en centímetros"><span class="u">cm</span><span id="c2"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s6">
+    <div class="step-h"><span class="num">3</span><h2>Comprobación del terreno con el peso propio</h2><span class="tag" id="t6"></span></div>
+    <div class="step-b">
+      <p class="why">Ya conocemos a y h, así que podemos calcular lo que pesa la zapata (hormigón armado: 25 kN/m³). El terreno recibe el axil del pilar más ese peso, todo sin mayorar. Aquí se usa N<sub>k</sub> sin el 20 %: el aumento era solo una previsión y ahora la sustituimos por el peso real. Si no cumple, se aumenta el lado y se repite.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Peso de la zapata</span><span class="f" id="f61"></span></div>
+        <div class="row"><span class="k">Tensión en el terreno</span><span class="f" id="f62"></span></div>
+        <div class="row"><span class="k">Peso frente al axil</span><span class="f" id="f63"></span></div>
+      </div>
+      <div class="note extra">El peso propio cuenta para el terreno, pero no para el armado: baja directamente al suelo y no flexiona la zapata. Por eso los pasos 4 a 7 no lo usan. Si hay tierras o solera sobre la zapata, su peso se sumaría aquí.</div>
+      <div class="try"><span>Tu tensión en el terreno:</span><input type="number" step="any" id="try6" aria-label="Tu tensión en kN/m²"><span class="u">kN/m²</span><span id="c6"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s3">
+    <div class="step-h"><span class="num">4</span><h2>Momento flector de cálculo</h2><span class="tag"></span></div>
+    <div class="step-b">
+      <p class="why">Se trata cada mitad de la zapata como un voladizo desde el eje del pilar. La carga es σ<sub>adm</sub> sobre media zapata (a × a/2), con su resultante a a/4 del eje. Así, M = σ·a·(a/2)·(a/4) = σ·a³/8. Se mayora con γ<sub>f</sub> = 1,5. Usar σ<sub>adm</sub> en lugar de la tensión real y medir desde el eje queda del lado de la seguridad: es un número «gordo». El peso propio de la zapata no interviene.</p>
+      <div class="calc">
+        <div class="row"><span class="k">M<sub>d</sub> (toda la zapata)</span><span class="f" id="f31"></span></div>
+      </div>
+      <div class="try"><span>Tu M<sub>d</sub>:</span><input type="number" step="any" id="try3" aria-label="Tu momento de cálculo en kN·m"><span class="u">kN·m</span><span id="c3"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s4">
+    <div class="step-h"><span class="num">5</span><h2>Armadura necesaria</h2><span class="tag" id="t4"></span></div>
+    <div class="step-b">
+      <p class="why">El momento lo resiste el par que forman la armadura inferior (tracción) y el hormigón comprimido. Se toma un brazo mecánico aproximado de 0,8·h. El acero trabaja a f<sub>yd</sub> = f<sub>yk</sub>/1,15. Unidades: con M<sub>d</sub> en kN·m, h en m y f<sub>yd</sub> en N/mm², el factor ·10 da A<sub>s</sub> en cm².</p>
+      <div class="calc">
+        <div class="row"><span class="k">f<sub>yd</sub></span><span class="f" id="f40"></span></div>
+        <div class="row"><span class="k">A<sub>s</sub> de cálculo</span><span class="f" id="f41"></span></div>
+        <div class="row" id="rmin"><span class="k">A<sub>s,mín</sub> geométrica</span><span class="f" id="f42"></span></div>
+        <div class="row"><span class="k">A<sub>s</sub> a disponer</span><span class="f" id="f43"></span></div>
+      </div>
+      <div class="note extra">Armadura mínima geométrica: 1,8 ‰ de la sección a·h con B 500 S (2,0 ‰ con B 400 S), pensada para repartirse entre las dos caras. En una zapata centrada solo se arma la cara inferior, así que se toma la mitad: 0,9 ‰ (1,0 ‰ con B 400 S), en cada dirección.</div>
+      <div class="try"><span>Tu A<sub>s</sub> de cálculo:</span><input type="number" step="any" id="try4" aria-label="Tu armadura en cm²"><span class="u">cm²</span><span id="c4"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s9">
+    <div class="step-h"><span class="num">6</span><h2>Comparación: bielas y tirantes</h2><span class="tag" id="t9"></span></div>
+    <div class="step-b">
+      <p class="why">En una zapata rígida la carga del pilar no «flecta» la zapata: baja por dos bielas comprimidas inclinadas hasta el centro de cada mitad, y la armadura inferior hace de tirante que las ata. Cada mitad recibe R<sub>d</sub> = N<sub>d</sub>/2, aplicada a a/4 del eje; la biela sale del pilar a a′/4 del eje y el brazo entre tirante y biela es 0,85·d. Del equilibrio, T<sub>d</sub>·0,85·d = (N<sub>d</sub>/2)·(a − a′)/4, es decir, T<sub>d</sub> = N<sub>d</sub>·(a − a′)/(6,8·d). Aquí se usa la carga real del pilar, N<sub>d</sub> = 1,5·N<sub>k</sub> (sin el 20 % ni el peso propio), y el acero del tirante se limita a 400 N/mm² para controlar la fisuración.</p>
+      <div class="scheme-w"><svg class="scheme" width="340" height="136" viewBox="0 0 300 120" role="img" aria-label="Esquema de bielas y tirantes: dos bielas desde el pilar hasta a/4 de cada mitad y el tirante en la cara inferior">
+        <rect x="130" y="4" width="40" height="34" fill="var(--concrete)" stroke="var(--concrete-edge)"/>
+        <rect x="20" y="38" width="260" height="56" fill="var(--concrete)" stroke="var(--concrete-edge)"/>
+        <line x1="140" y1="40" x2="85" y2="84" stroke="var(--accent)" stroke-width="3" stroke-dasharray="6 3"/>
+        <line x1="160" y1="40" x2="215" y2="84" stroke="var(--accent)" stroke-width="3" stroke-dasharray="6 3"/>
+        <line x1="34" y1="84" x2="266" y2="84" stroke="var(--rebar)" stroke-width="3"/>
+        <g stroke="var(--muted)" stroke-width="1"><line x1="85" y1="96" x2="85" y2="112"/><line x1="215" y1="96" x2="215" y2="112"/></g>
+        <path d="M85 96 l-4 7 h8 z M215 96 l-4 7 h8 z" fill="var(--muted)"/>
+        <text x="85" y="108" text-anchor="end" dx="-8" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--muted)">N<tspan font-size="8" dy="2">d</tspan><tspan dy="-2">/2</tspan></text>
+        <text x="215" y="108" dx="8" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--muted)">N<tspan font-size="8" dy="2">d</tspan><tspan dy="-2">/2</tspan></text>
+        <text x="150" y="80" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--rebar)">tirante T<tspan font-size="8" dy="2">d</tspan></text>
+        <text x="106" y="58" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--accent)">biela</text><text x="194" y="58" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--accent)">biela</text>
+      </svg></div>
+      <div class="calc">
+        <div class="row"><span class="k">Canto útil</span><span class="f" id="f91"></span></div>
+        <div class="row"><span class="k">Tracción del tirante</span><span class="f" id="f92"></span></div>
+        <div class="row"><span class="k">A<sub>s</sub> por bielas</span><span class="f" id="f93"></span></div>
+        <div class="row"><span class="k">Frente al paso 5</span><span class="f" id="f94"></span></div>
+      </div>
+      <div class="note">Este paso es de comparación: el armado de los pasos siguientes sigue usando el A<sub>s</sub> del paso 5, que queda del lado de la seguridad porque usa σ<sub>adm</sub> en lugar de la tensión real, mide desde el eje del pilar y no descuenta a′/4. Los dos caminos dan la misma fuerza en el centro de la zapata cuando se usan las mismas cargas y brazos.</div>
+      <div class="try"><span>Tu A<sub>s</sub> por bielas:</span><input type="number" step="any" id="try9" aria-label="Tu armadura por bielas en cm²"><span class="u">cm²</span><span id="c9"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s5">
+    <div class="step-h"><span class="num">7</span><h2>Número de redondos</h2><span class="tag" id="t5"></span></div>
+    <div class="step-b">
+      <p class="why">Se elige un diámetro, se calcula cuántas barras cubren A<sub>s</sub> y se redondea hacia arriba. La misma armadura se dispone en las dos direcciones, en la cara inferior y con patilla en los extremos.</p>
+      <div class="decide"><label for="phi">Diámetro Ø</label><select id="phi"><option>12</option><option>16</option><option>20</option><option>25</option></select><span class="u">mm</span></div>
+      <div class="calc">
+        <div class="row"><span class="k">Área de un redondo</span><span class="f" id="f51"></span></div>
+        <div class="row"><span class="k">Nº de redondos</span><span class="f" id="f52"></span></div>
+      </div>
+      <div class="decide"><label for="nDef">Nº definitivo</label><input id="nDef" type="number" step="1" min="2" placeholder="auto"><span class="sug" id="sug5"></span></div>
+      <div class="calc">
+        <div class="row"><span class="k">A<sub>s,real</sub> dispuesta</span><span class="f" id="f54"></span></div>
+      </div>
+      <div class="note extra">En cimientos el diámetro mínimo es Ø12 (Guía CE 9.6).</div>
+      <div class="try"><span>Tu nº de redondos:</span><input type="number" step="1" id="try5" aria-label="Tu número de redondos"><span id="c5"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s7">
+    <div class="step-h"><span class="num">8</span><h2>Separación entre barras</h2><span class="tag" id="t7"></span></div>
+    <div class="step-b">
+      <p class="why">Al lado de la zapata se le restan los dos recubrimientos laterales (r = 5 cm) y el ancho que ocupan las barras puestas una al lado de otra (nº · Ø). Lo que queda se reparte entre los huecos, que son una barra menos. Entre 10 y 30 cm la separación es razonable para hormigonar y controlar la fisuración.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Separación</span><span class="f" id="f71"></span></div>
+      </div>
+      <div class="note extra">Ø es el <b>diámetro</b> de la barra (en cm), no su área: nº · Ø es el ancho que ocupan las barras.</div>
+      <div class="try"><span>Tu separación:</span><input type="number" step="any" id="try7" aria-label="Tu separación en centímetros"><span class="u">cm</span><span id="c7"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s8">
+    <div class="step-h"><span class="num">9</span><h2>Longitud de anclaje (posición I)</h2><span class="tag" id="t8"></span></div>
+    <div class="step-b">
+      <p class="why">Las barras de la zapata tienen que anclarse en los extremos. Primero se calcula la longitud básica en posición I (barras abajo, buena adherencia): la mayor de m·Ø² y f<sub>yk</sub>/20·Ø, con Ø en mm. Después la longitud neta, que se reduce con la forma del anclaje (β) y con el acero que sobra respecto al necesario (A<sub>s</sub>/A<sub>s,real</sub>). En una zapata rígida, si las barras se mantienen en toda la longitud, el anclaje es correcto cuando l<sub>b,neta</sub> ≤ a/4 (Guía CE 9.6.1); si no, hay que poner patilla o bajar el diámetro.</p>
+      <div class="decide"><label for="beta">Terminación</label><select id="beta"><option value="0.7" selected>Patilla o gancho (β = 0,7)</option><option value="1">Prolongación recta (β = 1)</option></select></div>
+      <div class="calc">
+        <div class="row"><span class="k">Coeficiente m</span><span class="f" id="f81"></span></div>
+        <div class="row"><span class="k">l<sub>bI</sub> básica</span><span class="f" id="f82"></span></div>
+        <div class="row"><span class="k">l<sub>b,neta</sub></span><span class="f" id="f83"></span></div>
+        <div class="row"><span class="k">Mínimos</span><span class="f" id="f84"></span></div>
+        <div class="row"><span class="k">Zapata rígida</span><span class="f" id="f85"></span></div>
+      </div>
+      <div class="note extra">m según la tabla 66.5.2.a de la EHE-08: HA-25 → 1,2 (B 400 S) y 1,5 (B 500 S); HA-30 → 1,0 y 1,3. La longitud neta no puede bajar de 10Ø, 15 cm ni l<sub>b</sub>/3.</div>
+      <div class="try"><span>Tu l<sub>b,neta</sub>:</span><input type="number" step="any" id="try8" aria-label="Tu longitud de anclaje neta en centímetros"><span class="u">cm</span><span id="c8"></span></div>
+    </div>
+  </article>
+
+  <div class="box" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px"><p style="margin:0;flex:1 1 240px;font-size:13.5px;color:var(--muted)">Ya sabes cuánto mide y cómo se arma. ¿Y cómo se construye? Repasa el proceso de ejecución paso a paso.</p><a href="proceso-zapata.html" style="font:600 14px var(--sans);color:var(--panel);background:var(--bad);border:1px solid var(--bad);border-radius:4px;padding:9px 16px;text-decoration:none">Proceso constructivo</a></div>
+
+  <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con la Guía de aplicación del Código Estructural y el DB SE-C. Unidades: kN, m, cm, mm y N/mm². Errores o sugerencias: <a href="mailto:jaimevergara@ugr.es">jaimevergara@ugr.es</a>. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const nf=(x,d=2)=>isFinite(x)?x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const v=id=>parseFloat($(id).value);
+const R=s=>`<span class="res">${s}</span>`;
+const G=s=>`<span class="gen">${s}</span>`;
+const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+let last={};
+
+function check(tryId,outId,val,tol){
+  const t=parseFloat(String($(tryId).value).replace(',','.'));
+  if(!isFinite(t)){$(outId).innerHTML='';return;}
+  const ok=Math.abs(t-val)<=Math.max(Math.abs(val)*tol,1e-9);
+  $(outId).innerHTML=ok?pill('ok','Correcto'):pill('bad','Revisa: no coincide');
+}
+
+const OUT=['f91','f92','f93','f94','t9','c9','f85','f54','f71','f81','f82','f83','f84','t7','t8','c7','c8','f11','f12','f13','f21','f22','f23','f61','f62','f63','f31','f40','f41','f42','f43','f51','f52','f53','t1','t2','t6','t4','t5','c1','c2','c3','c4','c5','c6'];
+function empty(){
+  OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
+  ['sug1','sug2','sug5'].forEach(id=>$(id).textContent='');
+  $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce N<sub>k</sub>, σ<sub>adm</sub>, el lado del pilar y φ</span></div>';
+  $('sec').innerHTML='';$('pl').innerHTML='';
+}
+function calc(){
+  const Nk=v('Nk'),sig=v('sig'),l=v('l'),phiP=v('phiP'),fyk=v('fyk');
+  if(!(Nk>0&&sig>0&&l>0&&phiP>0)){empty();return;}
+  // Paso 1
+  const inc=$('inc').checked, Na=inc?1.2*Nk:Nk;
+  const A=Na/sig, aT=Math.sqrt(A);
+  const aSug=Math.ceil(aT/0.05-1e-9)*0.05;
+  const aIn=parseFloat($('aDef').value);
+  const a=isFinite(aIn)&&aIn>0?aIn:aSug;
+  const vu=(a-l)/2;
+    $('f11').innerHTML=inc?`${G('A = 1,2·N<sub>k</sub>/σ<sub>adm</sub>')} = 1,2·${nf(Nk)}/${nf(sig,0)} = ${R(nf(A,3)+' m²')}`:`${G('A = N<sub>k</sub>/σ<sub>adm</sub>')} = ${nf(Nk)}/${nf(sig,0)} = ${R(nf(A,3)+' m²')}`;
+  $('f12').innerHTML=`${G('a = √A')} = √${nf(A,3)} = ${R(nf(aT,3)+' m')}`;
+  $('sug1').textContent=`Sugerido: ${nf(aSug)} m (múltiplo de 5 cm por exceso)`;
+  $('f13').innerHTML=`${G('v = (a − l)/2')} = (${nf(a)} − ${nf(l)})/2 = ${R(nf(vu,3)+' m')}`;
+  $('t1').innerHTML=a<aT-1e-9?pill('bad','a menor que el teórico'):pill('ok',`a = ${nf(a)} m`);
+
+  // Paso 2
+  const hmin=50, hanc=15*Math.pow(phiP/10,2)+10, hv=100*vu/2;
+  const hmax=Math.max(hmin,hanc,hv);
+  const hSug=Math.ceil(hmax/5-1e-9)*5;
+  const hIn=parseFloat($('hDef').value);
+  const h=isFinite(hIn)&&hIn>0?hIn:hSug;
+  const mark=(x)=>x===hmax?' '+pill('info','condiciona'):'';
+  $('f21').innerHTML=`${G('h<sub>mín</sub>')} = ${R('50 cm')}${mark(hmin)}`;
+  $('f22').innerHTML=`${G('h = 15·φ² + 10')} = 15·${nf(phiP/10,1)}² + 10 = ${R(nf(hanc,1)+' cm')}${mark(hanc)}`;
+  $('f23').innerHTML=`${G('h = v/2')} = ${nf(vu*100,1)}/2 = ${R(nf(hv,1)+' cm')}${mark(hv)}`;
+  $('sug2').textContent=`Sugerido: ${hSug} cm (el mayor, redondeado a 5 cm)`;
+  const rigid=vu*100<=2*h+1e-9;
+  $('t2').innerHTML=h<hmax-1e-9?pill('bad','h insuficiente'):(rigid?pill('ok','Rígida: v ≤ 2h'):pill('warn','Flexible: v > 2h'));
+
+  // Comprobación del terreno
+  const P=25*a*a*h/100, sReal=(Nk+P)/(a*a), okT=sReal<=sig+1e-9;
+  $('f61').innerHTML=`${G('P = 25·a²·h')} = 25·${nf(a)}²·${nf(h/100)} = ${R(nf(P,1)+' kN')}`;
+  $('f62').innerHTML=`${G('σ = (N<sub>k</sub> + P)/a²')} = (${nf(Nk)} + ${nf(P,1)})/${nf(a)}² = ${R(nf(sReal,1)+' kN/m²')} `+(okT?pill('ok','≤ σadm'):pill('bad','> σadm: aumenta a'));
+  $('f63').innerHTML=`${G('P/N<sub>k</sub>')} = ${nf(P,1)}/${nf(Nk)} = ${R(nf(100*P/Nk,1)+' %')} `+pill('info',inc?'previsto: 20 %':'sin previsión');
+  $('t6').innerHTML=okT?pill('ok','Cumple'):pill('bad','No cumple');
+
+  // Paso 3
+  const Md=1.5*sig*a*a*a/8;
+  $('f31').innerHTML=`${G('M<sub>d</sub> = 1,5·σ<sub>adm</sub>·a³/8')} = 1,5·${nf(sig,0)}·${nf(a)}³/8 = ${R(nf(Md)+' kN·m')}`;
+
+  // Paso 4
+  const fyd=fyk/1.15;
+  const As=10*Md/(0.8*h*fyk/115);
+  const rho=fyk>=500?0.0018:0.0020;
+  const half=true, useMin=$('useMin').checked;
+  const Asmin=rho*(a*100)*h*(half?0.5:1);
+  const Asd=useMin?Math.max(As,Asmin):As;
+  $('f40').innerHTML=`${G('f<sub>yd</sub> = f<sub>yk</sub>/1,15')} = ${fyk}/1,15 = ${R(nf(fyd)+' N/mm²')}`;
+  $('f41').innerHTML=`${G('A<sub>s</sub> = M<sub>d</sub>/(0,8·h·f<sub>yd</sub>)·10')} = ${nf(Md)}/(0,8·${nf(h/100)}·${nf(fyd)})·10 = ${R(nf(As)+' cm²')}`;
+  $('rmin').hidden=!useMin;
+  $('f42').innerHTML=`${G('ρ·a·h'+(half?'/2':''))} = ${nf(rho*1000,1)}‰·${nf(a*100,0)}·${nf(h,0)}${half?'/2':''} = ${R(nf(Asmin)+' cm²')}`;
+  $('f43').innerHTML=R(nf(Asd)+' cm²')+' '+(useMin?(Asmin>As?pill('warn','manda la mínima'):pill('ok','manda el cálculo')):'');
+  $('t4').innerHTML=pill('info',nf(Asd)+' cm²');
+
+  // Bielas y tirantes (comparación)
+  const Nd=1.5*Nk, dU=h-5, fydB=Math.min(fyd,400);
+  const Td=Nd*(a-l)/(6.8*dU/100), AsB=10*Td/fydB;
+  const dif=100*(AsB-As)/As;
+  $('f91').innerHTML=`${G('d = h − 5 cm')} = ${nf(h,0)} − 5 = ${R(nf(dU,0)+' cm')}`;
+  $('f92').innerHTML=`${G('T<sub>d</sub> = 1,5·N<sub>k</sub>·(a − a′)/(6,8·d)')} = 1,5·${nf(Nk)}·(${nf(a)} − ${nf(l)})/(6,8·${nf(dU/100)}) = ${R(nf(Td,1)+' kN')}`;
+  $('f93').innerHTML=`${G('A<sub>s</sub> = T<sub>d</sub>/f<sub>yd</sub>·10, con f<sub>yd</sub> ≤ 400')} = ${nf(Td,1)}/${nf(fydB,0)}·10 = ${R(nf(AsB)+' cm²')}`;
+  $('f94').innerHTML=`${G('bielas / equilibrio')} = ${nf(AsB)} / ${nf(As)} cm² → ${R((dif<0?'':'+')+nf(dif,0)+' %')}`;
+  $('t9').innerHTML=rigid?pill('info',`bielas: ${nf(AsB)} cm²`):pill('warn','Flexible: no aplica');
+
+  // Paso 5
+  const phi=v('phi');
+  const Ab=Math.PI*Math.pow(phi/20,2);
+  const nT=Asd/Ab;
+  const nSug=Math.max(2,Math.ceil(nT-1e-9));
+  const nIn=parseInt($('nDef').value,10);
+  const n=isFinite(nIn)&&nIn>=2?nIn:nSug;
+  const AsR=n*Ab;
+  const s=(a*100-10-n*phi/10)/(n-1);
+  $('f51').innerHTML=`${G('π·(Ø/20)²')} = π·(${phi}/20)² = ${R(nf(Ab,3)+' cm²')}`;
+  $('f52').innerHTML=`${G('n = A<sub>s</sub>/A<sub>Ø</sub>')} = ${nf(Asd)}/${nf(Ab,3)} = ${R(nf(nT))}`;
+  $('sug5').textContent=`Sugerido: ${nSug} Ø${phi} (redondeo por exceso)`;
+  const nOk=AsR>=Asd-1e-9;
+  $('f54').innerHTML=`${G('n·A<sub>Ø</sub>')} = ${n}·${nf(Ab,3)} = ${R(nf(AsR)+' cm²')} `+(nOk?pill('ok','≥ A<sub>s</sub>'):pill('bad','< A<sub>s</sub>: faltan barras'));
+  $('t5').innerHTML=nOk?pill('ok',`${n} Ø${phi}`):pill('bad','Faltan barras');
+  // Paso 7
+  $('f71').innerHTML=`${G('s = (a − 2r − n<sub>Ø</sub>·Ø)/(n<sub>Ø</sub> − 1)')} = (${nf(a*100,0)} − 2·5 − ${n}·${nf(phi/10,1)})/${n-1} = ${R(nf(s,1)+' cm')}`;
+  let t7;
+  if(s>30) t7=pill('warn','s > 30 cm: más barras o menor Ø');
+  else if(s<10) t7=pill('warn','s < 10 cm: mayor Ø');
+  else t7=pill('ok',`c/${nf(Math.floor(s+1e-9),0)} cm`);
+  $('t7').innerHTML=t7;
+  // Paso 8
+  const fck=v('fck'), beta=v('beta');
+  const mT={25:{400:1.2,500:1.5},30:{400:1.0,500:1.3}};
+  const m=(mT[fck]||mT[25])[fyk];
+  const l1=m*phi*phi, l2=fyk/20*phi, lb=Math.max(l1,l2);
+  const lbn=lb*beta*Asd/AsR;
+  const lmin=Math.max(10*phi,150,lb/3);
+  const lbnD=Math.max(lbn,lmin), lbnCm=Math.ceil(lbnD/10-1e-9);
+  $('f81').innerHTML=`HA-${fck} y B ${fyk} S → m = ${R(nf(m,1))}`;
+  $('f82').innerHTML=`${G('el mayor de m·Ø² ; f<sub>yk</sub>/20·Ø')} = ${nf(m,1)}·${phi}² = ${nf(l1,0)} ; ${fyk}/20·${phi} = ${nf(l2,0)} → ${R(nf(lb/10,1)+' cm')}`;
+  $('f83').innerHTML=`${G('l<sub>bI</sub>·β·A<sub>s</sub>/A<sub>s,real</sub>')} = ${nf(lb/10,1)}·${nf(beta,1)}·${nf(Asd)}/${nf(AsR)} = ${R(nf(lbn/10,1)+' cm')}`;
+  $('f84').innerHTML=`${G('10Ø ; 15 cm ; l<sub>b</sub>/3')} = ${nf(phi,0)} ; 15 ; ${nf(lb/30,1)} cm → `+(lbn>=lmin-1e-9?pill('ok','cumple'):pill('warn',`se toma ${nf(lmin/10,1)} cm`));
+  const lav=a*100/4, okAnc=lbnD/10<=lav+1e-9;
+  $('f85').innerHTML=`${G('l<sub>b,neta</sub> ≤ a/4')} → ${nf(lbnD/10,1)} ≤ ${nf(lav,1)} cm `+(okAnc?pill('ok','cumple'):pill('bad',beta<1?'no cumple: baja el Ø':'no cumple: usa patilla'));
+  $('t8').innerHTML=okAnc?pill('info',`l<sub>b,neta</sub> = ${lbnCm} cm`):pill('bad','Anclaje insuficiente');
+
+  // Resumen
+  $('summary').innerHTML=`
+    <div><span class="lab">Dimensiones</span><span class="big">${nf(a)} × ${nf(a)} × ${nf(h/100)} m</span></div>
+    <div><span class="lab">Armado inferior, ambas direcciones</span><span class="big">${n} Ø${phi} a ${nf(Math.floor(s+1e-9),0)} cm</span></div>
+    <div><span class="lab">Anclaje</span><span class="big">${beta<1?'patilla':'recta'} · ${lbnCm} cm</span></div>
+    <div><span class="lab">Tensión en el terreno</span><span class="big">${nf(sReal,0)} kN/m²</span></div>`;
+
+  last={aT,h,Md,As,s};
+  check('try1','c1',aT,0.01); check('try2','c2',h,0.001); check('try3','c3',Md,0.02); check('try4','c4',As,0.02); check('try5','c5',n,0.001); check('try7','c7',s,0.03); check('try8','c8',lbn/10,0.03); check('try6','c6',sReal,0.02); check('try9','c9',AsB,0.02);
+  draw(a,l,h,n,phi,vu);
+}
+
+function draw(a,l,h,n,phi,vu){
+  const sec=$('sec'), pl=$('pl');
+  // Sección
+  const W=300, x0=30, sc=W/a; // px por m
+  const hp=h/100*sc, lp=l*sc, top=70, colH=55;
+  const cx=x0+W/2;
+  let g='';
+  g+=`<rect x="${x0}" y="${top}" width="${W}" height="${hp}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/>`;
+  g+=`<rect x="${cx-lp/2}" y="${top-colH}" width="${lp}" height="${colH}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/>`;
+  // armadura
+  const cov=5/100*sc, yb=top+hp-cov;
+  g+=`<path d="M${x0+cov} ${top+hp*0.45} L${x0+cov} ${yb} L${x0+W-cov} ${yb} L${x0+W-cov} ${top+hp*0.45}" fill="none" stroke="var(--rebar)" stroke-width="2"/>`;
+  const nn=Math.min(n,40);
+  for(let i=0;i<nn;i++){const x=x0+cov+4+(W-2*cov-8)*(nn===1?0.5:i/(nn-1));g+=`<circle cx="${x}" cy="${yb-4}" r="2.4" fill="var(--rebar)"/>`;}
+  // cotas
+  const yd=top+hp+22;
+  g+=dim(x0,yd,x0+W,yd,`a = ${nf(a)} m`);
+  g+=dim(x0,top-12,cx-lp/2,top-12,`v = ${nf(vu)} m`,true);
+  g+=vdim(x0+W+14,top,top+hp,`h = ${nf(h,0)} cm`);
+  g+=`<text x="${cx}" y="${top-colH-6}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">pilar ${nf(l*100,0)}×${nf(l*100,0)}</text>`;
+  sec.setAttribute('viewBox',`0 0 360 ${Math.ceil(yd+22)}`);
+  sec.innerHTML=g;
+  // Planta
+  const S=190, px=(360-S)/2, py=14, sp=S/a;
+  let p=`<rect x="${px}" y="${py}" width="${S}" height="${S}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/>`;
+  const c=5/100*sp;
+  for(let i=0;i<nn;i++){const t=c+(S-2*c)*(nn===1?0.5:i/(nn-1));
+    p+=`<line x1="${px+t}" y1="${py+c}" x2="${px+t}" y2="${py+S-c}" stroke="var(--rebar)" stroke-width="1.3"/>`;
+    p+=`<line x1="${px+c}" y1="${py+t}" x2="${px+S-c}" y2="${py+t}" stroke="var(--rebar)" stroke-width="1.3" opacity=".75"/>`;}
+  const ls=l*sp;
+  p+=`<rect x="${px+S/2-ls/2}" y="${py+S/2-ls/2}" width="${ls}" height="${ls}" fill="var(--ink)" opacity=".8"/>`;
+  p+=dim(px,py+S+16,px+S,py+S+16,`${nf(a)} m`);
+  p+=`<text x="${px+S+10}" y="${py+S/2}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--rebar)">${n}Ø${phi}</text>`;
+  p+=`<text x="${px+S+10}" y="${py+S/2+14}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">cada dir.</text>`;
+  pl.setAttribute('viewBox',`0 0 360 ${py+S+34}`);
+  pl.innerHTML=p;
+}
+function dim(x1,y,x2,y2,t,small){
+  return `<g stroke="var(--muted)" stroke-width="1"><line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}"/><line x1="${x1}" y1="${y-4}" x2="${x1}" y2="${y+4}"/><line x1="${x2}" y1="${y-4}" x2="${x2}" y2="${y+4}"/></g><text x="${(x1+x2)/2}" y="${y-4}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="${small?10:11}" fill="var(--ink)">${t}</text>`;
+}
+function vdim(x,y1,y2,t){
+  return `<g stroke="var(--muted)" stroke-width="1"><line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}"/><line x1="${x-4}" y1="${y1}" x2="${x+4}" y2="${y1}"/><line x1="${x-4}" y1="${y2}" x2="${x+4}" y2="${y2}"/></g><text x="${x+6}" y="${y2+14}" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--ink)" text-anchor="end">${t}</text>`;
+}
+
+function helper(){
+  const r=v('hp')*v('ha')*v('hq');
+  $('hres').innerHTML=`N<sub>k</sub> ≈ ${nf(r)} kN`;
+  return r;
+}
+$('huse').addEventListener('click',()=>{const r=helper();if(isFinite(r)&&r>0){$('Nk').value=r.toFixed(2);calc();}});
+$('clear').addEventListener('click',()=>{
+  ['Nk','sig','l','phiP','hp','ha','hq','aDef','hDef','nDef','try1','try2','try3','try4','try5','try6','try7','try8','try9'].forEach(id=>{const e=$(id);if(e)e.value='';});
+  $('fyk').value='500';$('fck').value='25';$('phi').value='12';$('beta').value='0.7';$('inc').checked=true;$('useMin').checked=true;
+  helper();calc();$('Nk').focus();
+});
+['hp','ha','hq'].forEach(id=>$(id).addEventListener('input',helper));
+
+function practice(){
+  document.querySelector('.wrap').classList.toggle('practice',$('practica').checked);
+}
+$('practica').addEventListener('change',practice);
+document.querySelectorAll('input,select').forEach(el=>{if(!['practica','hp','ha','hq'].includes(el.id))el.addEventListener('input',calc);});
+helper();calc();
+})();
+</script>
+
+
+<script src="pdf.js"></script>
+</body></html>

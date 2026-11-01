@@ -1,0 +1,309 @@
+<!doctype html><html><head><meta charset=utf8>
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Forjado reticular C2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#eef0ee; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#cfd5d3;
+  --soft:#f5f7f6; --accent:#1f5f7a; --accent-soft:#e1edf2; --rebar:#b0392b;
+  --concrete:#d9dcd8; --concrete-edge:#8e9692;
+  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+    --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+    --concrete:#3a4446; --concrete-edge:#6e7b7d;
+    --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+  --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+  --concrete:#3a4446; --concrete-edge:#6e7b7d;
+  --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 60px}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--cond);font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance;letter-spacing:-.01em}
+.src{font-size:13px;color:var(--muted);max-width:44ch}
+.mode{display:flex;align-items:center;gap:10px;font-size:14px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:6px}
+.grid{display:grid;grid-template-columns:350px 1fr;gap:22px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;flex-direction:column;gap:14px}
+@media (max-width:860px){aside{position:static}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
+.box h2{font-family:var(--cond);font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--accent)}
+.field{display:grid;grid-template-columns:1fr 124px 46px;align-items:center;gap:8px;padding-block:5px;border-bottom:1px dashed var(--line)}
+.field:last-child{border-bottom:0}
+.field label{font-size:13.5px}
+.field .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
+input[type=number],select{width:100%;font-family:var(--mono);font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--soft);color:var(--ink);text-align:right}
+select{text-align:left}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+.helper{margin-top:10px;font-size:13px}
+.helper summary{cursor:pointer;color:var(--accent);font-weight:500}
+.helper .field{grid-template-columns:1fr 84px 46px}
+button{font-family:var(--sans);font-size:13px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:6px 12px;border-radius:4px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+.summary{background:var(--ink);color:var(--bg);border-radius:6px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:18px 32px;align-items:baseline}
+.summary .big{font-family:var(--cond);font-size:26px;font-weight:700;letter-spacing:.01em}
+.summary .lab{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;display:block}
+.drawing{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:620px){.drawing{grid-template-columns:1fr}}
+.drawing .box{padding:10px 12px}
+.drawing h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:500}
+svg{display:block;width:100%;height:auto}
+main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.step-h{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--soft)}
+.num{font-family:var(--mono);font-weight:600;font-size:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--accent);color:var(--accent);flex:none}
+.step-h h2{font-family:var(--cond);font-size:19px;margin:0;font-weight:700}
+.step-h .tag{margin-left:auto}
+.step-b{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.why{font-size:14px;color:var(--muted);max-width:70ch;margin:0}
+.calc{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 14px;align-items:baseline;padding:8px 10px;border-radius:4px;background:var(--soft)}
+@media (max-width:520px){.row{grid-template-columns:1fr}}
+.row .k{font-size:13.5px;font-weight:500}
+.f{font-family:var(--mono);font-size:13.5px;overflow-wrap:anywhere}
+.f .gen{color:var(--muted)}
+.f .res{color:var(--accent);font-weight:600}
+.f sub{font-size:.75em}
+.practice .res,.practice .sug,.practice .step-h .tag,.practice .summary,.practice .drawing svg,.practice .row .pill{filter:blur(7px);user-select:none}
+.try{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;border-top:1px dashed var(--line);padding-top:10px}
+.try input{width:110px}
+.pill{font-family:var(--mono);font-size:11.5px;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.info{background:var(--accent-soft);color:var(--accent)}
+.decide{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px;border:1.5px solid var(--accent);border-radius:4px;background:var(--accent-soft)}
+.decide label{font-weight:600;font-size:14px}
+.decide input,.decide select{width:110px}
+.decide .sug{font-size:13px;color:var(--muted)}
+.note{font-size:13px;border-left:3px solid var(--warn);padding:6px 10px;background:var(--warn-soft);color:var(--ink);border-radius:0 4px 4px 0}
+.note.extra{border-left-color:var(--accent);background:var(--accent-soft)}
+footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px}
+@media (prefers-reduced-motion:no-preference){.res,.pill{transition:filter .25s ease}}
+ </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="mute.css">
+
+<div class="wrap">
+<a href="index.html#H" style="display:inline-flex;align-items:center;margin-bottom:14px;font:600 14px var(--sans);color:var(--panel);background:var(--ink);border:1px solid var(--ink);border-radius:6px;padding:6px 14px 6px 11px;text-decoration:none">← Menú de calculadoras</a>
+<header class="top mat-H">
+  <div>
+    <div class="mbadge">FR</div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Hormigón · Estructura</small>Forjado reticular</h1></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+    <label class="mode" for="practica"><input type="checkbox" id="practica"> Modo práctica: ocultar resultados</label>
+    <div class="hint" style="margin:0">Calcula tú, escribe tu resultado en cada paso y comprueba.</div>
+    <div class="src">Ficha HB «Forjado bidireccional y losa» de <em>Cálculo rápido de estructuras</em> (S. Mute): método de los pórticos virtuales.</div>
+  </div>
+</header>
+
+<div class="grid">
+<aside>
+  <div class="box">
+    <h2>Datos de partida</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"><button type="button" id="clear">Limpiar datos</button></div>
+    <div class="field"><label for="q">Carga superficial q (sin mayorar)</label><input id="q" type="number" step="any"><span class="u">kN/m²</span></div>
+    <div class="field"><label for="L">Luz entre pilares L</label><input id="L" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="S">Ancho del pórtico virtual S</label><input id="S" type="number" step="any" placeholder="= L"><span class="u">m</span></div>
+    <div class="field"><label for="vano">Tipo de vano</label><select id="vano"><option value="int" selected>Interior</option><option value="ext">Extremo (borde apoyado)</option><option value="exte">Extremo (borde empotrado)</option></select><span class="u"></span></div>
+    <div class="field"><label for="ie">Intereje de nervios</label><input id="ie" type="number" step="any" placeholder="0,80"><span class="u">m</span></div>
+    <div class="field"><label for="c">Lado del pilar c</label><input id="c" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="fyk">Límite elástico acero f<sub>yk</sub></label><select id="fyk"><option value="400">400 (B400S)</option><option value="500" selected>500 (B500S)</option></select><span class="u">N/mm²</span></div>
+    <div class="field"><label for="fck">Hormigón f<sub>ck</sub></label><select id="fck"><option value="25" selected>25 (HA-25)</option><option value="30">30 (HA-30)</option></select><span class="u">N/mm²</span></div>
+    <p class="hint">Método válido con luces parecidas (de 7 a 10 m es lo habitual) y pilares alineados. «Limpiar datos» lo deja todo en blanco.</p>
+  </div>
+</aside>
+
+<main>
+  <section>
+    <div class="summary" id="summary"></div>
+    <div class="drawing">
+      <div class="box"><h3>Bandas del pórtico virtual</h3><svg id="pl" viewBox="0 0 360 240" role="img" aria-label="Planta con banda de soportes y banda central"></svg></div>
+      <div class="box"><h3>Reparto del momento</h3><svg id="sec" viewBox="0 0 360 240" role="img" aria-label="Reparto del momento isostático"></svg></div>
+    </div>
+  </section>
+
+  <article class="step" id="s1">
+    <div class="step-h"><span class="num">1</span><h2>Canto</h2><span class="tag" id="t1"></span></div>
+    <div class="step-b">
+      <p class="why">Como regla práctica, el canto está entre L/25 y L/20. Mute lo fija por deformación con la esbeltez de losas planas sin vigas: canto útil d ≥ L/λ, con λ = 24 para cuantías bajas, y h = d + 3 cm. Es habitual que h ≥ 30 cm.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Rango L/25 – L/20</span><span class="f" id="f11"></span></div>
+        <div class="row"><span class="k">Criterio de Mute</span><span class="f" id="f12"></span></div>
+      </div>
+      <div class="decide"><label for="hDef">Canto h</label><input id="hDef" type="number" step="0.05" placeholder="auto"><span class="u">m</span><span class="sug" id="sug1"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s2">
+    <div class="step-h"><span class="num">2</span><h2>Momento isostático del pórtico virtual</h2><span class="tag" id="t2"></span></div>
+    <div class="step-b">
+      <p class="why">El forjado se divide en pórticos virtuales de ancho S (entre centros de vano) en cada dirección. Cada pórtico se carga con q·S y su momento isostático es M<sub>0</sub> = 1,5·q·S·L²/8.</p>
+      <div class="calc"><div class="row"><span class="k">M<sub>0</sub></span><span class="f" id="f21"></span></div></div>
+      <div class="try"><span>Tu M<sub>0</sub>:</span><input type="number" step="any" id="try2" aria-label="Tu momento isostático"><span class="u">kN·m</span><span id="c2"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s3">
+    <div class="step-h"><span class="num">3</span><h2>Reparto entre apoyos y vano</h2><span class="tag" id="t3"></span></div>
+    <div class="step-b">
+      <p class="why">El isostático se reparte entre el momento negativo en los apoyos y el positivo en el vano. Vano interior: 0,65·M<sub>0</sub> en apoyos y 0,35·M<sub>0</sub> en vano. Vano extremo con borde apoyado: 0 en el borde, 0,63·M<sub>0</sub> en vano y 0,75·M<sub>0</sub> en el apoyo interior; con borde empotrado: 0,30, 0,52 y 0,70 (Mute).</p>
+      <div class="calc">
+        <div class="row"><span class="k">M<sup>−</sup> en apoyos</span><span class="f" id="f31"></span></div>
+        <div class="row"><span class="k">M<sup>+</sup> en vano</span><span class="f" id="f32"></span></div>
+      </div>
+    </div>
+  </article>
+
+  <article class="step" id="s4">
+    <div class="step-h"><span class="num">4</span><h2>Bandas y armado por nervio</h2><span class="tag" id="t4"></span></div>
+    <div class="step-b">
+      <p class="why">Cada pórtico se divide en una banda de soportes (S/2, sobre los pilares) y una banda central (S/2). La banda de soportes se lleva el 75 % del negativo y el 60 % del positivo; la central, el 25 % y el 40 %. El momento de cada banda se reparte entre sus nervios y se arma cada nervio: inferior con brazo 0,8·h y superior con 0,7·h (Mute).</p>
+      <div class="decide"><label for="phiI">Ø inferior</label><select id="phiI"><option>12</option><option selected>16</option><option>20</option></select><label for="phiS">Ø superior</label><select id="phiS"><option>12</option><option selected>16</option><option>20</option></select><span class="u">mm</span></div>
+      <div class="calc">
+        <div class="row"><span class="k">Nervios por banda</span><span class="f" id="f41"></span></div>
+        <div class="row"><span class="k">Soportes, superior</span><span class="f" id="f42"></span></div>
+        <div class="row"><span class="k">Soportes, inferior</span><span class="f" id="f43"></span></div>
+        <div class="row"><span class="k">Central, superior</span><span class="f" id="f44"></span></div>
+        <div class="row"><span class="k">Central, inferior</span><span class="f" id="f45"></span></div>
+      </div>
+      <div class="note extra">El brazo es 0,8·h para la armadura inferior y 0,7·h para la superior (Mute). Los nervios por banda se cuentan en el plano; aquí se estiman como (S/2)/intereje.</div>
+      <div class="try"><span>Tu armado superior por nervio en banda de soportes:</span><input type="number" step="any" id="try4" aria-label="Tu armadura en cm²"><span class="u">cm²</span><span id="c4"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s5">
+    <div class="step-h"><span class="num">5</span><h2>Punzonamiento en el ábaco</h2><span class="tag" id="t5"></span></div>
+    <div class="step-b">
+      <p class="why">Alrededor del pilar el forjado es macizo (ábaco). Primero se comprueba la compresión en la cara del pilar: β·V ≤ u<sub>0</sub>·d·0,3·f<sub>cd</sub>, con β = 1,15 en pilar interior. Después el perímetro crítico u<sub>1</sub> a 2d de la cara, con la resistencia mínima del hormigón sin armadura (como en la losa de cimentación). Si no cumple, hace falta armadura de punzonamiento o más canto.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Carga del pilar</span><span class="f" id="f51"></span></div>
+        <div class="row"><span class="k">Cara del pilar</span><span class="f" id="f52"></span></div>
+        <div class="row"><span class="k">Perímetro u<sub>1</sub></span><span class="f" id="f53"></span></div>
+      </div>
+      <div class="note extra">Se sigue el criterio de la Guía CE que usamos en la losa de cimentación, con el β de Mute.</div>
+    </div>
+  </article>
+
+  <div class="box" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px"><p style="margin:0;flex:1 1 240px;font-size:13.5px;color:var(--muted)">Ya sabes cuánto mide y cómo se arma el forjado reticular. ¿Y cómo se construye? Repasa el proceso de ejecución paso a paso.</p><a href="proceso-reticular.html" style="font:600 14px var(--sans);color:var(--panel);background:var(--bad);border:1px solid var(--bad);border-radius:4px;padding:9px 16px;text-decoration:none">Proceso constructivo</a></div>
+  <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con la Guía de aplicación del Código Estructural y el DB SE-C. Método de los pórticos virtuales; tampoco sustituye al cálculo según el Código Estructural (flecha, nervios de borde, zona maciza y armadura de punzonamiento). Unidades: kN, m, cm, mm y N/mm². Errores o sugerencias: <a href="mailto:jaimevergara@ugr.es">jaimevergara@ugr.es</a>. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const nf=(x,d=2)=>isFinite(x)?x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const v=id=>parseFloat($(id).value);
+const R=s=>`<span class="res">${s}</span>`;
+const G=s=>`<span class="gen">${s}</span>`;
+const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+function check(tryId,outId,val,tol){
+  const t=parseFloat(String($(tryId).value).replace(',','.'));
+  if(!isFinite(t)||!isFinite(val)){$(outId).innerHTML='';return;}
+  const ok=Math.abs(t-val)<=Math.max(Math.abs(val)*tol,1e-9);
+  $(outId).innerHTML=ok?pill('ok','Correcto'):pill('bad','Revisa: no coincide');
+}
+const OUT=['f11','f12','f21','f31','f32','f41','f42','f43','f44','f45','f51','f52','f53','t1','t2','t3','t4','t5','c2','c4'];
+function empty(){
+  OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
+  $('sug1').textContent='';
+  $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce q, L y el lado del pilar</span></div>';
+  $('sec').innerHTML='';$('pl').innerHTML='';
+}
+const up5=x=>Math.ceil(x/0.05-1e-9)*0.05;
+function calc(){
+  const q=v('q'),L=v('L'),c=v('c'),fyk=v('fyk'),fck=v('fck'),vano=$('vano').value;
+  const S=v('S')>0?v('S'):L, ie=v('ie')>0?v('ie'):0.80;
+  if(!(q>0&&L>0&&c>0)){empty();return;}
+  const hMute=L*100/24+3;
+  const hS=up5(Math.max(L/25,0.30)), hIn=v('hDef'), h=hIn>0?hIn:hS;
+  $('f11').innerHTML=`${G('L/25 a L/20')} = ${R(nf(L/25,3)+' a '+nf(L/20,3)+' m')}`;
+  $('f12').innerHTML=`${G('h = L/24 + 3 cm')} = ${nf(L*100,0)}/24 + 3 = ${R(nf(hMute,1)+' cm')}`;
+  $('sug1').textContent=`Sugerido: ${nf(hS)} m (L/25 redondeado, mínimo 30 cm)`;
+  $('t1').innerHTML=(h>=L/25-1e-9)?pill('ok',`h = ${nf(h*100,0)} cm`):pill('warn','h < L/25');
+  const fcd=fck/1.5, fyd=fyk/1.15;
+  const M0=1.5*q*S*L*L/8;
+  $('f21').innerHTML=`${G('M<sub>0</sub> = 1,5·q·S·L²/8')} = 1,5·${nf(q)}·${nf(S)}·${nf(L)}²/8 = ${R(nf(M0,1)+' kN·m')}`;
+  $('t2').innerHTML=pill('info',nf(M0,0)+' kN·m');
+  check('try2','c2',M0,0.02);
+  let kn,kp,kb;
+  if(vano==='int'){kn=0.65;kp=0.35;kb=0.65;}
+  else if(vano==='ext'){kn=0.75;kp=0.63;kb=0;}
+  else{kn=0.70;kp=0.52;kb=0.30;}
+  const Mn=kn*M0, Mp=kp*M0;
+  $('f31').innerHTML=`${G(`${nf(kn,2)}·M<sub>0</sub>`)} = ${R(nf(Mn,1)+' kN·m')}`+(vano!=='int'?` · borde: ${nf(kb,2)}·M<sub>0</sub> = ${nf(kb*M0,1)} kN·m`:'');
+  $('f32').innerHTML=`${G(`${nf(kp,2)}·M<sub>0</sub>`)} = ${R(nf(Mp,1)+' kN·m')}`;
+  $('t3').innerHTML=pill('info',`${nf(Mn,0)} / ${nf(Mp,0)}`);
+  const nb=Math.max(1,Math.round(S/2/ie));
+  const phiI=v('phiI'),phiS=v('phiS'),AI=Math.PI*Math.pow(phiI/20,2),AS=Math.PI*Math.pow(phiS/20,2);
+  const arm=(M,z,A,phi)=>{const m=M/nb, As=10*m/(z*h*fyd), n=Math.max(2,Math.ceil(As/A-1e-9));return {m,As,n,phi};};
+  const BPs=arm(0.75*Mn,0.7,AS,phiS), BPi=arm(0.60*Mp,0.8,AI,phiI), BCs=arm(0.25*Mn,0.7,AS,phiS), BCi=arm(0.40*Mp,0.8,AI,phiI);
+  $('f41').innerHTML=`${G('(S/2)/intereje')} = (${nf(S)}/2)/${nf(ie)} → ${R(nb+' nervios')}`;
+  const line=(o,k,zt)=>`${G(k)} → ${nf(o.m,1)} kN·m por nervio → ${G(`A<sub>s</sub> = M·10/(${zt}·h·f<sub>yd</sub>)`)} = ${R(nf(o.As)+' cm²')} → ${R(o.n+' Ø'+o.phi)}`;
+  $('f42').innerHTML=line(BPs,'0,75·M<sup>−</sup>','0,7');
+  $('f43').innerHTML=line(BPi,'0,60·M<sup>+</sup>','0,8');
+  $('f44').innerHTML=line(BCs,'0,25·M<sup>−</sup>','0,7');
+  $('f45').innerHTML=line(BCi,'0,40·M<sup>+</sup>','0,8');
+  $('t4').innerHTML=pill('info',`BS: ${BPs.n}Ø${phiS} sup · ${BPi.n}Ø${phiI} inf`);
+  check('try4','c4',BPs.As,0.02);
+  const d=h-0.03, V=1.5*q*L*L, beta=1.15;
+  const u0=4*c, V0lim=u0*d*0.3*fcd*1000, okC=beta*V<=V0lim;
+  const u1=4*c+4*Math.PI*d, A1=c*c+8*c*d+4*Math.PI*d*d;
+  const Vr=beta*(V-1.5*q*A1), k=Math.min(2,1+Math.sqrt(200/(d*1000))), vmin=0.035*Math.pow(k,1.5)*Math.sqrt(fck);
+  const vEd=Vr/(u1*d)/1000, ok1=vEd<=vmin;
+  $('f51').innerHTML=`${G('V = 1,5·q·L²')} = 1,5·${nf(q)}·${nf(L)}² = ${R(nf(V,1)+' kN')} · d = h − 3 cm = ${nf(d,2)} m`;
+  $('f52').innerHTML=`${G('β·V ≤ 4·c·d·0,3·f<sub>cd</sub>')} → ${nf(beta*V,1)} ≤ ${nf(V0lim,1)} kN `+(okC?pill('ok','cumple'):pill('bad','no cumple: más canto o capitel'));
+  $('f53').innerHTML=`u<sub>1</sub> = 4c + 4πd = ${nf(u1,3)} m · ${G('v = β·(V − 1,5·q·A<sub>1</sub>)/(u<sub>1</sub>·d)')} = ${R(nf(vEd,3)+' N/mm²')} ${ok1?'≤':'>'} v<sub>mín</sub> = ${nf(vmin,3)} `+(ok1?pill('ok','sin armadura'):pill('warn','necesita armadura de punzonamiento'));
+  $('t5').innerHTML=okC&&ok1?pill('ok','Cumple'):(okC?pill('warn','Armar punzonamiento'):pill('bad','No cumple'));
+  $('summary').innerHTML=`
+    <div><span class="lab">Canto</span><span class="big">${nf(h*100,0)} cm</span></div>
+    <div><span class="lab">Banda de soportes (por nervio)</span><span class="big">${BPs.n}Ø${phiS} sup · ${BPi.n}Ø${phiI} inf</span></div>
+    <div><span class="lab">Banda central (por nervio)</span><span class="big">${BCs.n}Ø${phiS} sup · ${BCi.n}Ø${phiI} inf</span></div>`;
+  draw(L,S);
+}
+function draw(L,S){
+  const sc=Math.min(280/L,200/S),W=L*sc,H=S*sc,x0=(360-W)/2,y0=14;
+  let p=`<rect x="${x0}" y="${y0}" width="${W}" height="${H/4}" fill="var(--rebar)" opacity=".18"/><rect x="${x0}" y="${y0+3*H/4}" width="${W}" height="${H/4}" fill="var(--rebar)" opacity=".18"/><rect x="${x0}" y="${y0+H/4}" width="${W}" height="${H/2}" fill="var(--accent)" opacity=".12"/>`;
+  p+=`<rect x="${x0}" y="${y0}" width="${W}" height="${H}" fill="none" stroke="var(--concrete-edge)"/>`;
+  [[x0,y0],[x0+W,y0],[x0,y0+H],[x0+W,y0+H]].forEach(([x,y])=>p+=`<rect x="${x-6}" y="${y-6}" width="12" height="12" fill="var(--ink)"/>`);
+  p+=`<text x="${x0+W/2}" y="${y0+H/8+4}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--rebar)">½ banda de soportes</text><text x="${x0+W/2}" y="${y0+H/2+4}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--accent)">banda central (S/2)</text><text x="${x0+W/2}" y="${y0+7*H/8+4}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--rebar)">½ banda de soportes</text>`;
+  p+=`<text x="${x0+W/2}" y="${y0+H+18}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--ink)">L = ${nf(L)} m · S = ${nf(S)} m</text>`;
+  $('pl').setAttribute('viewBox',`0 0 360 ${Math.ceil(y0+H+26)}`);$('pl').innerHTML=p;
+  const rows=[['M⁻ apoyos','75 % banda soportes','25 % banda central'],['M⁺ vano','60 % banda soportes','40 % banda central']];
+  let s='';rows.forEach((r,i)=>{const y=40+i*90;s+=`<text x="20" y="${y}" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="600" fill="var(--ink)">${r[0]}</text><rect x="20" y="${y+10}" width="${i?192:240}" height="20" fill="var(--rebar)" opacity=".35"/><rect x="${20+(i?192:240)}" y="${y+10}" width="${i?128:80}" height="20" fill="var(--accent)" opacity=".3"/><text x="24" y="${y+46}" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--rebar)">${r[1]}</text><text x="${i?216:264}" y="${y+46}" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--accent)">${r[2]}</text>`;});
+  $('sec').innerHTML=s;
+}
+$('clear').addEventListener('click',()=>{
+  ['q','L','S','ie','c','hDef','try2','try4'].forEach(id=>{$(id).value='';});
+  $('vano').value='int';$('fyk').value='500';$('fck').value='25';$('phiI').value='16';$('phiS').value='16';
+  calc();$('q').focus();
+});
+$('practica').addEventListener('change',()=>document.querySelector('.wrap').classList.toggle('practice',$('practica').checked));
+document.querySelectorAll('input,select').forEach(el=>{if(el.id!=='practica')el.addEventListener('input',calc);});
+calc();
+})();
+</script>
+
+<script src="pdf.js"></script>
+</body></html>

@@ -1,538 +1,138 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cabezada de Escalera · DB-SUA</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body><title>Predimensionado</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
 <style>
-  :root {
-    --bg: #F4F1EB;
-    --paper: #FFFDF8;
-    --ink: #1A1814;
-    --muted: #6B6560;
-    --ok: #1A6B3A;
-    --ok-light: #D4EDDA;
-    --danger: #C0392B;
-    --danger-light: #FADBD8;
-    --accent: #E67E22;
-    --blue: #1A5276;
-    --blue-light: #D6EAF8;
-    --grid: #E0DBD0;
-    --shadow: rgba(26,24,20,0.10);
+/* Layout: cabecera + rejilla de fichas agrupadas por tema; el propietario ve además una barra de configuración. */
+:root{
+  --bg:#eef0ee; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#cfd5d3;
+  --soft:#f5f7f6; --accent:#1f5f7a; --accent-soft:#e1edf2; --warn:#a86608; --warn-soft:#fbefd9;
+  --ok:#2f7a45; --ok-soft:#e3f1e7; --bad:#b0392b; --bad-soft:#f8e3e0;
+  --concrete:#d9dcd8; --concrete-edge:#8e9692; --soil:#e8dcc3; --soil-edge:#b9a77d;
+  --steel:#c3ccd4; --steel-edge:#5d6b77; --wood:#e6cc9f; --wood-edge:#a07a48;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+    --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --warn:#e3a849; --warn-soft:#3a2d15;
+    --ok:#6cc488; --ok-soft:#1c3325; --bad:#e5705f; --bad-soft:#3d1f1b;
+    --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#3b3626; --soil-edge:#7a6a46; --steel:#46525c; --steel-edge:#8a99a6; --wood:#4d3b25; --wood-edge:#9b7a50;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    font-family: 'Outfit', sans-serif;
-    color: var(--ink);
-    min-height: 100vh;
-    padding: 28px 20px 60px;
-  }
-  header {
-    text-align: center;
-    margin-bottom: 28px;
-  }
-  header h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(1.5rem, 3.5vw, 2.4rem);
-    letter-spacing: -0.3px;
-  }
-  header p {
-    font-size: 0.88rem;
-    color: var(--muted);
-    margin-top: 5px;
-    font-family: 'DM Mono', monospace;
-  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+  --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --warn:#e3a849; --warn-soft:#3a2d15;
+  --ok:#6cc488; --ok-soft:#1c3325; --bad:#e5705f; --bad-soft:#3d1f1b;
+  --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#3b3626; --soil-edge:#7a6a46; --steel:#46525c; --steel-edge:#8a99a6; --wood:#4d3b25; --wood-edge:#9b7a50;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:980px;margin:0 auto;padding-block:28px 60px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 20px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:26px}
+header>div{min-width:0}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--cond);font-weight:700;font-size:clamp(30px,5vw,44px);line-height:1.05;margin:4px 0 8px;text-wrap:balance;letter-spacing:-.01em}
+.lead{margin:0;color:var(--muted);max-width:62ch;font-size:14.5px}
+button{font-family:var(--sans);font-size:13px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:7px 14px;border-radius:4px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.adminbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;background:var(--warn-soft);border:1px solid var(--warn);border-radius:6px;padding:12px 14px;margin-bottom:22px}
+.adminbar p{margin:0;font-size:13.5px;flex:1 1 260px;min-width:0}
+.adminbar .btns{display:flex;gap:8px;flex-wrap:wrap}
+.status{flex-basis:100%;font-size:13px;margin:0}
+.status.bad{color:var(--bad)}
+section{margin-bottom:28px}
+h2{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.card{display:flex;flex-direction:column;gap:10px;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px;color:inherit;text-decoration:none}
+a.card:hover{border-color:var(--accent)}
+a.card:focus-visible{outline-offset:3px}
+.card h3{font-family:var(--cond);font-size:19px;line-height:1.15;margin:0;font-weight:700;text-align:center;text-wrap:balance}
+.ico{background:var(--soft);border-radius:4px;padding:8px}
+.ico svg{display:block;width:100%;height:auto}
+.ic-c{fill:var(--concrete);stroke:var(--concrete-edge);stroke-width:1.2}
+.ic-s{fill:var(--soil);stroke:var(--soil-edge);stroke-width:1.2}
+.ic-a{fill:var(--steel);stroke:var(--steel-edge);stroke-width:1.2}
+.ic-m{fill:var(--wood);stroke:var(--wood-edge);stroke-width:1.2}
+.mats{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+.mat{display:flex;flex-direction:column;gap:10px;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px;color:inherit;text-decoration:none}
+a.mat:hover{border-color:var(--accent)}
+a.mat:hover .ico{background:var(--accent-soft)}
+.mat h3{font-family:var(--cond);font-size:24px;line-height:1.1;margin:0;font-weight:700;text-align:center}
+.mat h3 .l{font-family:var(--mono);font-size:15px;color:var(--accent);margin-left:6px}
+.mat .n{font-family:var(--mono);font-size:12.5px;color:var(--muted);text-align:center}
+.mat.soon{background:transparent;border-style:dashed}
+.mat.soon .ico,.mat.soon h3{opacity:.55}
+.crumb{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin:-8px 0 22px}
+.crumb{align-items:center!important}
+.crumb a{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:14px;font-weight:600;color:var(--panel);background:var(--accent);border:1px solid var(--accent);border-radius:20px;padding:6px 14px 6px 11px;text-decoration:none}
+.crumb a:hover{filter:brightness(1.12)}
+.crumb b{font-family:var(--cond);font-size:22px}
+.crumb b span{font-family:var(--mono);font-size:14px;color:var(--accent);margin-left:4px}
+a.card:hover .ico{background:var(--accent-soft)}
+.cardwrap{display:flex;flex-direction:column;gap:6px;min-width:0}
+.cardwrap>a.card{flex:1}
+.cardwrap>.go,.card .go.pr{font-family:var(--sans);font-size:12.5px;color:var(--ink);font-weight:600;text-decoration:none;text-align:center;border:1px solid var(--ink);border-radius:4px;padding:5px 10px}
+.cardwrap>.go:hover,.card .go.pr:hover{background:var(--ink);color:#fff}
+.card .go{font-family:var(--mono);font-size:12.5px;color:var(--accent);font-weight:500;text-decoration:none;text-align:center}
+.card.off{background:transparent;border-style:dashed}
+.card.off h3,.card.off .ico{opacity:.55}
+.toggle{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:500;padding-bottom:8px;border-bottom:1px solid var(--line);cursor:pointer}
+.toggle input{width:20px;height:20px;accent-color:var(--accent);flex:none;margin:0}
+.badge{font-family:var(--mono);font-size:11px;border-radius:20px;padding:2px 8px;margin-left:auto;white-space:nowrap}
+.badge.on{background:var(--ok-soft);color:var(--ok)}
+.badge.off{background:var(--bad-soft);color:var(--bad)}
+.empty{background:var(--panel);border:1px dashed var(--line);border-radius:6px;padding:22px;color:var(--muted);font-size:14.5px}
+footer{margin-top:10px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
 
-  .wrap {
-    max-width: 900px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .card {
-    background: var(--paper);
-    border-radius: 16px;
-    box-shadow: 0 2px 14px var(--shadow);
-    overflow: hidden;
-  }
-  .card-title {
-    padding: 13px 20px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: white;
-    background: #2C2926;
-  }
-  .card-body { padding: 24px 20px; }
-
-  /* CONTROLS */
-  .controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    align-items: flex-end;
-    margin-bottom: 20px;
-  }
-  .control-group { display: flex; flex-direction: column; gap: 6px; }
-  .control-group label {
-    font-size: 0.78rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--muted);
-  }
-  .control-group .val-display {
-    font-family: 'DM Mono', monospace;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--blue);
-    min-width: 60px;
-  }
-  input[type=range] {
-    -webkit-appearance: none;
-    width: 160px;
-    height: 5px;
-    border-radius: 3px;
-    background: var(--grid);
-    outline: none;
-  }
-  input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    background: var(--blue);
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  }
-
-  /* STATUS */
-  .status-bar {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-  }
-  .status-pill {
-    padding: 8px 18px;
-    border-radius: 30px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    transition: all 0.3s;
-  }
-  .status-pill.ok { background: var(--ok-light); color: var(--ok); }
-  .status-pill.danger { background: var(--danger-light); color: var(--danger); }
-
-  /* TOOLTIP */
-  .tooltip {
-    position: fixed;
-    background: var(--ink);
-    color: #fff;
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-size: 0.82rem;
-    max-width: 240px;
-    line-height: 1.5;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.15s;
-    z-index: 999;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-  }
-  .tooltip.visible { opacity: 1; }
-  .tooltip strong { display: block; font-size: 0.9rem; margin-bottom: 3px; color: #FFD580; }
-
-  /* EXPLANATION */
-  .explanation {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 14px;
-    margin-top: 4px;
-  }
-  .exp-item {
-    background: var(--bg);
-    border-radius: 10px;
-    padding: 14px 16px;
-    font-size: 0.83rem;
-    line-height: 1.6;
-    border-left: 4px solid transparent;
-  }
-  .exp-item h4 {
-    font-size: 0.76rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--muted);
-    margin-bottom: 5px;
-  }
-  .exp-item.blue { border-color: var(--blue); }
-  .exp-item.orange { border-color: var(--accent); }
-  .exp-item.green { border-color: var(--ok); }
-
-  @media (max-width: 600px) {
-    .explanation { grid-template-columns: 1fr; }
-    .controls { gap: 16px; }
-  }
+/* Estética inspirada en las fichas de «Cálculo rápido de estructuras» (S. Mute): franjas de color por material, códigos en recuadro y barras negras. */
+:root{--band-h:#dedede;--band-a:#b9cde5;--band-m:#e9cdb6;--beige:#efede4;--bar:#111;
+  --sans:"Open Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--cond:"Open Sans",system-ui,sans-serif;--mono:"Open Sans",system-ui,sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--band-h:#3a3f42;--band-a:#2c3d52;--band-m:#4a3a2c;--beige:#2a2a24;--bar:#000}}
+:root[data-theme="dark"]{--band-h:#3a3f42;--band-a:#2c3d52;--band-m:#4a3a2c;--beige:#2a2a24;--bar:#000}
+body{background:var(--panel)}
+.wrap{padding-top:0}
+header{display:block;border:0;margin:0 calc(50% - 50vw) 22px;padding:26px calc(50vw - 50% + 0px) 20px;background:var(--band-cur,var(--band-h))}
+header>div{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.badge-big{flex:none;width:86px;height:86px;border:5px solid var(--ink);border-radius:16px;background:var(--accent-mute,#6d9bd1);display:grid;place-items:center;font:800 38px/1 var(--sans);color:var(--ink);letter-spacing:-.02em}
+.htxt{min-width:0}
+.eyebrow{font:400 14px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:right;margin-bottom:6px}
+h1{font:800 clamp(28px,5vw,46px)/1.02 var(--sans);text-transform:uppercase;letter-spacing:-.01em;margin:0}
+h1 small{display:block;font-weight:400;font-size:.6em;letter-spacing:0;margin-bottom:2px}
+.lead{margin-top:10px;color:var(--ink);font-size:14.5px}
+#btn-config{margin-top:12px}
+section{margin-bottom:26px}
+h2{background:var(--bar);color:#fff;font:700 15px var(--sans);letter-spacing:.04em;text-align:center;padding:6px 10px;margin:0 0 14px;border-radius:0}
+.card{border:1px solid var(--line);border-radius:4px;padding:0;overflow:hidden;gap:0;background:var(--panel)}
+.card .ch{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--band-cur,var(--band-h))}
+.code{flex:none;min-width:34px;padding:0 4px;height:34px;border:2.5px solid var(--ink);border-radius:8px;display:grid;place-items:center;font:800 13.5px/1 var(--sans);background:var(--code-bg,#c9c9c9);color:var(--ink)}
+.card h3{font:700 12.5px/1.15 var(--sans);min-width:0;overflow-wrap:normal;word-break:normal;hyphens:manual;text-align:left;text-transform:uppercase;letter-spacing:.01em}
+.card .ico{border-radius:0;background:var(--panel);padding:10px 12px}
+a.card:hover .ico{background:var(--beige)}
+a.card:hover{border-color:var(--ink)}
+.card .go{padding:0 0 10px}
+.card .toggle{padding:8px 10px}
+.crumb a{border-radius:6px}
+.crumb b{font:800 22px var(--sans);text-transform:uppercase}
+.mats{gap:14px}
+.mat{padding:0;overflow:hidden;border-radius:4px;border:1px solid var(--line);gap:0}
+.mat .mh{display:flex;align-items:center;gap:12px;padding:14px;background:var(--band-x)}
+.mat .mh .code{width:52px;height:52px;border-width:4px;border-radius:12px;font-size:24px;background:var(--code-x)}
+.mat h3{text-align:left;font:800 22px var(--sans);text-transform:uppercase}
+.mat .ico{border-radius:0;background:var(--panel)}
+.mat .n{padding:8px 0 12px;font-family:var(--sans)}
+.mat.soon{background:var(--panel)}
+.crumb a{background:var(--ink)!important;border-color:var(--ink)!important;color:var(--panel)!important;border-radius:6px}
+@media (max-width:560px){.cards{grid-template-columns:1fr 1fr}.card .ch{padding:6px 7px;gap:7px}.card .ch .code{min-width:28px;height:28px;font-size:11.5px;border-width:2px;border-radius:6px}.card h3{font-size:11.5px}.badge-big{width:64px;height:64px;font-size:28px;border-width:4px;border-radius:12px}}
+footer{background:var(--beige);border:0;padding:12px 14px;border-radius:2px;color:var(--ink)}
 </style>
-</head>
-<body>
-
-<header>
-  <h1>Cabezada (Gálibo) de Escalera</h1>
-  <p>DB-SUA 1 · Mueve los controles para ver cómo cambia · Mínimo exigido: 2,20 m</p>
-</header>
-
-<div class="wrap">
-
-  <div class="card">
-    <div class="card-title">⚙️ Parámetros — ajusta y observa el diagrama</div>
-    <div class="card-body">
-
-      <div class="controls">
-        <div class="control-group">
-          <label>Contrahuella (C)</label>
-          <input type="range" id="rC" min="13" max="20" value="17" step="0.5">
-          <span class="val-display" id="dC">17 cm</span>
-        </div>
-        <div class="control-group">
-          <label>Huella (H)</label>
-          <input type="range" id="rH" min="22" max="35" value="28" step="0.5">
-          <span class="val-display" id="dH">28 cm</span>
-        </div>
-        <div class="control-group">
-          <label>Altura forjado superior</label>
-          <input type="range" id="rF" min="250" max="350" value="300" step="5">
-          <span class="val-display" id="dF">300 cm</span>
-        </div>
-        <div class="control-group">
-          <label>Cabezada mínima crítica</label>
-          <div class="val-display" id="dMin" style="color:var(--ink)">— cm</div>
-        </div>
-      </div>
-
-      <div class="status-bar">
-        <div class="status-pill ok" id="statusPill">✓ Cabezada correcta en todo el tramo</div>
-      </div>
-
-      <canvas id="cvs" width="840" height="400" style="width:100%;border-radius:10px;background:#FAFAF7;border:1px solid var(--grid);"></canvas>
-
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">📖 Cómo se calcula — resumen</div>
-    <div class="card-body">
-      <div class="explanation">
-        <div class="exp-item blue">
-          <h4>¿Qué es?</h4>
-          Distancia vertical desde la <strong>línea de inclinación</strong> (los vértices de los peldaños) hasta el obstáculo superior (forjado, viga, etc.).
-        </div>
-        <div class="exp-item orange">
-          <h4>¿Dónde medir?</h4>
-          En el punto más desfavorable, que suele ser donde la escalera pasa <strong>justo por debajo del forjado</strong> del piso superior.
-        </div>
-        <div class="exp-item green">
-          <h4>Valor mínimo</h4>
-          El DB-SUA exige <strong>≥ 2,20 m</strong> en zonas de uso general y <strong>≥ 2,10 m</strong> en zonas de uso restringido (SUA 2, altura libre de paso).
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<div class="tooltip" id="tip"></div>
-
-<script>
-const cvs = document.getElementById('cvs');
-const ctx = cvs.getContext('2d');
-
-// ─── Layout constants ───────────────────────────────
-const W = 840, H = 400;
-const MARGIN_L = 60, MARGIN_B = 50, MARGIN_T = 40;
-const DRAW_W = 620, DRAW_H = H - MARGIN_T - MARGIN_B;
-
-// Scale: 1 cm = ? px
-// We'll map ~350 cm height into DRAW_H px
-const SCALE_Y = DRAW_H / 360;   // px per cm (vertical)
-const SCALE_X = DRAW_W / 480;   // px per cm (horizontal)
-
-function cmX(cm) { return MARGIN_L + cm * SCALE_X; }
-function cmY(cm) { return H - MARGIN_B - cm * SCALE_Y; }
-
-// ─── State ──────────────────────────────────────────
-let C = 17, Hh = 28, Fh = 300;
-const MIN_GAL = 220; // cm, minimum headroom
-
-function getParams() {
-  C  = parseFloat(document.getElementById('rC').value);
-  Hh = parseFloat(document.getElementById('rH').value);
-  Fh = parseFloat(document.getElementById('rF').value);
-}
-
-function draw() {
-  getParams();
-  ctx.clearRect(0, 0, W, H);
-
-  // ── Background grid ──
-  ctx.strokeStyle = '#E5E0D5';
-  ctx.lineWidth = 0.5;
-  for (let x = MARGIN_L; x <= MARGIN_L + DRAW_W; x += 20 * SCALE_X) {
-    ctx.beginPath(); ctx.moveTo(x, MARGIN_T); ctx.lineTo(x, H - MARGIN_B); ctx.stroke();
-  }
-  for (let y = MARGIN_T; y <= H - MARGIN_B; y += 20 * SCALE_Y) {
-    ctx.beginPath(); ctx.moveTo(MARGIN_L, y); ctx.lineTo(MARGIN_L + DRAW_W, y); ctx.stroke();
-  }
-
-  // Number of steps that fit horizontally
-  const nSteps = Math.min(Math.floor(340 / Hh), 12);
-
-  // Stair base Y (ground floor = 0 cm)
-  const baseY = 0;
-  // Floor slab top = Fh cm above ground
-
-  // ── Floor slab (upper) ──
-  const slabThick = 25; // cm
-  ctx.fillStyle = '#B0A898';
-  ctx.fillRect(
-    cmX(0), cmY(Fh + slabThick),
-    (nSteps * Hh + 60) * SCALE_X, slabThick * SCALE_Y
-  );
-  ctx.fillStyle = '#9C8F74';
-  ctx.fillRect(
-    cmX(0), cmY(Fh),
-    (nSteps * Hh + 60) * SCALE_X, 4
-  );
-
-  // ── Ground floor ──
-  ctx.fillStyle = '#B0A898';
-  ctx.fillRect(cmX(0), cmY(0), (nSteps * Hh + 80) * SCALE_X, 18);
-
-  // ── Walls ──
-  ctx.fillStyle = '#C9BBA0';
-  // Left wall
-  ctx.fillRect(cmX(-15), cmY(Fh + slabThick), 15 * SCALE_X, (Fh + slabThick) * SCALE_Y + 18);
-  // Right wall stub (upper landing)
-  ctx.fillStyle = '#B0A898';
-  ctx.fillRect(cmX(nSteps * Hh + 60), cmY(Fh + slabThick + 20), 20 * SCALE_X, (slabThick + 20) * SCALE_Y);
-
-  // ── Upper landing ──
-  ctx.fillStyle = '#C9BBA0';
-  ctx.fillRect(cmX(nSteps * Hh), cmY(Fh), 60 * SCALE_X, nSteps * C * SCALE_Y + 10);
-
-  // ── Draw stairs ──
-  ctx.fillStyle = '#D5C9B0';
-  ctx.strokeStyle = '#9C8F74';
-  ctx.lineWidth = 1.5;
-
-  // Stair profile path
-  ctx.beginPath();
-  ctx.moveTo(cmX(0), cmY(0));
-  for (let i = 0; i < nSteps; i++) {
-    const x0 = i * Hh;
-    const y0 = i * C;
-    ctx.lineTo(cmX(x0), cmY(y0 + C));
-    ctx.lineTo(cmX(x0 + Hh), cmY(y0 + C));
-  }
-  ctx.lineTo(cmX(nSteps * Hh), cmY(0));
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
-
-  // Riser lines (darker)
-  ctx.strokeStyle = '#9C8F74';
-  ctx.lineWidth = 2;
-  for (let i = 0; i < nSteps; i++) {
-    const x0 = i * Hh;
-    const y0 = (i + 1) * C;
-    ctx.beginPath();
-    ctx.moveTo(cmX(x0), cmY(y0));
-    ctx.lineTo(cmX(x0 + Hh), cmY(y0));
-    ctx.stroke();
-  }
-
-  // ── Line of inclination (nosing line) ──
-  ctx.setLineDash([8, 5]);
-  ctx.strokeStyle = '#1A5276';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(cmX(0), cmY(0));
-  ctx.lineTo(cmX(nSteps * Hh), cmY(nSteps * C));
-  ctx.stroke();
-  ctx.setLineDash([]);
-
-  // ── Nosing dots ──
-  ctx.fillStyle = '#1A5276';
-  for (let i = 0; i <= nSteps; i++) {
-    ctx.beginPath();
-    ctx.arc(cmX(i * Hh), cmY(i * C), 4, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  // ── HEADROOM VERTICALS ──
-  // At each nosing, compute vertical distance to underside of slab (= Fh cm)
-  // Headroom at nosing i = Fh - i*C   (vertical distance to slab soffit)
-  // We draw the vertical line at each nosing where the step is "under" the slab
-
-  let minGal = Infinity;
-  let critX = 0, critY = 0;
-
-  for (let i = 0; i < nSteps; i++) {
-    const nx = i * Hh;       // horizontal cm of nosing
-    const ny = i * C;        // vertical cm of nosing (above ground)
-    const galCm = Fh - ny;   // headroom in cm
-
-    if (galCm < minGal) {
-      minGal = galCm;
-      critX = nx;
-      critY = ny;
-    }
-
-    const isOk = galCm >= MIN_GAL;
-    // Draw vertical line
-    ctx.setLineDash([4, 3]);
-    ctx.strokeStyle = isOk ? '#1A6B3A' : '#C0392B';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(cmX(nx), cmY(ny));
-    ctx.lineTo(cmX(nx), cmY(Fh));
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    // Small label at midpoint
-    const midY = (ny + Fh) / 2;
-    ctx.save();
-    ctx.fillStyle = isOk ? '#1A6B3A' : '#C0392B';
-    ctx.font = `bold ${Math.max(9, 10)}px DM Mono, monospace`;
-    ctx.textAlign = 'left';
-    ctx.fillText(Math.round(galCm) + ' cm', cmX(nx) + 4, cmY(midY));
-    ctx.restore();
-  }
-
-  // ── Critical point highlight ──
-  const critOk = minGal >= MIN_GAL;
-  ctx.beginPath();
-  ctx.arc(cmX(critX), cmY(critY), 8, 0, Math.PI * 2);
-  ctx.fillStyle = critOk ? 'rgba(26,107,58,0.2)' : 'rgba(192,57,43,0.2)';
-  ctx.fill();
-  ctx.strokeStyle = critOk ? '#1A6B3A' : '#C0392B';
-  ctx.lineWidth = 2.5;
-  ctx.stroke();
-
-  // ── LEGEND / labels ──
-  // "Línea de inclinación" label
-  ctx.save();
-  ctx.fillStyle = '#1A5276';
-  ctx.font = 'bold 11px Outfit, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.translate(cmX(nSteps * Hh / 2) - 20, cmY(nSteps * C / 2) + 24);
-  ctx.rotate(-Math.atan2(nSteps * C * SCALE_Y, nSteps * Hh * SCALE_X));
-  ctx.fillText('Línea de inclinación', 0, 0);
-  ctx.restore();
-
-  // "Forjado superior" label
-  ctx.fillStyle = '#555';
-  ctx.font = '11px Outfit, sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('Forjado superior', cmX(5), cmY(Fh + slabThick / 2) + 4);
-
-  // "Planta baja" label
-  ctx.fillText('Planta baja', cmX(5), cmY(-5));
-
-  // ── RIGHT PANEL annotations ──
-  const panX = W - 195;
-  const panY = MARGIN_T;
-
-  // Panel bg
-  ctx.fillStyle = 'rgba(255,253,248,0.95)';
-  roundRect(ctx, panX - 8, panY, 200, 200, 10);
-  ctx.fill();
-  ctx.strokeStyle = '#E0DBD0';
-  ctx.lineWidth = 1;
-  ctx.stroke();
-
-  // Title
-  ctx.fillStyle = '#2C2926';
-  ctx.font = 'bold 11px Outfit, sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('CABEZADA MÍNIMA', panX, panY + 18);
-
-  ctx.fillStyle = critOk ? '#1A6B3A' : '#C0392B';
-  ctx.font = 'bold 26px DM Mono, monospace';
-  ctx.fillText(Math.round(minGal) + ' cm', panX, panY + 52);
-
-  ctx.fillStyle = critOk ? '#1A6B3A' : '#C0392B';
-  ctx.font = 'bold 12px Outfit, sans-serif';
-  ctx.fillText(critOk ? '✓ CUMPLE ≥ 220 cm' : '✗ NO CUMPLE < 220 cm', panX, panY + 72);
-
-  // Params
-  ctx.fillStyle = var_muted;
-  ctx.font = '10px DM Mono, monospace';
-  ctx.fillText(`C = ${C} cm`, panX, panY + 98);
-  ctx.fillText(`H = ${Hh} cm`, panX, panY + 113);
-  ctx.fillText(`Forjado = ${Fh} cm`, panX, panY + 128);
-  ctx.fillText(`Peldaños = ${nSteps}`, panX, panY + 143);
-  ctx.fillText(`H salvada = ${Math.round(nSteps * C)} cm`, panX, panY + 158);
-
-  // Formula
-  ctx.fillStyle = '#1A5276';
-  ctx.font = 'bold 10px DM Mono, monospace';
-  ctx.fillText('Cabezada = H_forjado − (i × C)', panX, panY + 180);
-
-  // ── Update UI ──
-  document.getElementById('dMin').textContent = Math.round(minGal) + ' cm';
-  document.getElementById('dMin').style.color = critOk ? 'var(--ok)' : 'var(--danger)';
-  const pill = document.getElementById('statusPill');
-  if (critOk) {
-    pill.textContent = '✓ Cabezada correcta en todo el tramo';
-    pill.className = 'status-pill ok';
-  } else {
-    pill.textContent = '✗ Cabezada insuficiente — ajusta los parámetros';
-    pill.className = 'status-pill danger';
-  }
-}
-
-const var_muted = '#6B6560';
-
-function roundRect(ctx, x, y, w, h, r) {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.lineTo(x + w - r, y);
-  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-  ctx.lineTo(x + w, y + h - r);
-  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-  ctx.lineTo(x + r, y + h);
-  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-  ctx.lineTo(x, y + r);
-  ctx.quadraticCurveTo(x, y, x + r, y);
-  ctx.closePath();
-}
-
-// ── Controls ──
-['rC','rH','rF'].forEach(id => {
-  document.getElementById(id).addEventListener('input', () => {
-    document.getElementById('dC').textContent = document.getElementById('rC').value + ' cm';
-    document.getElementById('dH').textContent = document.getElementById('rH').value + ' cm';
-    document.getElementById('dF').textContent = document.getElementById('rF').value + ' cm';
-    draw();
-  });
-});
-
-// HiDPI
-function resize() {
-  const dpr = window.devicePixelRatio || 1;
-  const rect = cvs.getBoundingClientRect();
-  cvs.width  = rect.width  * dpr;
-  cvs.height = rect.height * dpr;
-  ctx.scale(dpr, dpr);
-  draw();
-}
-
-window.addEventListener('resize', () => { draw(); });
-draw();
-</script>
-</body>
-</html>
+<div class="wrap" id="app"></div>
+<script type="application/json" id="state">{"enabled":["zapata","medianera","esquina","combinada","centradora","atado","losa","losa-ampliacion","pilotes","encepado","muro","contencion","pantalla","unidireccional","reticular","viga","pilar","viga-acero","pilar-acero","basa","soldadura","tirante","viga-madera","pilar-madera","fuego-madera"]}</script>
+<script src="app.js"></script>
+</body></html>

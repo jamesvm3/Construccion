@@ -1,0 +1,279 @@
+<!doctype html><html><head><meta charset=utf8>
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Pilar C2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#eef0ee; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#cfd5d3;
+  --soft:#f5f7f6; --accent:#1f5f7a; --accent-soft:#e1edf2; --rebar:#b0392b;
+  --concrete:#d9dcd8; --concrete-edge:#8e9692;
+  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+    --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+    --concrete:#3a4446; --concrete-edge:#6e7b7d;
+    --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+  --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+  --concrete:#3a4446; --concrete-edge:#6e7b7d;
+  --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 60px}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--cond);font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance;letter-spacing:-.01em}
+.src{font-size:13px;color:var(--muted);max-width:44ch}
+.mode{display:flex;align-items:center;gap:10px;font-size:14px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:6px}
+.grid{display:grid;grid-template-columns:350px 1fr;gap:22px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;flex-direction:column;gap:14px}
+@media (max-width:860px){aside{position:static}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
+.box h2{font-family:var(--cond);font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--accent)}
+.field{display:grid;grid-template-columns:1fr 124px 46px;align-items:center;gap:8px;padding-block:5px;border-bottom:1px dashed var(--line)}
+.field:last-child{border-bottom:0}
+.field label{font-size:13.5px}
+.field .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
+input[type=number],select{width:100%;font-family:var(--mono);font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--soft);color:var(--ink);text-align:right}
+select{text-align:left}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+.helper{margin-top:10px;font-size:13px}
+.helper summary{cursor:pointer;color:var(--accent);font-weight:500}
+.helper .field{grid-template-columns:1fr 84px 46px}
+button{font-family:var(--sans);font-size:13px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:6px 12px;border-radius:4px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+.summary{background:var(--ink);color:var(--bg);border-radius:6px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:18px 32px;align-items:baseline}
+.summary .big{font-family:var(--cond);font-size:26px;font-weight:700;letter-spacing:.01em}
+.summary .lab{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;display:block}
+.drawing{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:620px){.drawing{grid-template-columns:1fr}}
+.drawing .box{padding:10px 12px}
+.drawing h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:500}
+svg{display:block;width:100%;height:auto}
+main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.step-h{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--soft)}
+.num{font-family:var(--mono);font-weight:600;font-size:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--accent);color:var(--accent);flex:none}
+.step-h h2{font-family:var(--cond);font-size:19px;margin:0;font-weight:700}
+.step-h .tag{margin-left:auto}
+.step-b{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.why{font-size:14px;color:var(--muted);max-width:70ch;margin:0}
+.calc{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 14px;align-items:baseline;padding:8px 10px;border-radius:4px;background:var(--soft)}
+@media (max-width:520px){.row{grid-template-columns:1fr}}
+.row .k{font-size:13.5px;font-weight:500}
+.f{font-family:var(--mono);font-size:13.5px;overflow-wrap:anywhere}
+.f .gen{color:var(--muted)}
+.f .res{color:var(--accent);font-weight:600}
+.f sub{font-size:.75em}
+.practice .res,.practice .sug,.practice .step-h .tag,.practice .summary,.practice .drawing svg,.practice .row .pill{filter:blur(7px);user-select:none}
+.try{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;border-top:1px dashed var(--line);padding-top:10px}
+.try input{width:110px}
+.pill{font-family:var(--mono);font-size:11.5px;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.info{background:var(--accent-soft);color:var(--accent)}
+.decide{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px;border:1.5px solid var(--accent);border-radius:4px;background:var(--accent-soft)}
+.decide label{font-weight:600;font-size:14px}
+.decide input,.decide select{width:110px}
+.decide .sug{font-size:13px;color:var(--muted)}
+.note{font-size:13px;border-left:3px solid var(--warn);padding:6px 10px;background:var(--warn-soft);color:var(--ink);border-radius:0 4px 4px 0}
+.note.extra{border-left-color:var(--accent);background:var(--accent-soft)}
+footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px}
+@media (prefers-reduced-motion:no-preference){.res,.pill{transition:filter .25s ease}}
+ </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="mute.css">
+
+<div class="wrap">
+<a href="index.html#H" style="display:inline-flex;align-items:center;margin-bottom:14px;font:600 14px var(--sans);color:var(--panel);background:var(--ink);border:1px solid var(--ink);border-radius:6px;padding:6px 14px 6px 11px;text-decoration:none">← Menú de calculadoras</a>
+<header class="top mat-H">
+  <div>
+    <div class="mbadge">PH</div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Hormigón · Estructura</small>Pilar</h1></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+    <label class="mode" for="practica"><input type="checkbox" id="practica"> Modo práctica: ocultar resultados</label>
+    <div class="hint" style="margin:0">Calcula tú, escribe tu resultado en cada paso y comprueba.</div>
+    <div class="src">Procedimiento de <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo), con las reglas de armado de la Guía de aplicación del Código Estructural (9.4).</div>
+  </div>
+</header>
+
+<div class="grid">
+<aside>
+  <div class="box">
+    <h2>Datos de partida</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"><button type="button" id="clear">Limpiar datos</button></div>
+    <div class="field"><label for="Nk">Axil característico N<sub>k</sub></label><input id="Nk" type="number" step="any"><span class="u">kN</span></div>
+    <div class="field"><label for="a">Lado del pilar a</label><input id="a" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="b">Otro lado b (si no es cuadrado)</label><input id="b" type="number" step="any" placeholder="= a"><span class="u">m</span></div>
+    <label class="chk" style="padding-block:7px;border-bottom:1px dashed var(--line)"><input type="checkbox" id="inc" checked> <span>Aumentar N<sub>d</sub> un 20 % por momentos</span></label>
+    <div class="field"><label for="fyk">Límite elástico acero f<sub>yk</sub></label><select id="fyk"><option value="400">400 (B400S)</option><option value="500" selected>500 (B500S)</option></select><span class="u">N/mm²</span></div>
+    <div class="field"><label for="fck">Hormigón f<sub>ck</sub></label><select id="fck"><option value="25" selected>25 (HA-25)</option><option value="30">30 (HA-30)</option></select><span class="u">N/mm²</span></div>
+    <p class="hint">Escribe los datos de tu ejercicio. «Limpiar datos» lo deja todo en blanco.</p>
+  </div>
+</aside>
+
+<main>
+  <section>
+    <div class="summary" id="summary"></div>
+    <div class="drawing">
+      <div class="box"><h3>Sección</h3><svg id="sec" viewBox="0 0 360 230" role="img" aria-label="Sección del pilar con las barras"></svg></div>
+      <div class="box"><h3>Reglas de armado</h3><svg id="pl" viewBox="0 0 360 230" role="img" aria-label="Resumen de reglas"></svg></div>
+    </div>
+  </section>
+
+  <article class="step" id="s1">
+    <div class="step-h"><span class="num">1</span><h2>Axil de cálculo</h2><span class="tag" id="t1"></span></div>
+    <div class="step-b">
+      <p class="why">El axil característico se mayora con γ<sub>f</sub> = 1,5. Además se aumenta un 20 % para cubrir de forma aproximada los momentos que llegan de las vigas, que en un predimensionado no se calculan.</p>
+      <div class="calc"><div class="row"><span class="k">N<sub>d</sub></span><span class="f" id="f11"></span></div></div>
+      <div class="try"><span>Tu N<sub>d</sub>:</span><input type="number" step="any" id="try1" aria-label="Tu axil en kN"><span class="u">kN</span><span id="c1"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s2">
+    <div class="step-h"><span class="num">2</span><h2>Armadura longitudinal</h2><span class="tag" id="t2"></span></div>
+    <div class="step-b">
+      <p class="why">El hormigón resiste N<sub>c</sub> = A<sub>c</sub>·f<sub>cd</sub>; lo que falte lo lleva el acero: A<sub>s</sub> = (N<sub>d</sub> − N<sub>c</sub>)/f<sub>yc,d</sub>. En compresión, la Guía del Código Estructural limita la tensión del acero a f<sub>yc,d</sub> = mín(f<sub>yd</sub>; 400 N/mm²). La armadura mínima es la mayor de 0,1·N<sub>d</sub>/f<sub>yc,d</sub> (Guía CE) y el 4 ‰ de la sección; la máxima, el 4 %.</p>
+      <div class="calc">
+        <div class="row"><span class="k">N<sub>c</sub> del hormigón</span><span class="f" id="f21"></span></div>
+        <div class="row"><span class="k">A<sub>s</sub> de cálculo</span><span class="f" id="f22"></span></div>
+        <div class="row"><span class="k">Mínimas</span><span class="f" id="f23"></span></div>
+        <div class="row"><span class="k">A<sub>s</sub> a disponer</span><span class="f" id="f24"></span></div>
+      </div>
+      <div class="note">En compresión el acero no puede pasar de 400 N/mm² (Guía CE), aunque f<sub>yd</sub> sea 434,8 N/mm².</div>
+      <div class="try"><span>Tu A<sub>s</sub>:</span><input type="number" step="any" id="try2" aria-label="Tu armadura en cm²"><span class="u">cm²</span><span id="c2"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s3">
+    <div class="step-h"><span class="num">3</span><h2>Redondos y separación</h2><span class="tag" id="t3"></span></div>
+    <div class="step-b">
+      <p class="why">Ø ≥ 12 mm, al menos una barra en cada esquina y armadura simétrica, así que el número de barras es múltiplo de 4. La separación libre entre barras de una cara se calcula restando el recubrimiento mecánico (r = 3 cm más el cerco) y no debe pasar de 30 cm.</p>
+      <div class="decide"><label for="phi">Diámetro Ø</label><select id="phi"><option>12</option><option selected>16</option><option>20</option><option>25</option></select><span class="u">mm</span></div>
+      <div class="calc"><div class="row"><span class="k">Nº de redondos</span><span class="f" id="f31"></span></div></div>
+      <div class="decide"><label for="nDef">Nº definitivo</label><input id="nDef" type="number" step="4" min="4" placeholder="auto"><span class="sug" id="sug3"></span></div>
+      <div class="calc"><div class="row"><span class="k">Separación libre</span><span class="f" id="f32"></span></div></div>
+      <div class="note extra">Se restan 2·(3 + 0,8) cm de recubrimiento y cerco.</div>
+      <div class="try"><span>Tu nº de redondos:</span><input type="number" step="1" id="try3" aria-label="Tu número de redondos"><span id="c3"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s4">
+    <div class="step-h"><span class="num">4</span><h2>Cercos</h2><span class="tag" id="t4"></span></div>
+    <div class="step-b">
+      <p class="why">Diámetro del cerco: al menos 6 mm y un cuarto de la barra mayor. Separación: menor que 15 veces la barra menor, 30 cm y el lado menor del pilar. Junto a los forjados, en una longitud igual al lado mayor, y en los solapos de barras de más de 12 mm, la separación se multiplica por 0,6.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Ø del cerco</span><span class="f" id="f41"></span></div>
+        <div class="row"><span class="k">Separación</span><span class="f" id="f42"></span></div>
+      </div>
+    </div>
+  </article>
+
+  <div class="box" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px"><p style="margin:0;flex:1 1 240px;font-size:13.5px;color:var(--muted)">Ya sabes cuánto mide y cómo se arma el pilar. ¿Y cómo se construye? Repasa el proceso de ejecución paso a paso.</p><a href="proceso-pilar.html" style="font:600 14px var(--sans);color:var(--panel);background:var(--bad);border:1px solid var(--bad);border-radius:4px;padding:9px 16px;text-decoration:none">Proceso constructivo</a></div>
+  <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con la Guía de aplicación del Código Estructural y el DB SE-C. Válido para pilares poco esbeltos a compresión; no sustituye al cálculo a flexocompresión con pandeo según el Código Estructural. Unidades: kN, m, cm, mm y N/mm². Errores o sugerencias: <a href="mailto:jaimevergara@ugr.es">jaimevergara@ugr.es</a>. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const nf=(x,d=2)=>isFinite(x)?x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const v=id=>parseFloat($(id).value);
+const R=s=>`<span class="res">${s}</span>`;
+const G=s=>`<span class="gen">${s}</span>`;
+const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+function check(tryId,outId,val,tol){
+  const t=parseFloat(String($(tryId).value).replace(',','.'));
+  if(!isFinite(t)||!isFinite(val)){$(outId).innerHTML='';return;}
+  const ok=Math.abs(t-val)<=Math.max(Math.abs(val)*tol,1e-9);
+  $(outId).innerHTML=ok?pill('ok','Correcto'):pill('bad','Revisa: no coincide');
+}
+const OUT=['f11','f21','f22','f23','f24','f31','f32','f41','f42','t1','t2','t3','t4','c1','c2','c3'];
+function empty(){
+  OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
+  $('sug3').textContent='';
+  $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce N<sub>k</sub> y el lado del pilar</span></div>';
+  $('sec').innerHTML='';$('pl').innerHTML='';
+}
+function calc(){
+  const Nk=v('Nk'),a=v('a'),fyk=v('fyk'),fck=v('fck');
+  const b=v('b')>0?v('b'):a;
+  if(!(Nk>0&&a>0)){empty();return;}
+  const inc=$('inc').checked, Nd=(inc?1.2:1)*1.5*Nk;
+  $('f11').innerHTML=`${G(`N<sub>d</sub> = ${inc?'1,2·':''}1,5·N<sub>k</sub>`)} = ${inc?'1,2·':''}1,5·${nf(Nk)} = ${R(nf(Nd,1)+' kN')}`;
+  $('t1').innerHTML=pill('info',nf(Nd,0)+' kN');
+  check('try1','c1',Nd,0.01);
+  const Ac=a*b, fcd=fck/1.5, fyd=fyk/1.15, fyc=Math.min(fyd,400);
+  const Nc=Ac*fcd*1000, As=10*(Nd-Nc)/fyc;
+  const Am1=10*0.1*Nd/fyc, Am2=0.004*Ac*1e4, Amax=0.04*Ac*1e4, Asmin=Math.max(Am1,Am2), Asd=Math.max(As,Asmin);
+  $('f21').innerHTML=`${G('N<sub>c</sub> = A<sub>c</sub>·f<sub>cd</sub>')} = ${nf(a)}·${nf(b)}·${nf(fcd)}·1000 = ${R(nf(Nc,0)+' kN')}`;
+  $('f22').innerHTML=`${G('A<sub>s</sub> = (N<sub>d</sub> − N<sub>c</sub>)·10/f<sub>yc,d</sub>')} = (${nf(Nd,1)} − ${nf(Nc,0)})·10/${nf(fyc,0)} = ${R(nf(As)+' cm²')}`+(As<=0?' '+pill('info','basta el hormigón'):'');
+  $('f23').innerHTML=`${G('0,1·N<sub>d</sub>/f<sub>yc,d</sub>')} = ${nf(Am1)} cm² · ${G('4 ‰·A<sub>c</sub>')} = ${nf(Am2)} cm² · máxima 4 % = ${nf(Amax,1)} cm²`;
+  const tooMuch=Asd>Amax;
+  $('f24').innerHTML=R(nf(Asd)+' cm²')+' '+(tooMuch?pill('bad','supera el 4 %: agranda el pilar'):(Asmin>=As?pill('warn','manda la mínima'):pill('ok','manda el cálculo')));
+  $('t2').innerHTML=tooMuch?pill('bad','sección pequeña'):pill('info',nf(Asd)+' cm²');
+  check('try2','c2',Asd,0.02);
+  const phi=v('phi'), Ab=Math.PI*Math.pow(phi/20,2), nT=Asd/Ab, nS=Math.max(4,4*Math.ceil(nT/4-1e-9));
+  const nI=parseInt($('nDef').value,10), n=nI>=4?nI:nS;
+  const phiE=Math.max(6,Math.ceil(phi/4/2)*2), r=3+phiE/10;
+  const mA=Math.round(n/4)+1, side=Math.min(a,b)*100;
+  const s=(side-2*r-mA*phi/10)/(mA-1);
+  $('f31').innerHTML=`${G('A<sub>s</sub>/A<sub>Ø</sub>')} = ${nf(Asd)}/${nf(Ab,3)} = ${R(nf(nT))}`;
+  $('sug3').textContent=`Sugerido: ${nS} Ø${phi} (múltiplo de 4)`;
+  $('f32').innerHTML=`${G('(lado − 2·r − m·Ø)/(m − 1)')}, con m = ${mA} barras por cara = (${nf(side,0)} − 2·${nf(r,1)} − ${mA}·${nf(phi/10,1)})/${mA-1} = ${R(nf(s,1)+' cm')} `+(s>30?pill('warn','> 30 cm: más barras'):s<Math.max(2,phi/10)?pill('bad','no caben'):pill('ok','correcta'));
+  $('t3').innerHTML=n*Ab>=Asd-1e-9?pill('ok',`${n} Ø${phi}`):pill('bad','Faltan barras');
+  check('try3','c3',nS,0.001);
+  const st=Math.min(15*phi/10,30,side);
+  $('f41').innerHTML=`${G('máx(6 mm; Ø/4)')} = máx(6; ${nf(phi/4,1)}) → ${R('Ø'+phiE)}`;
+  $('f42').innerHTML=`${G('mín(15·Ø; 30 cm; lado menor)')} = mín(${nf(15*phi/10,0)}; 30; ${nf(side,0)}) = ${R(nf(st,0)+' cm')} · junto a forjados ${R(nf(Math.floor(0.6*st),0)+' cm')}`;
+  $('t4').innerHTML=pill('info',`Ø${phiE} c/${Math.floor(st)}`);
+  $('summary').innerHTML=`
+    <div><span class="lab">Pilar</span><span class="big">${nf(a*100,0)} × ${nf(b*100,0)} cm</span></div>
+    <div><span class="lab">Armadura longitudinal</span><span class="big">${n} Ø${phi}</span></div>
+    <div><span class="lab">Cercos</span><span class="big">Ø${phiE} c/${Math.floor(st)} (c/${Math.floor(0.6*st)} en extremos)</span></div>`;
+  draw(a,b,n,phi);
+}
+function draw(a,b,n,phi){
+  const sc=Math.min(170/a,170/b), W=a*sc, H=b*sc, x0=(360-W)/2, y0=(230-H)/2;
+  let g=`<rect x="${x0}" y="${y0}" width="${W}" height="${H}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/>`;
+  const c=0.04*sc; g+=`<rect x="${x0+c}" y="${y0+c}" width="${W-2*c}" height="${H-2*c}" rx="3" fill="none" stroke="var(--rebar)" stroke-width="1.5"/>`;
+  const m=Math.round(n/4)+1, pts=[];
+  for(let i=0;i<m;i++){const t=i/(m-1);pts.push([t,0],[t,1]);if(i>0&&i<m-1){pts.push([0,t],[1,t]);}}
+  const cc=c+5;pts.forEach(([u,w])=>g+=`<circle cx="${x0+cc+(W-2*cc)*u}" cy="${y0+cc+(H-2*cc)*w}" r="4" fill="var(--rebar)"/>`);
+  $('sec').innerHTML=g;
+  const L=['Ø ≥ 12 mm','1 barra por esquina','A_s mín = máx(0,1·N_d/f_yc,d ; 4 ‰)','A_s máx = 4 % A_c','s libre ≤ 30 cm','cerco ≥ máx(6; Ø/4)','s cercos ≤ mín(15Ø; 30; lado)'];
+  $('pl').innerHTML=L.map((t,i)=>`<text x="20" y="${30+i*26}" font-family="IBM Plex Mono,monospace" font-size="12" fill="var(--ink)">· ${t.replace(/_([a-z,]+)/g,'$1')}</text>`).join('');
+}
+$('clear').addEventListener('click',()=>{
+  ['Nk','a','b','nDef','try1','try2','try3'].forEach(id=>{$(id).value='';});
+  $('fyk').value='500';$('fck').value='25';$('phi').value='16';$('inc').checked=true;
+  calc();$('Nk').focus();
+});
+$('practica').addEventListener('change',()=>document.querySelector('.wrap').classList.toggle('practice',$('practica').checked));
+document.querySelectorAll('input,select').forEach(el=>{if(el.id!=='practica')el.addEventListener('input',calc);});
+calc();
+})();
+</script>
+
+<script src="pdf.js"></script>
+</body></html>

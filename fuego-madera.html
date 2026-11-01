@@ -1,0 +1,342 @@
+<!doctype html><html><head><meta charset=utf8>
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.pick{font-family:var(--mono);font-size:12.5px;border-collapse:collapse;width:100%}
+.pick td,.pick th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}
+.pick th{color:var(--muted);font-weight:500}
+.pick td:first-child,.pick th:first-child{text-align:left}
+.tbl{overflow-x:auto}
+</style></head><body>
+<title>Madera en incendio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#eef0ee; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#cfd5d3;
+  --soft:#f5f7f6; --accent:#1f5f7a; --accent-soft:#e1edf2; --rebar:#b0392b;
+  --concrete:#d9dcd8; --concrete-edge:#8e9692; --steel:#c3ccd4; --steel-edge:#5d6b77; --wood:#e6cc9f; --wood-edge:#a07a48; --char:#3b3330; --load:#a86608;
+  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+    --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+    --concrete:#3a4446; --concrete-edge:#6e7b7d; --steel:#46525c; --steel-edge:#8a99a6; --wood:#4d3b25; --wood-edge:#9b7a50; --char:#111; --load:#e3a849;
+    --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+  --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+  --concrete:#3a4446; --concrete-edge:#6e7b7d; --steel:#46525c; --steel-edge:#8a99a6; --wood:#4d3b25; --wood-edge:#9b7a50; --char:#111; --load:#e3a849;
+  --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 60px}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--cond);font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance;letter-spacing:-.01em}
+.src{font-size:13px;color:var(--muted);max-width:44ch}
+.mode{display:flex;align-items:center;gap:10px;font-size:14px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:6px}
+.grid{display:grid;grid-template-columns:350px 1fr;gap:22px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;flex-direction:column;gap:14px}
+@media (max-width:860px){aside{position:static}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
+.box h2{font-family:var(--cond);font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--accent)}
+.field{display:grid;grid-template-columns:1fr 124px 46px;align-items:center;gap:8px;padding-block:5px;border-bottom:1px dashed var(--line)}
+.field:last-child{border-bottom:0}
+.field label{font-size:13.5px}
+.field .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
+input[type=number],select{width:100%;font-family:var(--mono);font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--soft);color:var(--ink);text-align:right}
+select{text-align:left}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+.helper{margin-top:10px;font-size:13px}
+.helper summary{cursor:pointer;color:var(--accent);font-weight:500}
+.helper .field{grid-template-columns:1fr 84px 46px}
+button{font-family:var(--sans);font-size:13px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:6px 12px;border-radius:4px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+.summary{background:var(--ink);color:var(--bg);border-radius:6px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:18px 32px;align-items:baseline}
+.summary .big{font-family:var(--cond);font-size:26px;font-weight:700;letter-spacing:.01em}
+.summary .lab{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;display:block}
+.drawing{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:620px){.drawing{grid-template-columns:1fr}}
+.drawing .box{padding:10px 12px}
+.drawing h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:500}
+svg{display:block;width:100%;height:auto}
+main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.step-h{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--soft)}
+.num{font-family:var(--mono);font-weight:600;font-size:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--accent);color:var(--accent);flex:none}
+.step-h h2{font-family:var(--cond);font-size:19px;margin:0;font-weight:700}
+.step-h .tag{margin-left:auto}
+.step-b{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.why{font-size:14px;color:var(--muted);max-width:70ch;margin:0}
+.calc{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 14px;align-items:baseline;padding:8px 10px;border-radius:4px;background:var(--soft)}
+@media (max-width:520px){.row{grid-template-columns:1fr}}
+.row .k{font-size:13.5px;font-weight:500}
+.f{font-family:var(--mono);font-size:13.5px;overflow-wrap:anywhere}
+.f .gen{color:var(--muted)}
+.f .res{color:var(--accent);font-weight:600}
+.f sub{font-size:.75em}
+.practice .res,.practice .sug,.practice .step-h .tag,.practice .summary,.practice .drawing svg,.practice .row .pill{filter:blur(7px);user-select:none}
+.try{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;border-top:1px dashed var(--line);padding-top:10px}
+.try input{width:110px}
+.pill{font-family:var(--mono);font-size:11.5px;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.info{background:var(--accent-soft);color:var(--accent)}
+.decide{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px;border:1.5px solid var(--accent);border-radius:4px;background:var(--accent-soft)}
+.decide label{font-weight:600;font-size:14px}
+.decide input,.decide select{width:110px}
+.decide .sug{font-size:13px;color:var(--muted)}
+.note{font-size:13px;border-left:3px solid var(--warn);padding:6px 10px;background:var(--warn-soft);color:var(--ink);border-radius:0 4px 4px 0}
+.note.extra{border-left-color:var(--accent);background:var(--accent-soft)}
+footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px}
+@media (prefers-reduced-motion:no-preference){.res,.pill{transition:filter .25s ease}}
+.pick{font-family:var(--mono);font-size:12.5px;border-collapse:collapse;width:100%}
+.pick td,.pick th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}
+.pick th{color:var(--muted);font-weight:500}
+.pick td:first-child,.pick th:first-child{text-align:left}
+.tbl{overflow-x:auto}
+ </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="mute.css">
+
+<div class="wrap">
+<a href="index.html#M" style="display:inline-flex;align-items:center;margin-bottom:14px;font:600 14px var(--sans);color:var(--panel);background:var(--ink);border:1px solid var(--ink);border-radius:6px;padding:6px 14px 6px 11px;text-decoration:none">← Menú de calculadoras</a>
+<header class="top mat-M">
+  <div>
+    <div class="mbadge">FM</div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Madera · Incendio</small>Resistencia al fuego</h1></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+    <label class="mode" for="practica"><input type="checkbox" id="practica"> Modo práctica: ocultar resultados</label>
+    <div class="hint" style="margin:0">Calcula tú, escribe tu resultado en cada paso y comprueba.</div>
+    <div class="src">Ficha MI «Madera. Incendio» de <em>Cálculo rápido de estructuras</em> (S. Mute), con el DB SI (SI 6, tabla 3.1 y anejo E). Método de la sección reducida.</div>
+  </div>
+</header>
+
+<div class="grid">
+<aside>
+  <div class="box">
+    <h2>Datos de partida</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"><button type="button" id="clear">Limpiar datos</button></div>
+    <div class="field"><label for="el">Elemento</label><select id="el"><option value="v">Viga</option><option value="s">Soporte</option></select><span class="u"></span></div>
+    <div class="field"><label for="cl">Madera</label><select id="cl"><option>C18</option><option selected>C24</option><option>D30</option><option>GL24h</option></select><span class="u"></span></div>
+    <div class="field"><label for="b">Ancho b (soporte: lado menor)</label><input id="b" type="number" step="any"><span class="u">cm</span></div>
+    <div class="field"><label for="h">Canto h (soporte: lado mayor)</label><input id="h" type="number" step="any"><span class="u">cm</span></div>
+    <div class="field"><label for="caras">Caras expuestas al fuego</label><select id="caras"><option value="3">3 (cara superior protegida)</option><option value="4">4 (exento)</option></select><span class="u"></span></div>
+    <div class="field" id="rowEsq"><label for="esq">Tipo de viga</label><select id="esq"><option value="8">Biapoyada (qL²/8)</option><option value="8e">Apoyada-empotrada (qL²/8)</option><option value="12">Biempotrada (qL²/12)</option><option value="2">Voladizo (qL²/2)</option></select><span class="u"></span></div>
+    <div class="field"><label for="L" id="lL">Luz L</label><input id="L" type="number" step="any"><span class="u">m</span></div>
+    <div class="field" id="rowBeta"><label for="beta">Apoyos del soporte</label><select id="beta"><option value="1">β = 1 · art.-art.</option><option value="0.7">β = 0,7 · emp.-art.</option><option value="0.5">β = 0,5 · emp.-emp.</option><option value="2">β = 2 · ménsula</option></select><span class="u"></span></div>
+    <div class="field"><label for="Gk" id="lG">Carga permanente G<sub>k</sub></label><input id="Gk" type="number" step="any"><span class="u" id="uG">kN/m</span></div>
+    <div class="field"><label for="Qk" id="lQ">Sobrecarga de uso Q<sub>k</sub></label><input id="Qk" type="number" step="any" placeholder="0"><span class="u" id="uQ">kN/m</span></div>
+    <div class="field"><label for="uso">Uso del sector</label><select id="uso"><option value="0">Vivienda unifamiliar</option><option value="1" selected>Residencial, docente, administrativo</option><option value="2">Comercial, pública concurrencia, hospital</option><option value="3">Aparcamiento bajo otro uso</option><option value="4">Aparcamiento exclusivo</option></select><span class="u"></span></div>
+    <div class="field"><label for="alt">Situación</label><select id="alt"><option value="0">Planta de sótano</option><option value="1" selected>Sobre rasante, evacuación &lt; 15 m</option><option value="2">Sobre rasante, &lt; 28 m</option><option value="3">Sobre rasante, ≥ 28 m</option></select><span class="u"></span></div>
+    <p class="hint">Normalmente se comprueba la sección que ya ha salido en el cálculo de la viga o del soporte.</p>
+  </div>
+</aside>
+
+<main>
+  <section>
+    <div class="summary" id="summary"></div>
+    <div class="drawing">
+      <div class="box"><h3>Sección inicial y reducida</h3><svg id="sec" viewBox="0 0 360 230" role="img" aria-label="Sección con la capa carbonizada"></svg></div>
+      <div class="box"><h3>Resistencia exigida (DB SI)</h3><svg id="pl" viewBox="0 0 360 230" role="img" aria-label="Tabla de resistencia al fuego"></svg></div>
+    </div>
+  </section>
+
+  <article class="step" id="s1">
+    <div class="step-h"><span class="num">1</span><h2>Resistencia al fuego exigida</h2><span class="tag" id="t1"></span></div>
+    <div class="step-b">
+      <p class="why">El DB SI (SI 6, tabla 3.1) fija el tiempo que la estructura debe resistir el incendio según el uso del sector y la altura de evacuación: R 60 significa 60 minutos. Ese tiempo t es el que se usa para calcular cuánta madera se quema.</p>
+      <div class="calc"><div class="row"><span class="k">Resistencia</span><span class="f" id="f11"></span></div></div>
+    </div>
+  </article>
+
+  <article class="step" id="s2">
+    <div class="step-h"><span class="num">2</span><h2>Profundidad carbonizada</h2><span class="tag" id="t2"></span></div>
+    <div class="step-b">
+      <p class="why">La madera arde despacio y la capa carbonizada protege el interior, que conserva su resistencia. Se quema a una velocidad β<sub>n</sub> (0,80 mm/min en conífera maciza, 0,70 en laminada encolada y 0,55 en frondosas densas). A la profundidad carbonizada se suman 7 mm de madera caliente que ya no resiste: d<sub>ef</sub> = β<sub>n</sub>·t + 7 mm.</p>
+      <div class="calc">
+        <div class="row"><span class="k">β<sub>n</sub></span><span class="f" id="f21"></span></div>
+        <div class="row"><span class="k">d<sub>ef</sub></span><span class="f" id="f22"></span></div>
+      </div>
+      <div class="try"><span>Tu d<sub>ef</sub>:</span><input type="number" step="any" id="try2" aria-label="Tu profundidad eficaz en mm"><span class="u">mm</span><span id="c2"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s3">
+    <div class="step-h"><span class="num">3</span><h2>Sección reducida</h2><span class="tag" id="t3"></span></div>
+    <div class="step-b">
+      <p class="why" id="why3"></p>
+      <div class="calc">
+        <div class="row"><span class="k">Dimensiones</span><span class="f" id="f31"></span></div>
+        <div class="row"><span class="k">Propiedades</span><span class="f" id="f32"></span></div>
+      </div>
+      <div class="try"><span>Tu canto reducido:</span><input type="number" step="any" id="try3" aria-label="Tu canto reducido en cm"><span class="u">cm</span><span id="c3"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s4">
+    <div class="step-h"><span class="num">4</span><h2>Carga durante el incendio</h2><span class="tag" id="t4"></span></div>
+    <div class="step-b">
+      <p class="why">El incendio es una situación extraordinaria: las cargas no se mayoran y la sobrecarga se reduce porque es poco probable que esté completa durante el fuego. Mute toma q<sub>fi</sub> ≈ G<sub>k</sub> + 0,7·Q<sub>k</sub>.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Carga en incendio</span><span class="f" id="f41"></span></div>
+        <div class="row"><span class="k" id="k42">Esfuerzo</span><span class="f" id="f42"></span></div>
+      </div>
+      <div class="note extra">El DB SE (4.2.2) combina en situación accidental con los coeficientes ψ<sub>1</sub> y ψ<sub>2</sub> del uso (en vivienda, 0,5 y 0,3). El 0,7 de Mute queda del lado de la seguridad.</div>
+      <div class="try"><span>Tu carga en incendio:</span><input type="number" step="any" id="try4" aria-label="Tu carga en incendio"><span class="u" id="u4">kN/m</span><span id="c4"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s5">
+    <div class="step-h"><span class="num">5</span><h2>Comprobación de la sección reducida</h2><span class="tag" id="t5"></span></div>
+    <div class="step-b">
+      <p class="why" id="why5"></p>
+      <div class="calc">
+        <div class="row" id="rowChi"><span class="k">Pandeo</span><span class="f" id="f51"></span></div>
+        <div class="row"><span class="k">Tensión</span><span class="f" id="f52"></span></div>
+      </div>
+      <div class="note extra">Mute usa en situación extraordinaria γ<sub>M</sub>/k<sub>mod</sub> = 1, es decir, la tensión característica sin reducir. Si no cumple, se aumenta la sección o se protege la madera (placas, revestimientos).</div>
+      <div class="try"><span>Tu σ:</span><input type="number" step="any" id="try5" aria-label="Tu tensión en N/mm²"><span class="u">N/mm²</span><span id="c5"></span></div>
+    </div>
+  </article>
+
+  <div class="box" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px"><p style="margin:0;flex:1 1 240px;font-size:13.5px;color:var(--muted)">Ya sabes cuánta sección se pierde con el fuego. ¿Y cómo se ejecuta la estructura en obra? Repasa el proceso paso a paso.</p><a href="proceso-madera.html" style="font:600 14px var(--sans);color:var(--panel);background:var(--bad);border:1px solid var(--bad);border-radius:4px;padding:9px 16px;text-decoration:none">Proceso constructivo</a></div>
+  <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con el DB SE-M y el DB SI. Tampoco sustituye al cálculo de uniones en incendio, protecciones ni otras exigencias del DB SI. Unidades: kN, m, cm, mm y N/mm². Errores o sugerencias: <a href="mailto:jaimevergara@ugr.es">jaimevergara@ugr.es</a>. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</main>
+</div>
+</div>
+
+<script src="madera.js"></script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const nf=(x,d=2)=>isFinite(x)?x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const v=id=>parseFloat($(id).value);
+const R=s=>`<span class="res">${s}</span>`;
+const G=s=>`<span class="gen">${s}</span>`;
+const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+function check(tryId,outId,val,tol){
+  const t=parseFloat(String($(tryId).value).replace(',','.'));
+  if(!isFinite(t)||!isFinite(val)){$(outId).innerHTML='';return;}
+  const ok=Math.abs(t-val)<=Math.max(Math.abs(val)*tol,1e-9);
+  $(outId).innerHTML=ok?pill('ok','Correcto'):pill('bad','Revisa: no coincide');
+}
+const RT=[[30,30,null,null],[120,60,90,120],[120,90,120,180],[90,90,90,90],[120,120,120,120]];
+const USOS=['Vivienda unifamiliar','Residencial, docente, administrativo','Comercial, pública conc., hospital','Aparcamiento bajo otro uso','Aparcamiento exclusivo'];
+const OUT=['f11','f21','f22','f31','f32','f41','f42','f51','f52','t1','t2','t3','t4','t5','c2','c3','c4','c5'];
+function empty(msg){
+  OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
+  $('summary').innerHTML=`<div><span class="lab">Sin datos</span><span class="big">${msg||'Introduce la sección, la luz o altura y las cargas'}</span></div>`;
+  $('sec').innerHTML='';drawTable(-1,-1);
+}
+function setUI(){
+  const s=$('el').value==='s';
+  $('rowEsq').hidden=s;$('rowBeta').hidden=!s;
+  $('lL').textContent=s?'Altura H':'Luz L';
+  $('uG').textContent=s?'kN':'kN/m';$('uQ').textContent=s?'kN':'kN/m';$('u4').textContent=s?'kN':'kN/m';
+  $('lG').innerHTML=s?'Axil permanente G<sub>k</sub>':'Carga permanente G<sub>k</sub>';
+  $('lQ').innerHTML=s?'Axil de sobrecarga Q<sub>k</sub>':'Sobrecarga de uso Q<sub>k</sub>';
+  const c=$('caras');
+  c.options[0].text=s?'3 (una cara adosada a muro)':'3 (cara superior protegida)';
+  c.options[1].text=s?'4 (exento)':'4 (exenta)';
+  $('rowChi').hidden=!s;
+}
+function calc(){
+  setUI();
+  const s=$('el').value==='s',cl=$('cl').value,m=window.MADERA[cl],b0=v('b'),h0=v('h'),caras=parseInt($('caras').value,10),L=v('L'),Gk=v('Gk'),Qk=v('Qk')>0?v('Qk'):0,uso=parseInt($('uso').value,10),alt=parseInt($('alt').value,10);
+  const Rq=RT[uso][alt];
+  if(!(b0>0&&h0>0&&L>0&&Gk>0)){empty();drawTable(uso,alt);return;}
+  if(Rq==null){empty('Vivienda unifamiliar: el DB SI no da valor para esa altura');drawTable(uso,alt);return;}
+  const b=Math.min(b0,h0), h=Math.max(b0,h0);
+  $('f11').innerHTML=`${USOS[uso]}, ${$('alt').selectedOptions[0].text.toLowerCase()} → ${R('R '+Rq)} · t = ${Rq} min`;
+  $('t1').innerHTML=pill('info','R '+Rq);
+  const bn=m.bn, def=bn*Rq+7;
+  $('f21').innerHTML=`${cl==='GL24h'?'Laminada encolada':cl==='D30'?'Frondosa, ρ ≥ 450 kg/m³':'Conífera maciza'} → ${R(nf(bn,2)+' mm/min')}`;
+  $('f22').innerHTML=`${G('d<sub>ef</sub> = β<sub>n</sub>·t + 7')} = ${nf(bn,2)}·${Rq} + 7 = ${R(nf(def,1)+' mm')}`;
+  $('t2').innerHTML=pill('info',nf(def,0)+' mm');check('try2','c2',def,0.01);
+  const d=def/10;
+  let br,hr;
+  if(!s){br=b-2*d; hr=caras===3?h-d:h-2*d;}
+  else{br=caras===3?b-d:b-2*d; hr=h-2*d;}
+  $('why3').innerHTML=s?'A cada cara expuesta se le resta d<sub>ef</sub>. Un soporte exento pierde d<sub>ef</sub> por los cuatro lados; si está adosado a un muro por una cara, esa no se quema (aquí se supone adosado por el lado menor).':'A cada cara expuesta se le resta d<sub>ef</sub>. Una viga bajo forjado tiene la cara superior protegida: pierde d<sub>ef</sub> en los dos laterales y en la cara inferior. Si está exenta, en las cuatro.';
+  if(br<=0||hr<=0){['f31','f32','f41','f42','f51','f52'].forEach(id=>$(id).innerHTML='<span class="gen">—</span>');$('f31').innerHTML=pill('bad','la sección se consume entera');$('t3').innerHTML=pill('bad','Sin sección');$('t5').innerHTML=pill('bad','No cumple');
+    $('summary').innerHTML=`<div><span class="lab">${s?'Soporte':'Viga'} ${nf(b,0)} × ${nf(h,0)} cm · R ${Rq}</span><span class="big">No cumple</span></div>`;draw(s,b,h,br,hr,caras,d);drawTable(uso,alt);return;}
+  const A=br*hr, W=br*hr*hr/6, i=Math.min(br,hr)/Math.sqrt(12);
+  $('f31').innerHTML=!s?`b<sub>r</sub> = ${nf(b,0)} − 2·${nf(d,2)} = ${R(nf(br,2)+' cm')} · h<sub>r</sub> = ${nf(h,0)} − ${caras===3?'':'2·'}${nf(d,2)} = ${R(nf(hr,2)+' cm')}`:`a<sub>r</sub> = ${nf(b,0)} − ${caras===3?'':'2·'}${nf(d,2)} = ${R(nf(br,2)+' cm')} · b<sub>r</sub> = ${nf(h,0)} − 2·${nf(d,2)} = ${R(nf(hr,2)+' cm')}`;
+  $('f32').innerHTML=s?`A<sub>r</sub> = ${nf(A,0)} cm² · i<sub>mín</sub> = ${nf(i,2)} cm`:`W<sub>r</sub> = b<sub>r</sub>·h<sub>r</sub>²/6 = ${R(nf(W,0)+' cm³')} (frente a ${nf(b*h*h/6,0)} cm³ inicial)`;
+  $('t3').innerHTML=pill('info',`${nf(br,1)} × ${nf(hr,1)} cm`);check('try3','c3',s?hr:hr,0.01);
+  const qfi=Gk+0.7*Qk;
+  $('f41').innerHTML=`${G('q<sub>fi</sub> = G<sub>k</sub> + 0,7·Q<sub>k</sub>')} = ${nf(Gk)} + 0,7·${nf(Qk)} = ${R(nf(qfi)+(s?' kN':' kN/m'))}`;
+  $('t4').innerHTML=pill('info',nf(qfi,1)+(s?' kN':' kN/m'));check('try4','c4',qfi,0.01);
+  let sig,fk,ok,chi=1;
+  if(!s){const esq=$('esq').value, c=esq==='12'?12:esq==='2'?2:8, Mfi=qfi*L*L/c;
+    $('k42').textContent='Momento';
+    $('f42').innerHTML=`${G('M<sub>fi</sub> = q<sub>fi</sub>·L²/'+c)} = ${nf(qfi)}·${nf(L)}²/${c} = ${R(nf(Mfi)+' kN·m')}`;
+    fk=m.fm; sig=Mfi*100/W;
+    $('why5').innerHTML='Con la sección reducida y la carga de incendio, la tensión de flexión no puede superar la resistencia característica de la madera: σ = M<sub>fi</sub>/W<sub>r</sub> ≤ f<sub>m,k</sub>.';
+    $('f52').innerHTML=`${G('σ = M<sub>fi</sub>·100/W<sub>r</sub>')} = ${nf(Mfi)}·100/${nf(W,0)} = ${R(nf(sig*10,1)+' N/mm²')} ≤ f<sub>m,k</sub> = ${nf(fk*10,0)} → ${R(nf(100*sig/fk,0)+' %')} `;
+  }else{const beta=v('beta'), Lk=beta*L, lam=Lk*100/i; chi=window.chiMadera(cl,lam);
+    $('k42').textContent='Axil';
+    $('f42').innerHTML=`${G('N<sub>fi</sub>')} = ${R(nf(qfi)+' kN')}`;
+    $('f51').innerHTML=`${G('λ = L<sub>k</sub>/i<sub>mín</sub>')} = ${nf(Lk*100,0)}/${nf(i,2)} = ${R(nf(lam,1))} → χ = ${R(nf(chi,3))}`+(lam>200?' '+pill('bad','λ > 200'):'');
+    fk=m.fc0; sig=qfi/(A*chi);
+    $('why5').innerHTML='La sección reducida es más esbelta, así que el pandeo empeora: se recalcula χ con su radio de giro y se comprueba σ = N<sub>fi</sub>/(A<sub>r</sub>·χ) ≤ f<sub>c,0,k</sub>.';
+    $('f52').innerHTML=`${G('σ = N<sub>fi</sub>/(A<sub>r</sub>·χ)')} = ${nf(qfi)}/(${nf(A,0)}·${nf(chi,3)}) = ${R(nf(sig*10,1)+' N/mm²')} ≤ f<sub>c,0,k</sub> = ${nf(fk*10,0)} → ${R(nf(100*sig/fk,0)+' %')} `;
+  }
+  ok=sig<=fk+1e-9;
+  $('f52').innerHTML+=ok?pill('ok','cumple'):pill('bad','no cumple');
+  $('t5').innerHTML=ok?pill('ok','Cumple R '+Rq):pill('bad','No cumple');
+  check('try5','c5',sig*10,0.02);
+  $('summary').innerHTML=`
+    <div><span class="lab">${s?'Soporte':'Viga'} ${nf(b,0)} × ${nf(h,0)} cm ${cl}</span><span class="big">${ok?'Cumple':'No cumple'} R ${Rq}</span></div>
+    <div><span class="lab">Carbonizado</span><span class="big">${nf(def,0)} mm</span></div>
+    <div><span class="lab">Aprovechamiento</span><span class="big">${nf(100*sig/fk,0)} %</span></div>`;
+  draw(s,b,h,br,hr,caras,d);drawTable(uso,alt);
+}
+function draw(s,b,h,br,hr,caras,d){
+  const sc=Math.min(150/b,170/h),W=b*sc,H=h*sc,cx=130,cy=112,x0=cx-W/2,y0=cy-H/2,dd=d*sc;
+  let g=`<rect x="${x0}" y="${y0}" width="${W}" height="${H}" fill="var(--char)" opacity=".85"/>`;
+  const top=(!s&&caras===3)?0:dd, left=(s&&caras===3)?0:dd;
+  if(br>0&&hr>0)g+=`<rect x="${x0+left}" y="${y0+top}" width="${br*sc}" height="${hr*sc}" fill="var(--wood)" stroke="var(--wood-edge)" stroke-width="1.2"/>`;
+  if(!s&&caras===3)g+=`<rect x="${x0-30}" y="${y0-12}" width="${W+60}" height="12" fill="var(--concrete)" stroke="var(--concrete-edge)"/>`;
+  if(s&&caras===3)g+=`<rect x="${x0-14}" y="${y0-20}" width="14" height="${H+40}" fill="var(--concrete)" stroke="var(--concrete-edge)"/>`;
+  g+=`<text x="${cx}" y="${y0+H+16}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">${nf(b,0)} → ${br>0?nf(br,1):'0'} cm</text><text x="${x0+W+8}" y="${cy}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">${nf(h,0)} → ${hr>0?nf(hr,1):'0'}</text>`;
+  g+=`<text x="${x0+W+8}" y="${y0+H}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--bad)">d<tspan font-size="8" dy="2">ef</tspan><tspan dy="-2"> = ${nf(d*10,0)} mm</tspan></text>`;
+  $('sec').innerHTML=g;
+}
+function drawTable(uso,alt){
+  const cols=['Sót.','<15','<28','≥28'], sh=['Viv. unifam.','Resid./doc./adm.','Comerc./públ./hosp.','Aparc. otro uso','Aparc. exclusivo'];
+  let q='';const x0=12,y0=22,cw=50,rw=128,rh=32;
+  cols.forEach((c,j)=>q+=`<text x="${x0+rw+cw*j+cw/2}" y="${y0}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--muted)">${c}</text>`);
+  RT.forEach((row,i)=>{q+=`<text x="${x0}" y="${y0+20+rh*i+4}" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--ink)">${sh[i]}</text>`;
+    row.forEach((r,j)=>{const on=i===uso&&j===alt;q+=`<rect x="${x0+rw+cw*j+3}" y="${y0+8+rh*i}" width="${cw-6}" height="${rh-8}" rx="4" fill="${on?'var(--accent)':'var(--soft)'}" stroke="var(--line)"/><text x="${x0+rw+cw*j+cw/2}" y="${y0+24+rh*i}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="${on?'var(--panel)':'var(--ink)'}">${r==null?'—':'R'+r}</text>`;});});
+  $('pl').innerHTML=q;
+}
+$('clear').addEventListener('click',()=>{
+  ['b','h','L','Gk','Qk','try2','try3','try4','try5'].forEach(id=>{$(id).value='';});
+  $('el').value='v';$('cl').value='C24';$('caras').value='3';$('esq').value='8';$('beta').value='1';$('uso').value='1';$('alt').value='1';
+  calc();$('b').focus();
+});
+$('el').addEventListener('change',()=>{$('caras').value=$('el').value==='s'?'4':'3';});
+$('practica').addEventListener('change',()=>document.querySelector('.wrap').classList.toggle('practice',$('practica').checked));
+document.querySelectorAll('input,select').forEach(el=>{if(el.id!=='practica')el.addEventListener('input',calc);});
+calc();
+})();
+</script>
+
+<script src="pdf.js"></script>
+</body></html>

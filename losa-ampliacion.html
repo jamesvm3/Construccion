@@ -1,0 +1,527 @@
+<!doctype html><html><head><meta charset=utf8>
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Losa de cimentación C2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+/* Layout: datos a la izquierda (fijos), pasos 0 a 5 a la derecha, con resumen y dos dibujos arriba. Mismo lenguaje visual que las calculadoras de zapata y muro. */
+:root{
+  --bg:#eef0ee; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#cfd5d3;
+  --soft:#f5f7f6; --accent:#1f5f7a; --accent-soft:#e1edf2; --rebar:#b0392b;
+  --concrete:#d9dcd8; --concrete-edge:#8e9692; --soil:#e8dcc3; --soil-ink:#7a6a46;
+  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+    --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+    --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#3b3626; --soil-ink:#c9b98f;
+    --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+  --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+  --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#3b3626; --soil-ink:#c9b98f;
+  --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 60px}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--cond);font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance;letter-spacing:-.01em}
+.src{font-size:13px;color:var(--muted);max-width:46ch}
+.mode{display:flex;align-items:center;gap:10px;font-size:14px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:6px}
+.grid{display:grid;grid-template-columns:350px 1fr;gap:22px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;flex-direction:column;gap:14px;max-height:calc(100vh - 28px);overflow:auto}
+@media (max-width:860px){aside{position:static;max-height:none}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
+.box h2{font-family:var(--cond);font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--accent)}
+.box h3.g{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:12px 0 2px;font-weight:500}
+.field{display:grid;grid-template-columns:1fr 104px 52px;align-items:center;gap:8px;padding-block:5px;border-bottom:1px dashed var(--line)}
+.field:last-child{border-bottom:0}
+.field label{font-size:13.5px}
+.field .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
+input[type=number],input[type=text],select{width:100%;font-family:var(--mono);font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--soft);color:var(--ink);text-align:right}
+input[type=text]{text-align:left}
+select{text-align:left}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+button{font-family:var(--sans);font-size:13px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:6px 12px;border-radius:4px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+button.x{background:transparent;color:var(--muted);border-color:var(--line);padding:4px 8px}
+.summary{background:var(--ink);color:var(--bg);border-radius:6px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:18px 32px;align-items:baseline}
+.summary .big{font-family:var(--cond);font-size:22px;font-weight:700;letter-spacing:.01em}
+.summary .lab{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;display:block}
+.drawing{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:620px){.drawing{grid-template-columns:1fr}}
+.drawing .box{padding:10px 12px}
+.drawing h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:500}
+.cap{font-size:11.5px;color:var(--muted);margin:2px 0 0}
+svg{display:block;width:100%;height:auto}
+main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.step-h{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--soft)}
+.num{font-family:var(--mono);font-weight:600;font-size:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--accent);color:var(--accent);flex:none}
+.step-h h2{font-family:var(--cond);font-size:19px;margin:0;font-weight:700}
+.step-h .tag{margin-left:auto}
+.step-b{padding:14px 16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.why{font-size:14px;color:var(--muted);max-width:72ch;margin:0}
+.calc{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:minmax(120px,170px) 1fr;gap:6px 14px;align-items:center;padding:8px 10px;border-radius:4px;background:var(--soft)}
+@media (max-width:520px){.row{grid-template-columns:1fr}}
+.row .k{font-size:13.5px;font-weight:500}
+.f{font-family:var(--mono);font-size:13.5px;line-height:1.5;overflow-wrap:anywhere}
+.f .gen{color:var(--muted)}
+.f .res{color:var(--accent);font-weight:600}
+.f sub,.f sup{font-size:.75em;line-height:0}
+/* quebrado con raya horizontal */
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .3em;line-height:1.3;text-align:center}
+.fr>span:first-child{padding:0 .3em .1em}
+.fr>span:last-child{border-top:1.6px solid currentColor;padding:.1em .3em 0}
+.fr .fr{font-size:.9em}
+.practice .res,.practice .sug,.practice .step-h .tag,.practice .summary,.practice .drawing svg,.practice .row .pill,.practice td.r{filter:blur(7px);user-select:none}
+.try{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;border-top:1px dashed var(--line);padding-top:10px}
+.try input{width:104px}
+.pill{font-family:var(--mono);font-size:11.5px;padding:3px 8px;border-radius:20px;white-space:nowrap;margin-left:6px}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.info{background:var(--accent-soft);color:var(--accent)}
+.note{font-size:13px;border-left:3px solid var(--warn);padding:6px 10px;background:var(--warn-soft);color:var(--ink);border-radius:0 4px 4px 0}
+.note.extra{border-left-color:var(--accent);background:var(--accent-soft)}
+.sub-h{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:4px 0 -2px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{font-weight:500;color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em}
+th:first-child,td:first-child{text-align:left}
+table.loads input{width:92px}
+table.loads input[type=text]{width:120px}
+footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+footer ul{margin:6px 0 0;padding-left:18px}
+@media (prefers-reduced-motion:no-preference){.res,.pill{transition:filter .25s ease}}
+ </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="mute.css">
+
+<div class="wrap">
+<a href="index.html#H" style="display:inline-flex;align-items:center;margin-bottom:14px;font:600 14px var(--sans);color:var(--panel);background:var(--ink);border:1px solid var(--ink);border-radius:6px;padding:6px 14px 6px 11px;text-decoration:none">← Menú de calculadoras</a>
+<header class="top mat-H">
+  <div>
+    <div class="mbadge">LC+</div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Hormigón · Cimentaciones superficiales</small>Losa de cimentación (ampliación)</h1></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+    <label class="mode" for="practica"><input type="checkbox" id="practica"> Modo práctica: ocultar resultados</label>
+    <div class="hint" style="margin:0">Calcula tú, escribe tu resultado en cada paso y comprueba.</div>
+    <div class="src">Losa rígida, presión lineal. DB SE-C (4.1.5 y anejo E) y Guía de aplicación del Código Estructural (6.3, 9.1). El armado sigue el criterio de las fichas: A<sub>s</sub> = M<sub>d</sub> / (0,8·h·f<sub>yd</sub>).</div>
+  </div>
+</header>
+
+<div class="grid">
+<aside>
+  <div class="box">
+    <h2>Datos de partida</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px"><button type="button" id="clear">Limpiar datos</button></div>
+    <h3 class="g">Losa</h3>
+    <div class="field"><label for="Lx">Lado en x, L</label><input id="Lx" type="number" step="any" min="0"><span class="u">m</span></div>
+    <div class="field"><label for="Ly">Lado en y, B</label><input id="Ly" type="number" step="any" min="0"><span class="u">m</span></div>
+    <div class="field"><label for="x0">Esquina de la losa, x<sub>0</sub></label><input id="x0" type="number" step="any" placeholder="0"><span class="u">m</span></div>
+    <div class="field"><label for="y0">Esquina de la losa, y<sub>0</sub></label><input id="y0" type="number" step="any" placeholder="0"><span class="u">m</span></div>
+    <div class="field"><label for="h">Canto de tanteo h</label><input id="h" type="number" step="0.05" min="0"><span class="u">m</span></div>
+    <div class="field"><label for="lmax">Luz mayor entre pilares l</label><input id="lmax" type="number" step="any" min="0"><span class="u">m</span></div>
+    <div class="field"><label for="vmax">Voladizo mayor v</label><input id="vmax" type="number" step="any" min="0" placeholder="0"><span class="u">m</span></div>
+    <h3 class="g">Terreno</h3>
+    <div class="field"><label for="sig">Tensión admisible σ<sub>adm</sub></label><input id="sig" type="number" step="any" min="0"><span class="u">kN/m²</span></div>
+    <div class="field"><label for="k30">Balasto K<sub>30</sub></label><input id="k30" type="number" step="any" min="0"><span class="u">kp/cm³</span></div>
+    <div class="field"><label for="soil">Tipo de suelo</label><select id="soil"><option value="c">Cohesivo</option><option value="g">Granular</option></select><span class="u"></span></div>
+    <h3 class="g">Materiales y armado</h3>
+    <div class="field"><label for="fck">Hormigón f<sub>ck</sub></label><input id="fck" type="number" step="any" min="0" placeholder="25"><span class="u">N/mm²</span></div>
+    <div class="field"><label for="fyk">Acero f<sub>yk</sub></label><select id="fyk"><option value="400">400 (B400S)</option><option value="500" selected>500 (B500S)</option></select><span class="u">N/mm²</span></div>
+    <div class="field"><label for="rec">Recubrimiento</label><input id="rec" type="number" step="any" min="0" placeholder="5"><span class="u">cm</span></div>
+    <div class="field"><label for="phiB">Ø de la armadura base</label><select id="phiB"><option>12</option><option selected>16</option><option>20</option><option>25</option></select><span class="u">mm</span></div>
+    <div class="field"><label for="sB">Separación de la base</label><input id="sB" type="number" step="any" min="0"><span class="u">cm</span></div>
+    <h3 class="g">Pilar más cargado</h3>
+    <div class="field"><label for="NkP">N<sub>k</sub> del pilar</label><input id="NkP" type="number" step="any" min="0"><span class="u">kN</span></div>
+    <div class="field"><label for="cP">Lado del pilar c</label><input id="cP" type="number" step="any" min="0"><span class="u">cm</span></div>
+    <p class="hint">Escribe los datos de tu ejercicio. Las cargas van sin mayorar. Las coordenadas de las cargas del paso 0 y la esquina de la losa usan el mismo origen (por ejemplo, el eje del primer pilar). «Limpiar datos» lo deja todo en blanco.</p>
+  </div>
+  <div class="box">
+    <h2>Convenios</h2>
+    <p class="hint" style="margin-top:0">Mayoración 1,5. Hormigón γ<sub>c</sub> = 1,5; acero γ<sub>s</sub> = 1,15. Hormigón armado 25 kN/m³. 1 kp/cm³ ≈ 9,81 MN/m³. Pilar interior a punzonamiento con β = 1.</p>
+  </div>
+</aside>
+
+<main>
+  <section>
+    <div class="summary" id="summary"></div>
+    <div class="drawing">
+      <div class="box"><h3>Planta de cargas</h3><svg id="plan" viewBox="0 0 360 300" role="img" aria-label="Planta de la losa con las cargas, su centro y la resultante"></svg><p class="cap">Círculos proporcionales a N<sub>k</sub>. Cruz: centro de la losa. Punto rojo: resultante.</p></div>
+      <div class="box"><h3>Punzonamiento del pilar</h3><svg id="punz" viewBox="0 0 360 300" role="img" aria-label="Perímetros de comprobación alrededor del pilar"></svg><p class="cap">Perímetros u<sub>0</sub> (cara del pilar) y a 0,5d, d, 1,5d y 2d (u<sub>1</sub>).</p></div>
+    </div>
+  </section>
+
+  <article class="step" id="s0">
+    <div class="step-h"><span class="num">0</span><h2>Cargas que llegan a la losa</h2><span class="tag" id="t0"></span></div>
+    <div class="step-b">
+      <p class="why">Escribe cada carga característica que baja a la losa con su posición en planta: pilares, y también lo que llega por los muros (forjado apoyado en el muro y peso del propio muro), que se puede meter como una sola carga en el centro de gravedad del muro. El peso de la losa no se escribe aquí: se calcula en el paso 1.</p>
+      <div class="tbl"><table class="loads" id="loads"><thead><tr><th>Carga</th><th>N<sub>k</sub> (kN)</th><th>x (m)</th><th>y (m)</th><th></th></tr></thead><tbody></tbody></table></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center"><button type="button" id="addRow" class="ghost">Añadir carga</button><span class="hint" style="margin:0">Las filas vacías no cuentan.</span></div>
+      <div class="calc">
+        <div class="row"><span class="k">Carga total</span><span class="f" id="f01"></span></div>
+      </div>
+      <div class="try"><span>Tu ΣN<sub>k</sub>:</span><input type="number" step="any" id="try0" aria-label="Tu suma de cargas en kN"><span class="u">kN</span><span id="c0"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s1">
+    <div class="step-h"><span class="num">1</span><h2>Presión sobre el terreno</h2><span class="tag" id="t1"></span></div>
+    <div class="step-b">
+      <p class="why">La presión media es la carga total, con el peso de la losa, entre su área. Si la resultante no pasa por el centro de la losa, la presión crece hacia un borde: la posición de la resultante sale de tomar momentos, y la excentricidad es su distancia al centro. Se trabaja con cargas sin mayorar, igual que en la zapata.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Área y peso de la losa</span><span class="f" id="f11"></span></div>
+        <div class="row"><span class="k">Presión media</span><span class="f" id="f12"></span></div>
+        <div class="row"><span class="k">Resultante en x</span><span class="f" id="f13"></span></div>
+        <div class="row"><span class="k">Resultante en y</span><span class="f" id="f14"></span></div>
+        <div class="row"><span class="k">Presión máxima</span><span class="f" id="f15"></span></div>
+      </div>
+      <div class="sub-h">Opcional: ¿cimentación compensada?</div>
+      <div class="field" style="max-width:420px"><label for="Dexc">Profundidad excavada bajo el terreno natural</label><input id="Dexc" type="number" step="any" min="0"><span class="u">m</span></div>
+      <div class="field" style="max-width:420px"><label for="gam">Peso específico del terreno γ</label><input id="gam" type="number" step="any" min="0" placeholder="17–20"><span class="u">kN/m³</span></div>
+      <div class="calc"><div class="row"><span class="k">Descarga de tierras</span><span class="f" id="f16"></span></div></div>
+      <div class="try"><span>Tu σ<sub>med</sub>:</span><input type="number" step="any" id="try1" aria-label="Tu presión media en kN por metro cuadrado"><span class="u">kN/m²</span><span id="c1"></span><span style="margin-left:8px">Tu e<sub>x</sub>:</span><input type="number" step="any" id="try1b" aria-label="Tu excentricidad en x en metros"><span class="u">m</span><span id="c1b"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s2">
+    <div class="step-h"><span class="num">2</span><h2>¿Es una losa rígida?</h2><span class="tag" id="t2"></span></div>
+    <div class="step-b">
+      <p class="why">Los pasos 1 y 4 suponen que la presión bajo la losa es lineal, y eso solo vale si la losa es rígida frente al terreno. El DB SE-C (anejo E.3) lo admite si la luz entre pilares y los voladizos no pasan de unos límites que dependen de la rigidez de la losa (E<sub>c</sub>·I<sub>c</sub>) y del terreno (k<sub>sB</sub>). Se calcula una banda de 1 m. El K<sub>30</sub> del informe es de una placa de 30 cm y hay que pasarlo al ancho real de la losa (DB SE-C, E.5), con B el lado menor.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Módulo del hormigón</span><span class="f" id="f21"></span></div>
+        <div class="row"><span class="k">Inercia de la banda</span><span class="f" id="f22"></span></div>
+        <div class="row"><span class="k">Balasto de cálculo</span><span class="f" id="f23"></span></div>
+        <div class="row"><span class="k">Longitud elástica</span><span class="f" id="f24"></span></div>
+        <div class="row"><span class="k">Luz límite</span><span class="f" id="f25"></span></div>
+        <div class="row"><span class="k">Voladizo límite</span><span class="f" id="f26"></span></div>
+      </div>
+      <div class="note extra">Si no cumple, la losa es flexible y hay que calcularla en un programa con muelles: este método no sirve. El DB avisa de que en losas el paso de K<sub>30</sub> al ancho real es poco fiable (E.5, párrafo 9).</div>
+      <div class="try"><span>Tu luz límite:</span><input type="number" step="any" id="try2" aria-label="Tu luz límite en metros"><span class="u">m</span><span id="c2"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s3">
+    <div class="step-h"><span class="num">3</span><h2>Canto por punzonamiento</h2><span class="tag" id="t3"></span></div>
+    <div class="step-b">
+      <p class="why">El pilar más cargado intenta perforar la losa. Al axil mayorado se le descuenta la reacción neta del terreno dentro de cada perímetro: la del terreno menos el peso de la losa, es decir, las cargas de la estructura repartidas en la losa. Se comprueba la cara del pilar (bielas) y cuatro perímetros (tirantes), a 2d (u<sub>1</sub>), 1,5d, d y 0,5d, como pide la Guía CE (6.3) para losas de cimentación. Si alguno no cumple, sube el canto h.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Canto útil</span><span class="f" id="f31"></span></div>
+        <div class="row"><span class="k">Axil de cálculo</span><span class="f" id="f32"></span></div>
+        <div class="row"><span class="k">Reacción neta de cálculo</span><span class="f" id="f33"></span></div>
+        <div class="row"><span class="k">Bielas (cara del pilar)</span><span class="f" id="f34"></span></div>
+        <div class="row"><span class="k">Cuantía y k</span><span class="f" id="f35"></span></div>
+        <div class="row"><span class="k">Resistencia v<sub>Rd,c</sub></span><span class="f" id="f36"></span></div>
+      </div>
+      <div class="sub-h">Tirantes en los cuatro perímetros</div>
+      <div class="tbl"><table id="ptab"><thead><tr><th>a</th><th>u (m)</th><th>A<sub>int</sub> (m²)</th><th>V<sub>red</sub> (kN)</th><th>v<sub>Ed</sub> (N/mm²)</th><th>v<sub>Rd,c</sub>·2d/a</th><th></th></tr></thead><tbody></tbody></table></div>
+      <p class="hint" style="margin:0">u = 4·c + 2·π·a · A<sub>int</sub> = c² + 4·c·a + π·a² · V<sub>red</sub> = V<sub>Ed</sub> − q<sub>d,neta</sub>·A<sub>int</sub> · v<sub>Ed</sub> = V<sub>red</sub> / (u·d)</p>
+      <div class="try"><span>Tu v<sub>Ed</sub> en u<sub>1</sub>:</span><input type="number" step="any" id="try3" aria-label="Tu tensión de punzonamiento en u1 en newton por milímetro cuadrado"><span class="u">N/mm²</span><span id="c3"></span><span style="margin-left:8px">Tu v<sub>Rd,c</sub>:</span><input type="number" step="any" id="try3b" aria-label="Tu resistencia en newton por milímetro cuadrado"><span class="u">N/mm²</span><span id="c3b"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s4">
+    <div class="step-h"><span class="num">4</span><h2>Armado por bandas</h2><span class="tag" id="t4"></span></div>
+    <div class="step-b">
+      <p class="why">Cada banda entre ejes de pilares trabaja como una viga continua invertida: los pilares son los apoyos y el terreno empuja hacia arriba con la reacción neta de cálculo. Con la luz mayor y el coeficiente 1/10 de viga continua sale el momento por metro de banda. Bajo las filas de pilares tracciona la cara inferior; en el centro de los vanos, la superior. Donde la base no llegue, se añade refuerzo.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Momento de cálculo</span><span class="f" id="f41"></span></div>
+        <div class="row"><span class="k">Armadura necesaria</span><span class="f" id="f42"></span></div>
+        <div class="row"><span class="k">Armadura base</span><span class="f" id="f43"></span></div>
+        <div class="row"><span class="k">Refuerzo</span><span class="f" id="f44"></span></div>
+      </div>
+      <div class="try"><span>Tu M<sub>d</sub>:</span><input type="number" step="any" id="try4" aria-label="Tu momento en kilonewton metro por metro"><span class="u">kN·m/m</span><span id="c4"></span><span style="margin-left:8px">Tu A<sub>s</sub>:</span><input type="number" step="any" id="try4b" aria-label="Tu armadura en centímetros cuadrados por metro"><span class="u">cm²/m</span><span id="c4b"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s5">
+    <div class="step-h"><span class="num">5</span><h2>Armadura mínima</h2><span class="tag" id="t5"></span></div>
+    <div class="step-b">
+      <p class="why">La armadura base de cada cara tiene que cubrir la mínima de flexión de la Guía CE (9.1), que evita la rotura frágil al fisurarse el hormigón. Se calcula por metro de ancho. La Guía da también la regla rápida 0,002·b·h, más conservadora. En cimientos, el diámetro mínimo es 12 mm.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Tracción del hormigón</span><span class="f" id="f51"></span></div>
+        <div class="row"><span class="k">A flexotracción</span><span class="f" id="f52"></span></div>
+        <div class="row"><span class="k">Armadura mínima</span><span class="f" id="f53"></span></div>
+      </div>
+      <div class="try"><span>Tu A<sub>s,mín</sub>:</span><input type="number" step="any" id="try5" aria-label="Tu armadura mínima en centímetros cuadrados por metro"><span class="u">cm²/m</span><span id="c5"></span></div>
+    </div>
+  </article>
+
+  <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con la Guía de aplicación del Código Estructural y el DB SE-C. Tampoco sustituye al cálculo con un modelo de interacción suelo-estructura (DB SE-C, anejo E). No se comprueban:
+    <ul>
+      <li>asientos totales y diferenciales;</li>
+      <li>subpresión del agua y estanquidad;</li>
+      <li>punzonamiento de pilares de borde y de esquina, ni momentos transmitidos por los pilares;</li>
+      <li>cortante en bandas, fisuración y anclajes;</li>
+      <li>el reparto real de momentos entre vanos de luces distintas (el 1/10 es una simplificación).</li>
+    </ul>
+    <p style="margin:8px 0 0">Errores o sugerencias: <a href="mailto:jaimevergara@ugr.es">jaimevergara@ugr.es</a>.</p>
+   © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const nf=(x,d=2)=>isFinite(x)?x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const num=s=>parseFloat(String(s).replace(',','.'));
+const v=id=>num($(id).value);
+const vd=(id,def)=>{const x=v(id);return isFinite(x)?x:def;};
+const R=s=>`<span class="res">${s}</span>`;
+const G=s=>`<span class="gen">${s}</span>`;
+const fr=(n,d)=>`<span class="fr"><span>${n}</span><span>${d}</span></span>`;
+const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+const dash='<span class="gen">—</span>';
+
+function check(tryId,outId,val,tol){
+  const t=num($(tryId).value);
+  if(!isFinite(t)||!isFinite(val)){$(outId).innerHTML='';return;}
+  const ok=Math.abs(t-val)<=Math.max(Math.abs(val)*tol,1e-9);
+  $(outId).innerHTML=ok?pill('ok','Correcto'):pill('bad','Revisa: no coincide');
+}
+
+/* Tabla de cargas */
+let rid=0;
+function addRow(n='',N='',x='',y=''){
+  const i=rid++; const tr=document.createElement('tr');
+  tr.innerHTML=`<td><input type="text" id="ln${i}" aria-label="Nombre de la carga" placeholder="P${i+1}" value="${n}"></td><td><input type="number" step="any" id="lN${i}" aria-label="Nk en kN" value="${N}"></td><td><input type="number" step="any" id="lx${i}" aria-label="x en m" value="${x}"></td><td><input type="number" step="any" id="ly${i}" aria-label="y en m" value="${y}"></td><td><button type="button" class="x" aria-label="Quitar fila">×</button></td>`;
+  tr.querySelector('button').addEventListener('click',()=>{tr.remove();calc();});
+  tr.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));
+  $('loads').querySelector('tbody').appendChild(tr);
+}
+function loads(){
+  const out=[];
+  $('loads').querySelectorAll('tbody tr').forEach(tr=>{
+    const ins=tr.querySelectorAll('input');
+    const N=num(ins[1].value),x=num(ins[2].value),y=num(ins[3].value);
+    if(isFinite(N)&&N>0) out.push({n:ins[0].value||ins[0].placeholder,N,x:isFinite(x)?x:NaN,y:isFinite(y)?y:NaN});
+  });
+  return out;
+}
+
+const IDS=['f01','f11','f12','f13','f14','f15','f16','f21','f22','f23','f24','f25','f26','f31','f32','f33','f34','f35','f36','f41','f42','f43','f44','f51','f52','f53'];
+const TAGS=['t0','t1','t2','t3','t4','t5'];
+const CHK=['c0','c1','c1b','c2','c3','c3b','c4','c4b','c5'];
+function blank(){IDS.forEach(id=>$(id).innerHTML=dash);TAGS.concat(CHK).forEach(id=>$(id).innerHTML='');$('ptab').querySelector('tbody').innerHTML='';}
+
+function calc(){
+  blank();
+  const Lx=v('Lx'),Ly=v('Ly'),x0=vd('x0',0),y0=vd('y0',0),h=v('h'),lmax=v('lmax'),vmax=vd('vmax',0);
+  const sig=v('sig'),k30=v('k30'),soil=$('soil').value,fck=vd('fck',25),fyk=v('fyk'),rec=vd('rec',5),phi=v('phiB'),sB=v('sB'),NkP=v('NkP'),c=v('cP')/100;
+  const L=loads(); const S={};
+  const fyd=fyk/1.15;
+
+  /* Paso 0 */
+  const N=L.reduce((a,b)=>a+b.N,0);
+  if(L.length){
+    $('f01').innerHTML=`${G('ΣN<sub>k</sub> = ')}${L.map(l=>nf(l.N,0)).join(' + ')} = ${R(nf(N,1)+' kN')}`;
+    $('t0').innerHTML=pill('info',`${L.length} cargas · ${nf(N,0)} kN`);
+    check('try0','c0',N,0.01);
+  }
+
+  /* Paso 1 */
+  const haveL=Lx>0&&Ly>0, A=haveL?Lx*Ly:NaN;
+  let sm=NaN,smax=NaN,ex=NaN,ey=NaN,xR=NaN,yR=NaN;
+  const cx=x0+Lx/2, cy=y0+Ly/2;
+  if(haveL&&h>0){
+    const Pl=25*h*A;
+    $('f11').innerHTML=`${G('A = L·B')} = ${nf(Lx)}·${nf(Ly)} = ${R(nf(A)+' m²')} · ${G('P<sub>losa</sub> = 25·h·A')} = 25·${nf(h)}·${nf(A)} = ${R(nf(Pl,1)+' kN')}`;
+    if(N>0){
+      sm=(N+Pl)/A;
+      $('f12').innerHTML=`${G('σ<sub>med</sub> = ')}${G(fr('ΣN<sub>k</sub> + P<sub>losa</sub>','A'))} = ${fr(`${nf(N,1)} + ${nf(Pl,1)}`,nf(A))} = ${R(nf(sm)+' kN/m²')}`;
+      check('try1','c1',sm,0.01);
+      const okXY=L.every(l=>isFinite(l.x)&&isFinite(l.y));
+      if(okXY){
+        xR=L.reduce((a,b)=>a+b.N*b.x,0)/N; yR=L.reduce((a,b)=>a+b.N*b.y,0)/N;
+        ex=xR-cx; ey=yR-cy;
+        $('f13').innerHTML=`${G('x<sub>R</sub> = ')}${G(fr('ΣN<sub>i</sub>·x<sub>i</sub>','ΣN<sub>i</sub>'))} = ${fr(nf(xR*N,1),nf(N,1))} = ${R(nf(xR,3)+' m')} · centro ${nf(cx,3)} m → ${G('e<sub>x</sub>')} = ${R(nf(ex,3)+' m')}`;
+        $('f14').innerHTML=`${G('y<sub>R</sub> = ')}${G(fr('ΣN<sub>i</sub>·y<sub>i</sub>','ΣN<sub>i</sub>'))} = ${fr(nf(yR*N,1),nf(N,1))} = ${R(nf(yR,3)+' m')} · centro ${nf(cy,3)} m → ${G('e<sub>y</sub>')} = ${R(nf(ey,3)+' m')}`;
+        smax=sm*(1+6*Math.abs(ex)/Lx+6*Math.abs(ey)/Ly);
+        $('f15').innerHTML=`${G('σ<sub>máx</sub> = σ<sub>med</sub>·(1 + ')}${G(fr('6·e<sub>x</sub>','L'))}${G(' + ')}${G(fr('6·e<sub>y</sub>','B'))}${G(')')} = ${nf(sm)}·(1 + ${fr('6·'+nf(Math.abs(ex),3),nf(Lx))} + ${fr('6·'+nf(Math.abs(ey),3),nf(Ly))}) = ${R(nf(smax)+' kN/m²')}`+(sig>0?(smax<=sig?pill('ok',`≤ σ<sub>adm</sub> = ${nf(sig,0)}`):pill('bad',`> σ<sub>adm</sub> = ${nf(sig,0)}`)):'');
+        if(Math.abs(ex)>Lx/6||Math.abs(ey)>Ly/6) $('f15').innerHTML+=pill('warn','resultante fuera del núcleo central');
+        check('try1b','c1b',ex,0.02);
+        $('t1').innerHTML=sig>0?(smax<=sig?pill('ok',`σ<sub>máx</sub> ${nf(smax,1)} kN/m²`):pill('bad','supera σ<sub>adm</sub>')):pill('info',`σ<sub>máx</sub> ${nf(smax,1)} kN/m²`);
+      } else {
+        $('f13').innerHTML=`${dash} <span class="gen">(escribe x e y de todas las cargas)</span>`;
+        $('t1').innerHTML=pill('info',`σ<sub>med</sub> ${nf(sm,1)} kN/m²`);
+      }
+      const D=v('Dexc'),gam=v('gam');
+      if(D>0&&gam>0){const q0=D*gam;
+        $('f16').innerHTML=`${G('γ·D')} = ${nf(gam,1)}·${nf(D)} = ${R(nf(q0,1)+' kN/m²')} · presión neta σ<sub>med</sub> − γ·D = ${R(nf(sm-q0,1)+' kN/m²')}`+(sm-q0<=0.25*sm?pill('info','casi compensada'):'');}
+    }
+  }
+
+  /* Paso 2 */
+  let rig=null;
+  if(h>0&&k30>0&&haveL){
+    const Ec=22000*Math.pow((fck+8)/10,0.3), I=Math.pow(h,3)/12, B=Math.min(Lx,Ly), kp=k30*9.81;
+    const ksB=soil==='c'?kp*0.3/B:kp*Math.pow((B+0.3)/(2*B),2);
+    const lam=Math.pow(4*Ec*I/ksB,0.25);
+    $('f21').innerHTML=`${G('E<sub>cm</sub> = 22 000·(')}${G(fr('f<sub>ck</sub> + 8','10'))}${G(')<sup>0,3</sup>')} = 22 000·(${fr(nf(fck,0)+' + 8','10')})<sup>0,3</sup> = ${R(nf(Ec,0)+' MN/m²')}`;
+    $('f22').innerHTML=`${G('I<sub>c</sub> = ')}${G(fr('1·h³','12'))} = ${fr('1·'+nf(h)+'³','12')} = ${R(nf(I,5)+' m⁴/m')}`;
+    $('f23').innerHTML=(soil==='c'?`${G('k<sub>sB</sub> = K<sub>30</sub>·')}${G(fr('0,30','B'))} = ${nf(kp,2)}·${fr('0,30',nf(B))}`:`${G('k<sub>sB</sub> = K<sub>30</sub>·(')}${G(fr('B + 0,30','2·B'))}${G(')²')} = ${nf(kp,2)}·(${fr(nf(B)+' + 0,30','2·'+nf(B))})²`)+` = ${R(nf(ksB,3)+' MN/m³')} <span class="gen">(K<sub>30</sub> = ${nf(k30)} kp/cm³ = ${nf(kp,2)} MN/m³; B = lado menor)</span>`;
+    $('f24').innerHTML=`${G('λ<sub>e</sub> = ')}<span style="font-size:1.1em">∜</span>(${fr('4·E<sub>c</sub>·I<sub>c</sub>','1·k<sub>sB</sub>')}) = ∜(${fr(`4·${nf(Ec,0)}·${nf(I,5)}`,nf(ksB,3))}) = ${R(nf(lam)+' m')}`;
+    const lL=Math.PI/2*lam, vL=Math.PI/4*lam;
+    const okl=lmax>0?lmax<=lL:null, okv=vmax<=vL;
+    $('f25').innerHTML=`${G(fr('π','2'))}${G('·λ<sub>e</sub>')} = ${fr('π','2')}·${nf(lam)} = ${R(nf(lL)+' m')}`+(lmax>0?(okl?pill('ok',`l = ${nf(lmax)} m ≤ límite`):pill('bad',`l = ${nf(lmax)} m > límite`)):'');
+    $('f26').innerHTML=`${G(fr('π','4'))}${G('·λ<sub>e</sub>')} = ${fr('π','4')}·${nf(lam)} = ${R(nf(vL)+' m')}`+(okv?pill('ok',`v = ${nf(vmax)} m ≤ límite`):pill('bad',`v = ${nf(vmax)} m > límite`));
+    rig=okl===null?null:(okl&&okv);
+    $('t2').innerHTML=rig===null?pill('info','falta la luz l'):(rig?pill('ok','rígida'):pill('bad','flexible'));
+    check('try2','c2',lL,0.01);
+    S.lam=lam;
+  }
+
+  /* Paso 3 */
+  let punz=null,d=NaN,qn=NaN,vRdc=NaN,vEd1=NaN;
+  if(h>0&&NkP>0&&c>0&&phi>0){
+    d=h-rec/100-phi/1000;
+    const V=1.5*NkP;
+    $('f31').innerHTML=`${G('d = h − r − Ø')} = ${nf(h*100,1)} − ${nf(rec,1)} − ${nf(phi/10,1)} = ${R(nf(d*100,1)+' cm')}`;
+    $('f32').innerHTML=`${G('V<sub>Ed</sub> = 1,5·N<sub>k</sub>')} = 1,5·${nf(NkP,1)} = ${R(nf(V,1)+' kN')}`;
+    if(haveL&&N>0){
+      qn=1.5*N/A;
+      $('f33').innerHTML=`${G('q<sub>d,neta</sub> = ')}${G(fr('1,5·ΣN<sub>k</sub>','A'))} = ${fr('1,5·'+nf(N,1),nf(A))} = ${R(nf(qn)+' kN/m²')} <span class="gen">(sin el peso de la losa)</span>`;
+    }
+    const fcd=fck/1.5, nu=0.6*(1-fck/250), vmaxR=0.4*nu*fcd, u0=4*c, v0=V/(u0*d)/1000;
+    const okb=v0<=vmaxR;
+    $('f34').innerHTML=`${G(fr('V<sub>Ed</sub>','u<sub>0</sub>·d'))} = ${fr(nf(V,1),`${nf(u0)}·${nf(d,3)}`)} = ${R(nf(v0,3)+' N/mm²')} ≤ ${G('0,4·ν·f<sub>cd</sub>')} = 0,4·${nf(nu,3)}·${nf(fcd)} = ${R(nf(vmaxR,2)+' N/mm²')}`+(okb?pill('ok','cumple'):pill('bad','no cumple: más canto o pilar mayor'));
+    if(sB>0){
+      const Asb=Math.PI*phi*phi/400*100/sB, rho=Math.min(Asb/(100*d*100),0.02), k=Math.min(1+Math.sqrt(200/(d*1000)),2);
+      const vc=0.12*k*Math.cbrt(100*rho*fck), vmin=0.035*Math.pow(k,1.5)*Math.sqrt(fck);
+      vRdc=Math.max(vc,vmin);
+      $('f35').innerHTML=`${G('ρ = ')}${G(fr('A<sub>s,base</sub>','100·d'))} = ${fr(nf(Asb),'100·'+nf(d*100,1))} = ${R(nf(rho,5))} · ${G('k = 1 + √(')}${G(fr('200','d'))}${G(')')} = 1 + √(${fr('200',nf(d*1000,0))}) = ${R(nf(k,3))} <span class="gen">(d en mm, k ≤ 2)</span>`;
+      $('f36').innerHTML=`${G('0,12·k·∛(100·ρ·f<sub>ck</sub>)')} = 0,12·${nf(k,3)}·∛(100·${nf(rho,5)}·${nf(fck,0)}) = ${nf(vc,3)} · ${G('mín. 0,035·k<sup>3/2</sup>·√f<sub>ck</sub>')} = ${nf(vmin,3)} → ${R('v<sub>Rd,c</sub> = '+nf(vRdc,3)+' N/mm²')}`;
+      if(isFinite(qn)){
+        let allok=okb; const rows=[];
+        [[2,'2d (u<sub>1</sub>)'],[1.5,'1,5d'],[1,'d'],[0.5,'0,5d']].forEach(([f,lab])=>{
+          const a=f*d,u=4*c+2*Math.PI*a,Ai=c*c+4*c*a+Math.PI*a*a,Vr=V-qn*Ai,ve=Vr/(u*d)/1000,res=vRdc*2*d/a,ok=ve<=res;
+          if(f===2) vEd1=ve; allok=allok&&ok;
+          rows.push(`<tr><td>${lab}</td><td class="r">${nf(u,3)}</td><td class="r">${nf(Ai,3)}</td><td class="r">${nf(Vr,1)}</td><td class="r">${nf(ve,3)}</td><td class="r">${nf(res,3)}</td><td>${ok?pill('ok','cumple'):pill('bad','no cumple')}</td></tr>`);
+        });
+        $('ptab').querySelector('tbody').innerHTML=rows.join('');
+        punz=allok;
+        $('t3').innerHTML=allok?pill('ok',`h = ${nf(h)} m cumple`):pill('bad',`h = ${nf(h)} m no cumple`);
+        check('try3','c3',vEd1,0.02);
+      }
+      check('try3b','c3b',vRdc,0.02);
+    }
+  }
+
+  /* Paso 4 */
+  let As=NaN,Asb=NaN,ref=NaN;
+  if(isFinite(qn)&&lmax>0&&h>0){
+    const Md=qn*lmax*lmax/10; As=Md*1000/(0.8*h*100*fyd);
+    $('f41').innerHTML=`${G('M<sub>d</sub> = ')}${G(fr('q<sub>d,neta</sub>·l²','10'))} = ${fr(`${nf(qn)}·${nf(lmax)}²`,'10')} = ${R(nf(Md,1)+' kN·m/m')}`;
+    $('f42').innerHTML=`${G('A<sub>s</sub> = ')}${G(fr('M<sub>d</sub>·10³','0,8·h·f<sub>yd</sub>'))} = ${fr(nf(Md,1)+'·10³',`0,8·${nf(h*100,0)}·${nf(fyd,1)}`)} = ${R(nf(As)+' cm²/m')} <span class="gen">(h en cm)</span>`;
+    check('try4','c4',Md,0.02); check('try4b','c4b',As,0.02);
+    if(sB>0&&phi>0){
+      const Ab=Math.PI*phi*phi/400; Asb=Ab*100/sB; ref=As-Asb;
+      $('f43').innerHTML=`Ø${phi} c/${nf(sB,0)}: ${G(fr('100','s'))}${G('·A<sub>Ø</sub>')} = ${fr('100',nf(sB,0))}·${nf(Ab,3)} = ${R(nf(Asb)+' cm²/m')}`;
+      if(ref>0){
+        const pr=[12,16,20,25].find(p=>Math.PI*p*p/400*100/sB>=ref-1e-9);
+        const sug=pr?`Ø${pr} c/${nf(sB,0)} intercalado con la base (${nf(Math.PI*pr*pr/400*100/sB)} cm²/m)`:'más de un refuerzo';
+        $('f44').innerHTML=`${G('A<sub>s</sub> − A<sub>s,base</sub>')} = ${nf(As)} − ${nf(Asb)} = ${R(nf(ref)+' cm²/m')} <span class="gen">en las bandas: por ejemplo ${sug}</span>`;
+        $('t4').innerHTML=pill('warn',`refuerzo ${nf(ref,1)} cm²/m`);
+      } else {
+        $('f44').innerHTML=`${R('no hace falta')}: la base cubre ${nf(As)} cm²/m`;
+        $('t4').innerHTML=pill('ok','basta la base');
+      }
+    }
+  }
+
+  /* Paso 5 */
+  let okmin=null;
+  if(h>0){
+    const fctm=0.3*Math.pow(fck,2/3), fct=Math.max((1.6-h)*fctm,fctm), Asmin=100*h*100/5*fct/fyd;
+    $('f51').innerHTML=`${G('f<sub>ctm</sub> = 0,30·f<sub>ck</sub><sup>2/3</sup>')} = 0,30·${nf(fck,0)}<sup>2/3</sup> = ${R(nf(fctm,3)+' N/mm²')}`;
+    $('f52').innerHTML=`${G('f<sub>ctm,fl</sub> = (1,6 − ')}${G(fr('h','1000'))}${G(')·f<sub>ctm</sub>')} = (1,6 − ${fr(nf(h*1000,0),'1000')})·${nf(fctm,3)} = ${R(nf(fct,3)+' N/mm²')} <span class="gen">(h en mm; no menos que f<sub>ctm</sub>)</span>`;
+    $('f53').innerHTML=`${G('A<sub>s,mín</sub> = ')}${G(fr('b·h','5'))}${G('·')}${G(fr('f<sub>ctm,fl</sub>','f<sub>yd</sub>'))} = ${fr('100·'+nf(h*100,0),'5')}·${fr(nf(fct,3),nf(fyd,1))} = ${R(nf(Asmin)+' cm²/m')} <span class="gen">(regla rápida 0,002·b·h = ${nf(0.002*100*h*100)} cm²/m)</span>`+(isFinite(Asb)?(Asb>=Asmin?pill('ok',`base ${nf(Asb)} ≥ mínima`):pill('bad',`base ${nf(Asb)} < mínima`)):'');
+    if(isFinite(Asb)){okmin=Asb>=Asmin;$('t5').innerHTML=okmin?pill('ok','la base cumple'):pill('bad','sube la base');}
+    if(phi<12) $('f53').innerHTML+=pill('warn','Ø menor de 12 mm');
+    check('try5','c5',Asmin,0.02);
+  }
+
+  /* Resumen */
+  if(!(haveL||h>0||L.length)){
+    $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce la losa, el terreno y las cargas</span></div>';
+  } else {
+    const ok=b=>b===null?'—':(b?'cumple':'no cumple');
+    $('summary').innerHTML=`
+      <div><span class="lab">Losa</span><span class="big">${haveL?`${nf(Lx)} × ${nf(Ly)} m`:'—'}${h>0?` · h = ${nf(h)} m`:''}</span></div>
+      <div><span class="lab">Presión máxima</span><span class="big">${isFinite(smax)?nf(smax,1)+' kN/m²':(isFinite(sm)?nf(sm,1)+' kN/m² (media)':'—')}</span></div>
+      <div><span class="lab">Rigidez</span><span class="big">${rig===null?'—':(rig?'rígida':'flexible')}</span></div>
+      <div><span class="lab">Punzonamiento</span><span class="big">${ok(punz)}</span></div>
+      <div><span class="lab">Armado</span><span class="big">${isFinite(Asb)?`Ø${phi} c/${nf(sB,0)}${ref>0?` + ${nf(ref,1)} cm²/m`:''}`:'—'}</span></div>`;
+  }
+  drawPlan(L,Lx,Ly,x0,y0,xR,yR);
+  drawPunz(c,d);
+}
+
+const T=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-family="IBM Plex Mono,monospace" font-size="${o.s||11}" fill="${o.c||'var(--ink)'}" ${o.a?`text-anchor="${o.a}"`:''}>${t}</text>`;
+function drawPlan(L,Lx,Ly,x0,y0,xR,yR){
+  const g=$('plan'); if(!(Lx>0&&Ly>0)){g.innerHTML='';return;}
+  const W=360,H=300,m=34,sc=Math.min((W-2*m)/Lx,(H-2*m)/Ly);
+  const ox=(W-Lx*sc)/2, oy=(H+Ly*sc)/2;
+  const X=x=>ox+(x-x0)*sc, Y=y=>oy-(y-y0)*sc;
+  let s=`<rect x="${ox}" y="${oy-Ly*sc}" width="${Lx*sc}" height="${Ly*sc}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.4"/>`;
+  const Nm=Math.max(...L.map(l=>l.N),1);
+  L.forEach(l=>{ if(isFinite(l.x)&&isFinite(l.y)){const r=4+12*Math.sqrt(l.N/Nm);
+    s+=`<circle cx="${X(l.x)}" cy="${Y(l.y)}" r="${r}" fill="var(--accent)" fill-opacity=".25" stroke="var(--accent)"/>`+T(X(l.x)+r+2,Y(l.y)-r,l.n,{s:9.5,c:'var(--muted)'});}});
+  const cx=X(x0+Lx/2),cy=Y(y0+Ly/2);
+  s+=`<g stroke="var(--ink)" stroke-width="1.4"><line x1="${cx-8}" y1="${cy}" x2="${cx+8}" y2="${cy}"/><line x1="${cx}" y1="${cy-8}" x2="${cx}" y2="${cy+8}"/></g>`;
+  if(isFinite(xR)&&isFinite(yR)) s+=`<circle cx="${X(xR)}" cy="${Y(yR)}" r="4.5" fill="var(--rebar)"/>`+T(X(xR)+7,Y(yR)+12,'R',{c:'var(--rebar)',s:11});
+  s+=T(W/2,oy+20,`L = ${nf(Lx)} m`,{a:'middle',c:'var(--muted)'});
+  s+=T(ox-8,H/2,`B = ${nf(Ly)} m`,{a:'middle',c:'var(--muted)'}).replace('<text','<text transform="rotate(-90 '+(ox-8)+' '+(H/2)+')"');
+  g.innerHTML=s;
+}
+function drawPunz(c,d){
+  const g=$('punz'); if(!(c>0&&d>0)){g.innerHTML='';return;}
+  const W=360,H=300,cx=W/2,cy=H/2-6, sc=Math.min(240/(c+4*d),110/(c/2+2*d)*0.98);
+  const hc=c*sc/2;
+  let s=`<rect x="20" y="10" width="${W-40}" height="${H-40}" fill="var(--concrete)" opacity=".45"/>`;
+  [[2,'u₁ (2d)',1.8],[1.5,'1,5d',1],[1,'d',1],[0.5,'0,5d',1]].forEach(([f,lab,w])=>{
+    const a=f*d*sc;
+    s+=`<rect x="${cx-hc-a}" y="${cy-hc-a}" width="${2*hc+2*a}" height="${2*hc+2*a}" rx="${a}" fill="none" stroke="var(--accent)" stroke-width="${w}" ${f===2?'':'stroke-dasharray="4 3"'}/>`;
+    s+=T(cx+hc+a*0.71+3,cy-hc-a*0.71-3,lab,{s:9.5,c:'var(--accent)'});
+  });
+  s+=`<rect x="${cx-hc}" y="${cy-hc}" width="${2*hc}" height="${2*hc}" fill="var(--ink)" opacity=".85"/>`;
+  s+=T(cx,cy+hc+14,`c = ${nf(c*100,0)} cm`,{a:'middle',s:10,c:'var(--muted)'});
+  s+=T(cx,H-8,`d = ${nf(d*100,1)} cm`,{a:'middle',s:11,c:'var(--muted)'});
+  g.innerHTML=s;
+}
+
+$('addRow').addEventListener('click',()=>{addRow();calc();});
+$('clear').addEventListener('click',()=>{
+  ['Lx','Ly','x0','y0','h','lmax','vmax','sig','k30','fck','rec','sB','NkP','cP','Dexc','gam','try0','try1','try1b','try2','try3','try3b','try4','try4b','try5'].forEach(id=>{const e=$(id);if(e)e.value='';});
+  $('fyk').value='500';$('phiB').value='16';$('soil').value='c';
+  $('loads').querySelector('tbody').innerHTML='';rid=0;for(let i=0;i<4;i++)addRow();
+  calc();$('Lx').focus();
+});
+$('practica').addEventListener('change',()=>document.querySelector('.wrap').classList.toggle('practice',$('practica').checked));
+document.querySelectorAll('aside input,aside select,.step input,.step select').forEach(el=>{if(el.id!=='practica')el.addEventListener('input',calc);});
+for(let i=0;i<4;i++)addRow();
+calc();
+})();
+</script>
+
+<script src="pdf.js"></script>
+</body></html>

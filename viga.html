@@ -1,0 +1,316 @@
+<!doctype html><html><head><meta charset=utf8>
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Viga C2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#eef0ee; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#cfd5d3;
+  --soft:#f5f7f6; --accent:#1f5f7a; --accent-soft:#e1edf2; --rebar:#b0392b;
+  --concrete:#d9dcd8; --concrete-edge:#8e9692;
+  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+    --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+    --concrete:#3a4446; --concrete-edge:#6e7b7d;
+    --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+  --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+  --concrete:#3a4446; --concrete-edge:#6e7b7d;
+  --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 60px}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--cond);font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance;letter-spacing:-.01em}
+.src{font-size:13px;color:var(--muted);max-width:44ch}
+.mode{display:flex;align-items:center;gap:10px;font-size:14px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:6px}
+.grid{display:grid;grid-template-columns:350px 1fr;gap:22px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;flex-direction:column;gap:14px}
+@media (max-width:860px){aside{position:static}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
+.box h2{font-family:var(--cond);font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--accent)}
+.field{display:grid;grid-template-columns:1fr 124px 46px;align-items:center;gap:8px;padding-block:5px;border-bottom:1px dashed var(--line)}
+.field:last-child{border-bottom:0}
+.field label{font-size:13.5px}
+.field .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
+input[type=number],select{width:100%;font-family:var(--mono);font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--soft);color:var(--ink);text-align:right}
+select{text-align:left}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+.helper{margin-top:10px;font-size:13px}
+.helper summary{cursor:pointer;color:var(--accent);font-weight:500}
+.helper .field{grid-template-columns:1fr 84px 46px}
+button{font-family:var(--sans);font-size:13px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:6px 12px;border-radius:4px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+.summary{background:var(--ink);color:var(--bg);border-radius:6px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:18px 32px;align-items:baseline}
+.summary .big{font-family:var(--cond);font-size:26px;font-weight:700;letter-spacing:.01em}
+.summary .lab{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;display:block}
+.drawing{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:620px){.drawing{grid-template-columns:1fr}}
+.drawing .box{padding:10px 12px}
+.drawing h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:500}
+svg{display:block;width:100%;height:auto}
+main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.step-h{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--soft)}
+.num{font-family:var(--mono);font-weight:600;font-size:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--accent);color:var(--accent);flex:none}
+.step-h h2{font-family:var(--cond);font-size:19px;margin:0;font-weight:700}
+.step-h .tag{margin-left:auto}
+.step-b{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.why{font-size:14px;color:var(--muted);max-width:70ch;margin:0}
+.calc{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 14px;align-items:baseline;padding:8px 10px;border-radius:4px;background:var(--soft)}
+@media (max-width:520px){.row{grid-template-columns:1fr}}
+.row .k{font-size:13.5px;font-weight:500}
+.f{font-family:var(--mono);font-size:13.5px;overflow-wrap:anywhere}
+.f .gen{color:var(--muted)}
+.f .res{color:var(--accent);font-weight:600}
+.f sub{font-size:.75em}
+.practice .res,.practice .sug,.practice .step-h .tag,.practice .summary,.practice .drawing svg,.practice .row .pill{filter:blur(7px);user-select:none}
+.try{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;border-top:1px dashed var(--line);padding-top:10px}
+.try input{width:110px}
+.pill{font-family:var(--mono);font-size:11.5px;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.info{background:var(--accent-soft);color:var(--accent)}
+.decide{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px;border:1.5px solid var(--accent);border-radius:4px;background:var(--accent-soft)}
+.decide label{font-weight:600;font-size:14px}
+.decide input,.decide select{width:110px}
+.decide .sug{font-size:13px;color:var(--muted)}
+.note{font-size:13px;border-left:3px solid var(--warn);padding:6px 10px;background:var(--warn-soft);color:var(--ink);border-radius:0 4px 4px 0}
+.note.extra{border-left-color:var(--accent);background:var(--accent-soft)}
+footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px}
+@media (prefers-reduced-motion:no-preference){.res,.pill{transition:filter .25s ease}}
+ </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="mute.css">
+
+<div class="wrap">
+<a href="index.html#H" style="display:inline-flex;align-items:center;margin-bottom:14px;font:600 14px var(--sans);color:var(--panel);background:var(--ink);border:1px solid var(--ink);border-radius:6px;padding:6px 14px 6px 11px;text-decoration:none">← Menú de calculadoras</a>
+<header class="top mat-H">
+  <div>
+    <div class="mbadge">VH</div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Hormigón · Estructura</small>Viga</h1></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+    <label class="mode" for="practica"><input type="checkbox" id="practica"> Modo práctica: ocultar resultados</label>
+    <div class="hint" style="margin:0">Calcula tú, escribe tu resultado en cada paso y comprueba.</div>
+    <div class="src">Ficha HV «Vigas» de <em>Cálculo rápido de estructuras</em> (S. Mute), con γ<sub>f</sub> = 1,5.</div>
+  </div>
+</header>
+
+<div class="grid">
+<aside>
+  <div class="box">
+    <h2>Datos de partida</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"><button type="button" id="clear">Limpiar datos</button></div>
+    <div class="field"><label for="q">Carga superficial del forjado q (sin mayorar)</label><input id="q" type="number" step="any"><span class="u">kN/m²</span></div>
+    <div class="field"><label for="S">Ancho tributario S</label><input id="S" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="L">Luz del tramo L</label><input id="L" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="tramo">Tipo de tramo</label><select id="tramo"><option value="ext" selected>Extremo</option><option value="int">Interior</option><option value="ais">Aislado (biapoyado)</option><option value="vol">Voladizo</option></select><span class="u"></span></div>
+    <div class="field"><label for="P">Carga puntual en el extremo del voladizo P</label><input id="P" type="number" step="any"><span class="u">kN</span></div>
+    <div class="field"><label for="b">Ancho de la viga b</label><input id="b" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="h">Canto de la viga h</label><input id="h" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="fyk">Límite elástico acero f<sub>yk</sub></label><select id="fyk"><option value="400">400 (B400S)</option><option value="500" selected>500 (B500S)</option></select><span class="u">N/mm²</span></div>
+    <div class="field"><label for="fck">Hormigón f<sub>ck</sub></label><select id="fck"><option value="25" selected>25 (HA-25)</option><option value="30">30 (HA-30)</option></select><span class="u">N/mm²</span></div>
+    <p class="hint">P solo se usa en voladizos. Viga de canto: h mayor que el forjado; viga plana: h igual al forjado. «Limpiar datos» lo deja todo en blanco.</p>
+  </div>
+</aside>
+
+<main>
+  <section>
+    <div class="summary" id="summary"></div>
+    <div class="drawing">
+      <div class="box"><h3>Momentos del tramo</h3><svg id="pl" viewBox="0 0 360 200" role="img" aria-label="Diagrama de momentos del tramo"></svg></div>
+      <div class="box"><h3>Sección</h3><svg id="sec" viewBox="0 0 360 200" role="img" aria-label="Sección de la viga con armaduras"></svg></div>
+    </div>
+  </section>
+
+  <article class="step" id="s1">
+    <div class="step-h"><span class="num">1</span><h2>Carga sobre la viga y canto orientativo</h2><span class="tag" id="t1"></span></div>
+    <div class="step-b">
+      <p class="why">La viga recoge el forjado de su ancho tributario (la mitad de la distancia a las vigas vecinas a cada lado): q<sub>viga</sub> = q·S. Mute da un canto orientativo con un coeficiente α según el tramo (voladizo 2, aislado 8, extremo 10, interior 14).</p>
+      <div class="calc">
+        <div class="row"><span class="k">Carga lineal</span><span class="f" id="f11"></span></div>
+        <div class="row"><span class="k">Canto orientativo</span><span class="f" id="f12"></span></div>
+      </div>
+      <div class="try"><span>Tu carga lineal:</span><input type="number" step="any" id="try1" aria-label="Tu carga en kN/m"><span class="u">kN/m</span><span id="c1"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s2">
+    <div class="step-h"><span class="num">2</span><h2>Momentos de cálculo</h2><span class="tag" id="t2"></span></div>
+    <div class="step-b">
+      <p class="why">Se usan estos coeficientes para vigas continuas: tramo extremo M<sup>+</sup> = qL²/10 y M<sup>−</sup> = qL²/8; tramo interior M<sup>+</sup> = qL²/12 y M<sup>−</sup> = qL²/10; viga aislada M<sup>+</sup> = qL²/8. En el voladizo, M<sup>−</sup> = qL²/2 + P·L en el empotramiento. Todo mayorado con γ<sub>f</sub> = 1,5. El momento positivo tracciona la cara inferior en el centro del vano; el negativo, la superior sobre los apoyos.</p>
+      <div class="calc">
+        <div class="row"><span class="k">M<sub>d</sub><sup>+</sup></span><span class="f" id="f21"></span></div>
+        <div class="row"><span class="k">M<sub>d</sub><sup>−</sup></span><span class="f" id="f22"></span></div>
+        <div class="row"><span class="k">Límite de la sección</span><span class="f" id="f23"></span></div>
+      </div>
+      <div class="try"><span>Tu M<sub>d</sub><sup>−</sup>:</span><input type="number" step="any" id="try2" aria-label="Tu momento negativo"><span class="u">kN·m</span><span id="c2"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s3">
+    <div class="step-h"><span class="num">3</span><h2>Armadura longitudinal</h2><span class="tag" id="t3"></span></div>
+    <div class="step-b">
+      <p class="why">A<sub>s</sub> = M<sub>d</sub>·10/(0,8·h·f<sub>yd</sub>), con brazo 0,8·h. Mínima de flexión aproximada dMute: A<sub>s</sub> ≥ C/1000·b·h, con C = 1,2 (HA-25, B 500 S), 1,5 (HA-25, B 400 S), 1,4 (HA-30, B 500 S) o 1,7 (HA-30, B 400 S). Al menos 2 barras de Ø12 en cada cara.</p>
+      <div class="decide"><label for="phiP">Ø inferior</label><select id="phiP"><option>12</option><option selected>16</option><option>20</option><option>25</option></select><label for="phiN">Ø superior</label><select id="phiN"><option>12</option><option selected>16</option><option>20</option><option>25</option></select><span class="u">mm</span></div>
+      <div class="calc">
+        <div class="row"><span class="k">A<sub>s</sub><sup>+</sup> inferior</span><span class="f" id="f31"></span></div>
+        <div class="row"><span class="k">A<sub>s</sub><sup>−</sup> superior</span><span class="f" id="f32"></span></div>
+        <div class="row"><span class="k">A<sub>s,mín</sub> por cara</span><span class="f" id="f33"></span></div>
+        <div class="row"><span class="k">Separación libre</span><span class="f" id="f34"></span></div>
+      </div>
+      <div class="note extra">Separación libre = (b − 2·(3 + 0,8) − n·Ø)/(n − 1), con recubrimiento de 3 cm y cerco de Ø8; debe ser al menos 2 cm y Ø.</div>
+      <div class="try"><span>Tu A<sub>s</sub><sup>+</sup>:</span><input type="number" step="any" id="try3" aria-label="Tu armadura inferior"><span class="u">cm²</span><span id="c3"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s4">
+    <div class="step-h"><span class="num">4</span><h2>Cortante y cercos</h2><span class="tag" id="t4"></span></div>
+    <div class="step-b">
+      <p class="why">Cortante en el apoyo: V<sub>d</sub> = 1,5·q·L/2 en un vano y 1,5·(q·L + P) en un voladizo. El hormigón resiste sin cercos, para predimensionar, una tensión de 0,5 N/mm² sobre b·d (Guía CE). Lo que falte lo llevan los cercos: A<sub>α</sub> = (V<sub>d</sub> − V<sub>cu</sub>)·10/(0,8·h·f<sub>yα,d</sub>) en cm² por metro, con f<sub>yα,d</sub> ≤ 400 N/mm². Separación máxima 0,75·d y 60 cm.</p>
+      <div class="decide"><label for="ram">Ramas</label><select id="ram"><option selected>2</option><option>4</option></select><label for="phiE">Ø cerco</label><select id="phiE"><option>6</option><option selected>8</option><option>10</option></select><span class="u">mm</span></div>
+      <div class="calc">
+        <div class="row"><span class="k">V<sub>d</sub></span><span class="f" id="f41"></span></div>
+        <div class="row"><span class="k">V<sub>cu</sub> del hormigón</span><span class="f" id="f42"></span></div>
+        <div class="row"><span class="k">A<sub>α</sub> necesaria</span><span class="f" id="f43"></span></div>
+        <div class="row"><span class="k">Separación de cercos</span><span class="f" id="f44"></span></div>
+      </div>
+      <div class="try"><span>Tu V<sub>d</sub>:</span><input type="number" step="any" id="try4" aria-label="Tu cortante en kN"><span class="u">kN</span><span id="c4"></span></div>
+    </div>
+  </article>
+
+  <div class="box" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px"><p style="margin:0;flex:1 1 240px;font-size:13.5px;color:var(--muted)">Ya sabes qué sección y qué armadura necesita la viga. ¿Y cómo se ejecuta en obra? Repasa el proceso paso a paso.</p><a href="proceso-viga.html" style="font:600 14px var(--sans);color:var(--panel);background:var(--bad);border:1px solid var(--bad);border-radius:4px;padding:9px 16px;text-decoration:none">Proceso constructivo</a></div>
+  <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con la Guía de aplicación del Código Estructural y el DB SE-C. Tampoco sustituye al cálculo según el Código Estructural (flecha, fisuración, despiece y anclajes). Unidades: kN, m, cm, mm y N/mm². Errores o sugerencias: <a href="mailto:jaimevergara@ugr.es">jaimevergara@ugr.es</a>. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const nf=(x,d=2)=>isFinite(x)?x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const v=id=>parseFloat($(id).value);
+const R=s=>`<span class="res">${s}</span>`;
+const G=s=>`<span class="gen">${s}</span>`;
+const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+function check(tryId,outId,val,tol){
+  const t=parseFloat(String($(tryId).value).replace(',','.'));
+  if(!isFinite(t)||!isFinite(val)){$(outId).innerHTML='';return;}
+  const ok=Math.abs(t-val)<=Math.max(Math.abs(val)*tol,1e-9);
+  $(outId).innerHTML=ok?pill('ok','Correcto'):pill('bad','Revisa: no coincide');
+}
+const OUT=['f11','f12','f21','f22','f23','f31','f32','f33','f34','f41','f42','f43','f44','t1','t2','t3','t4','c1','c2','c3','c4'];
+function empty(){
+  OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
+  $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce q, S, L, b y h</span></div>';
+  $('sec').innerHTML='';$('pl').innerHTML='';
+}
+function calc(){
+  const q=v('q'),S=v('S'),L=v('L'),b=v('b'),h=v('h'),fyk=v('fyk'),fck=v('fck'),tramo=$('tramo').value;
+  const P=v('P')>0?v('P'):0;
+  if(!(q>0&&S>0&&L>0&&b>0&&h>0)){empty();return;}
+  const ql=q*S, qd=1.5*ql, fcd=fck/1.5, fyd=fyk/1.15;
+  const alpha={vol:2,ais:8,ext:10,int:14}[tramo];
+  const hor=Math.sqrt(qd*L*L/(0.2*alpha*fcd*1000*b));
+  $('f11').innerHTML=`${G('q<sub>viga</sub> = q·S')} = ${nf(q)}·${nf(S)} = ${R(nf(ql)+' kN/m')}`;
+  $('f12').innerHTML=`${G('h ≈ √(q<sub>d</sub>·L²/(0,2·α·f<sub>cd</sub>·b))')} = √(${nf(qd)}·${nf(L)}²/(0,2·${alpha}·${nf(fcd*1000,0)}·${nf(b)})) = ${R(nf(hor,2)+' m')} `+(h>=hor-1e-9?pill('ok','h elegido ≥'):pill('warn','h elegido menor'));
+  $('t1').innerHTML=pill('info',nf(ql,1)+' kN/m');
+  check('try1','c1',ql,0.01);
+  let Mp=0,Mn=0,fp='',fn='';
+  if(tramo==='ext'){Mp=qd*L*L/10;Mn=qd*L*L/8;fp='1,5·q·L²/10';fn='1,5·q·L²/8';}
+  else if(tramo==='int'){Mp=qd*L*L/12;Mn=qd*L*L/10;fp='1,5·q·L²/12';fn='1,5·q·L²/10';}
+  else if(tramo==='ais'){Mp=qd*L*L/8;Mn=0;fp='1,5·q·L²/8';fn='—';}
+  else{Mp=0;Mn=qd*L*L/2+1.5*P*L;fp='—';fn='1,5·(q·L²/2 + P·L)';}
+  $('f21').innerHTML=Mp>0?`${G('M<sup>+</sup> = '+fp)} = ${R(nf(Mp,1)+' kN·m')}`:G('no hay momento positivo');
+  $('f22').innerHTML=Mn>0?`${G('M<sup>−</sup> = '+fn)} = ${R(nf(Mn,1)+' kN·m')}`:G('apoyos sin empotramiento: mínima constructiva arriba');
+  const Mlim=0.32*b*h*h*fcd*1000, okM=Math.max(Mp,Mn)<=Mlim;
+  $('f23').innerHTML=`${G('0,32·b·h²·f<sub>cd</sub>')} = 0,32·${nf(b)}·${nf(h)}²·${nf(fcd*1000,0)} = ${R(nf(Mlim,1)+' kN·m')} `+(okM?pill('ok','M ≤ límite'):pill('bad','aumenta la sección'));
+  $('t2').innerHTML=okM?pill('info',`${nf(Mp,0)} / ${nf(Mn,0)} kN·m`):pill('bad','sección pequeña');
+  check('try2','c2',Mn,0.02);
+  const Cv={'25-500':1.2,'25-400':1.5,'30-500':1.4,'30-400':1.7}[fck+'-'+fyk];
+  const Asmin=Cv/1000*b*100*h*100;
+  const Ap=10*Mp/(0.8*h*fyd), An=10*Mn/(0.8*h*fyd);
+  const phiP=v('phiP'),phiN=v('phiN'), AbP=Math.PI*Math.pow(phiP/20,2), AbN=Math.PI*Math.pow(phiN/20,2);
+  const AdP=Math.max(Ap,Asmin), AdN=Math.max(An,Asmin);
+  const nP=Math.max(2,Math.ceil(AdP/AbP-1e-9)), nN=Math.max(2,Math.ceil(AdN/AbN-1e-9));
+  $('f31').innerHTML=`${G('M<sup>+</sup>·10/(0,8·h·f<sub>yd</sub>)')} = ${nf(Mp,1)}·10/(0,8·${nf(h)}·${nf(fyd)}) = ${nf(Ap)} cm² → ${R(nP+' Ø'+phiP)} ${pill('info',nf(nP*AbP)+' cm²')}`;
+  $('f32').innerHTML=`${G('M<sup>−</sup>·10/(0,8·h·f<sub>yd</sub>)')} = ${nf(Mn,1)}·10/(0,8·${nf(h)}·${nf(fyd)}) = ${nf(An)} cm² → ${R(nN+' Ø'+phiN)} ${pill('info',nf(nN*AbN)+' cm²')}`;
+  $('f33').innerHTML=`${G('C/1000·b·h')} = ${nf(Cv,1)}/1000·${nf(b*100,0)}·${nf(h*100,0)} = ${R(nf(Asmin)+' cm²')}`;
+  const sp=(n,phi)=>(b*100-2*3.8-n*phi/10)/(n-1);
+  const sP=sp(nP,phiP), sN=sp(nN,phiN), smin=x=>Math.max(2,x/10);
+  const ok=(s,phi)=>s>=smin(phi)?pill('ok','caben'):pill('bad','no caben: dos capas o más ancho');
+  $('f34').innerHTML=`inferior ${R(nf(sP,1)+' cm')} ${ok(sP,phiP)} · superior ${R(nf(sN,1)+' cm')} ${ok(sN,phiN)}`;
+  $('t3').innerHTML=pill('info',`${nP} Ø${phiP} / ${nN} Ø${phiN}`);
+  check('try3','c3',Ap,0.02);
+  const Vd=tramo==='vol'?1.5*(ql*L+P):qd*L/2;
+  const d=h-0.04, Vcu=0.5*1000*b*d;
+  const fya=Math.min(fyd,400), Aa=Math.max(0,10*(Vd-Vcu)/(0.8*h*fya));
+  const ram=v('ram'), phiE=v('phiE'), Ae=ram*Math.PI*Math.pow(phiE/20,2);
+  const smax=Math.min(0.75*d*100,60), sc=Aa>0?Math.min(100*Ae/Aa,smax):smax, scR=Math.floor(sc+1e-9);
+  $('f41').innerHTML=`${G(tramo==='vol'?'V<sub>d</sub> = 1,5·(q·L + P)':'V<sub>d</sub> = 1,5·q·L/2')} = ${R(nf(Vd,1)+' kN')}`;
+  $('f42').innerHTML=`${G('0,5 N/mm²·b·d')} = 0,5·1000·${nf(b)}·${nf(d)} = ${R(nf(Vcu,1)+' kN')}`;
+  $('f43').innerHTML=Aa>0?`${G('(V<sub>d</sub> − V<sub>cu</sub>)·10/(0,8·h·f<sub>yα,d</sub>)')} = (${nf(Vd,1)} − ${nf(Vcu,1)})·10/(0,8·${nf(h)}·${nf(fya,0)}) = ${R(nf(Aa)+' cm²/m')}`:`${R('0')} ${pill('ok','basta el hormigón: cercos mínimos')}`;
+  $('f44').innerHTML=`${G(Aa>0?'100·A<sub>cerco</sub>/A<sub>α</sub>, ≤ 0,75·d':'0,75·d (máximo)')} = ${R('c/'+scR+' cm')} con ${ram} ramas Ø${phiE} `+(scR<7?pill('warn','muy juntos: más ramas o mayor Ø'):'');
+  $('t4').innerHTML=pill('info',`${ram}r Ø${phiE} c/${scR}`);
+  check('try4','c4',Vd,0.02);
+  $('summary').innerHTML=`
+    <div><span class="lab">Viga</span><span class="big">${nf(b*100,0)} × ${nf(h*100,0)} cm</span></div>
+    <div><span class="lab">Inferior / superior</span><span class="big">${nP} Ø${phiP} / ${nN} Ø${phiN}</span></div>
+    <div><span class="lab">Cercos</span><span class="big">${ram}r Ø${phiE} c/${scR}</span></div>`;
+  draw(tramo,b,h,nP,nN);
+}
+function draw(tr,b,h,nP,nN){
+  let g='';const x1=40,x2=320,y0=90;
+  g+=`<line x1="${x1}" y1="${y0}" x2="${x2}" y2="${y0}" stroke="var(--ink)" stroke-width="2"/>`;
+  const curve=(c)=>{let d='';for(let i=0;i<=40;i++){const t=i/40,x=x1+(x2-x1)*t;const y=y0+c(t);d+=(i?'L':'M')+x+' '+y;}return d;};
+  let f;
+  if(tr==='vol')f=t=>-60*(1-t)*(1-t);
+  else if(tr==='ais')f=t=>55*4*t*(1-t);
+  else if(tr==='ext')f=t=>{const mA=0,mB=-50;return 4*55*t*(1-t)+mA*(1-t)+mB*t+ (tr==='ext'?-10*t:0);};
+  else f=t=>4*60*t*(1-t)-42;
+  g+=`<path d="${curve(f)}" fill="none" stroke="var(--rebar)" stroke-width="2"/>`;
+  g+=`<text x="${(x1+x2)/2}" y="185" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">momentos positivos hacia abajo</text>`;
+  if(tr!=='vol'){g+=`<polygon points="${x1-8},${y0+14} ${x1+8},${y0+14} ${x1},${y0}" fill="var(--ink)"/><polygon points="${x2-8},${y0+14} ${x2+8},${y0+14} ${x2},${y0}" fill="var(--ink)"/>`;}
+  else g+=`<rect x="${x1-12}" y="${y0-30}" width="12" height="60" fill="var(--concrete)" stroke="var(--concrete-edge)"/>`;
+  $('pl').innerHTML=g;
+  const sc=Math.min(120/b,150/h), W=b*sc, H=h*sc, x0=(360-W)/2, yy=(200-H)/2;
+  let s=`<rect x="${x0}" y="${yy}" width="${W}" height="${H}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/>`;
+  const c=0.04*sc; s+=`<rect x="${x0+c}" y="${yy+c}" width="${W-2*c}" height="${H-2*c}" rx="3" fill="none" stroke="var(--rebar)" stroke-width="1.3"/>`;
+  const row=(n,y)=>{for(let i=0;i<n;i++){const x=x0+c+5+(W-2*c-10)*(n===1?.5:i/(n-1));s+=`<circle cx="${x}" cy="${y}" r="4" fill="var(--rebar)"/>`;}};
+  row(Math.min(nN,12),yy+c+5);row(Math.min(nP,12),yy+H-c-5);
+  s+=`<text x="${x0+W+8}" y="${yy+12}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--rebar)">${nN} sup.</text><text x="${x0+W+8}" y="${yy+H-4}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--rebar)">${nP} inf.</text>`;
+  $('sec').innerHTML=s;
+}
+$('clear').addEventListener('click',()=>{
+  ['q','S','L','P','b','h','try1','try2','try3','try4'].forEach(id=>{$(id).value='';});
+  $('tramo').value='ext';$('fyk').value='500';$('fck').value='25';$('phiP').value='16';$('phiN').value='16';$('ram').value='2';$('phiE').value='8';
+  calc();$('q').focus();
+});
+$('practica').addEventListener('change',()=>document.querySelector('.wrap').classList.toggle('practice',$('practica').checked));
+document.querySelectorAll('input,select').forEach(el=>{if(el.id!=='practica')el.addEventListener('input',calc);});
+calc();
+})();
+</script>
+
+<script src="pdf.js"></script>
+</body></html>

@@ -1,0 +1,35 @@
+/* Estética común de las calculadoras, inspirada en las fichas de «Cálculo rápido de estructuras»:
+   franja de color por material, código en recuadro, barras negras de sección y recuadros beige. */
+:root{--sans:"Open Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--cond:var(--sans);
+  --band:#dedede;--code:#c9c9c9;--beige:#efede4;--bar:#111}
+.mat-A{--band:#b9cde5;--code:#6d9bd1}
+.mat-M{--band:#e9cdb6;--code:#d9a784}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--band:#3a3f42;--code:#5a6266;--beige:#2a2a24;--bar:#000}
+  :root:not([data-theme="light"]) .mat-A{--band:#2c3d52;--code:#3f6693}:root:not([data-theme="light"]) .mat-M{--band:#4a3a2c;--code:#8a6448}}
+:root[data-theme="dark"]{--band:#3a3f42;--code:#5a6266;--beige:#2a2a24;--bar:#000}
+:root[data-theme="dark"] .mat-A{--band:#2c3d52;--code:#3f6693}:root[data-theme="dark"] .mat-M{--band:#4a3a2c;--code:#8a6448}
+body{background:var(--panel)}
+.wrap{padding-top:14px}
+header.top{border:0;margin:0 calc(50% - 50vw) 22px;padding:20px calc(50vw - 50% + 20px) 18px;background:var(--band);align-items:center}
+header.top>div:first-child{display:flex;align-items:center;gap:18px;min-width:0}
+.mbadge{flex:none;min-width:84px;height:84px;padding:0 8px;border:5px solid var(--ink);border-radius:16px;background:var(--code);display:grid;place-items:center;font:800 32px/1 var(--sans);color:var(--ink)}
+@media (max-width:520px){.mbadge{min-width:62px;height:62px;font-size:24px;border-width:4px;border-radius:12px}}
+.eyebrow{font:400 13px var(--sans);letter-spacing:.06em}
+h1{font:800 clamp(24px,4.2vw,40px)/1.04 var(--sans);text-transform:uppercase;letter-spacing:-.01em}
+h1 small{display:block;font-weight:400;font-size:.6em;margin-bottom:3px;letter-spacing:0}
+.mode{border-radius:4px}
+.box{border-radius:2px;background:var(--beige);border:0}
+aside .box h2{background:var(--bar);color:#fff;margin:-16px -16px 12px;padding:6px 12px;font:700 14px var(--sans);text-align:center;letter-spacing:.04em}
+.drawing .box{background:var(--panel);border:1px solid var(--line)}
+.drawing h3{font-family:var(--sans);font-weight:700}
+.step{border-radius:0;border:0;background:transparent}
+.step-h{background:var(--bar);border:0;padding:7px 12px}
+.step-h h2{color:#fff;font:700 15px var(--sans);text-transform:uppercase;letter-spacing:.03em}
+.num{border-color:#fff;color:#fff;width:24px;height:24px;font:700 12px var(--sans)}
+.step-b{padding:12px 4px}
+.row{background:var(--beige);border-radius:2px}
+.summary,.decide,.note{border-radius:2px}
+footer{background:var(--beige);border:0;padding:12px 14px;color:var(--ink)}
+.pdfbar{border-radius:2px;background:var(--beige);border:0}
+.pdfbar button{background:var(--ink);border-color:var(--ink);color:var(--panel);border-radius:4px}
+#clear,#clear.ghost{background:var(--ink);border-color:var(--ink);color:var(--panel);border-radius:4px}

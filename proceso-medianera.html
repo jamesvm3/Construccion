@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Proceso: zapata de medianera y esquina</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#f4efe9; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#d9d0c6; --soft:#f8f4ef;
+  --accent:#8f2d3a; --accent-soft:#f3e1e3; --accent-ink:#ffffff;
+  --rebar:#2f3b42; --concrete:#d9dcd8; --concrete-edge:#8e9692; --soil:#c9bba3; --soil-edge:#9c8d73; --water:#3b86a8;
+  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
+  --sans:"IBM Plex Sans",system-ui,sans-serif; --cond:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1c1715; --panel:#262019; --ink:#e4e9e7; --muted:#9aa6a8; --line:#463b33; --soft:#2d2620;
+  --accent:#e08a95; --accent-soft:#3d1f25; --accent-ink:#2a1216;
+  --rebar:#c9d3d8; --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#4a4333; --soil-edge:#7a6f58; --water:#6db3d1;
+  --ok:#6fcf8b; --ok-soft:#1b3326; --warn:#e3a74f; --warn-soft:#3a2d14; --bad:#e5705f; --bad-soft:#3a1f1b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1c1715; --panel:#262019; --ink:#e4e9e7; --muted:#9aa6a8; --line:#463b33; --soft:#2d2620;
+  --accent:#e08a95; --accent-soft:#3d1f25; --accent-ink:#2a1216;
+  --rebar:#c9d3d8; --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#4a4333; --soil-edge:#7a6f58; --water:#6db3d1;
+  --ok:#6fcf8b; --ok-soft:#1b3326; --warn:#e3a74f; --warn-soft:#3a2d14; --bad:#e5705f; --bad-soft:#3a1f1b; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans);padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.back{display:inline-flex;gap:6px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--accent);font-size:13px;font-weight:500;text-decoration:none}
+.back:hover{background:var(--accent-soft)}
+.eyebrow{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font:700 30px/1.15 var(--cond);margin:4px 0 6px;text-wrap:balance}
+.lead{color:var(--muted);margin:0;max-width:65ch}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tab{font:500 14px var(--sans);padding:8px 14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;min-width:0}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px}
+@media(max-width:720px){.grid{grid-template-columns:minmax(0,1fr)}}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.chip{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--soft);color:var(--muted);font:500 13px var(--mono);cursor:pointer}
+.chip[aria-current="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.chip.done{color:var(--accent);border-color:var(--accent)}
+svg.sec{width:100%;height:auto;display:block;background:var(--soft);border:1px solid var(--line);border-radius:8px}
+svg text{font:500 10px var(--mono);fill:var(--muted)}
+.g{opacity:0;transition:opacity .35s}.g.on{opacity:1}
+h2{font:700 21px/1.2 var(--cond);margin:0 0 8px}
+h3{font:600 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:14px 0 4px}
+p{margin:0 0 8px}
+.pill{display:inline-block;font:500 11px var(--mono);padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.pill.bp{background:var(--soft);color:var(--muted);border:1px solid var(--line)}
+.why{border-left:3px solid var(--accent);background:var(--accent-soft);padding:8px 12px;border-radius:0 6px 6px 0}
+ul.ctl{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
+ul.ctl li{display:flex;gap:8px}ul.ctl li::before{content:"☐";color:var(--accent)}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:16px}
+.btn{font:500 14px var(--sans);padding:8px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.btn.sec{background:var(--panel);color:var(--accent)}
+.btn:disabled{opacity:.4;cursor:default}
+.ord{list-style:none;margin:12px 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.ord li{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--soft);border-radius:8px;padding:8px 10px}
+.ord li.ok{border-color:var(--ok);background:var(--ok-soft)}.ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord .t{flex:1;min-width:0}
+.mv{display:flex;gap:4px}.mv button{width:32px;height:32px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;cursor:pointer}
+.fb{margin-top:12px;padding:10px 12px;border-radius:8px;border:1px solid var(--line)}
+.fb.ok{background:var(--ok-soft);border-color:var(--ok)}.fb.bad{background:var(--bad-soft);border-color:var(--bad)}.fb.warn{background:var(--warn-soft);border-color:var(--warn)}
+.opts{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.opt{text-align:left;font:400 14px var(--sans);padding:10px 12px;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:8px;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.ok{background:var(--ok-soft);border-color:var(--ok)}.opt.no{background:var(--bad-soft);border-color:var(--bad)}
+.sym{background:var(--warn-soft);border:1px solid var(--warn);border-radius:8px;padding:10px 12px}
+.meta{display:flex;justify-content:space-between;font:500 12px var(--mono);color:var(--muted);margin-bottom:10px}
+.score{font:700 40px var(--cond)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel)}
+.seg button{font:500 14px var(--sans);padding:8px 16px;border:0;background:transparent;color:var(--ink);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.row2{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+footer{font-size:12px;color:var(--muted);max-width:75ch}
+.mode{display:flex;align-items:center;gap:10px;background:var(--accent);color:var(--accent-ink);border-radius:8px;padding:8px 14px;font:600 12px var(--mono);letter-spacing:.1em;text-transform:uppercase}.mode span{font-weight:400;opacity:.85;letter-spacing:.04em;text-transform:none}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="mute.css">
+<link rel="stylesheet" href="proceso.css">
+</head><body>
+<div class="wrap">
+  <div style="display:flex;flex-wrap:wrap;gap:8px"><a class="back" href="index.html#H">← Menú de calculadoras</a><a class="back" id="tocalc" href="medianera.html">Calcular esta zapata →</a></div>
+  <header class="top mat-H"><div><div class="mbadge"><b>ZM</b><span>PROCESO</span></div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Hormigón · Cimentaciones superficiales</small>Zapata de medianera y de esquina</h1></div></div><p class="lead">Las dos zapatas tienen el pilar en el borde y trabajan con viga centradora. Elige cuál repasar: el orden es casi el mismo, pero cambia cuántos lindes hay y cuántas vigas se anclan.</p></header>
+  <div class="mode">Proceso constructivo <span>· cómo se ejecuta en obra</span></div>
+  <div class="row2">
+    <div class="seg" id="seg" role="group" aria-label="Tipo de zapata"></div>
+  </div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <main id="main"></main>
+  <footer>Herramienta de estudio de la asignatura Construcción (ETSIE y ETSA, UGR). Material orientativo para el repaso: en obra rigen el proyecto, el estudio geotécnico y las indicaciones de la dirección facultativa. Las referencias normativas indicadas son las verificadas; el resto de pasos son buena práctica constructiva. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</div>
+
+<script>
+var TIPOS={medianera:"Zapata de medianera",esquina:"Zapata de esquina"};
+var tipo="medianera";
+
+var STEPS=[
+{id:1,t:"Replantear respecto al linde y excavar protegiendo la medianería",
+ q:"Se replantean los ejes del pilar y los bordes de la zapata, con el borde exterior justo sobre el linde. Se excava hasta la cota de proyecto sin desestabilizar la medianería: según el terreno y lo que haya al otro lado, por tramos (bataches), con entibación o con las medidas de protección que fije el proyecto.",
+ q_esquina:"Se replantean los ejes del pilar, que queda en el vértice, y los bordes de la zapata, que toca el linde por dos lados. Se excava hasta la cota de proyecto sin desestabilizar las dos medianerías: por tramos (bataches), con entibación o con las medidas de protección que fije el proyecto.",
+ w:"Junto al linde no hay holgura por ese lado: un error de replanteo invade la finca vecina o deja el pilar descentrado respecto del cálculo. Y una excavación que quita el apoyo lateral al edificio vecino lo daña.",
+ w_esquina:"En la esquina no hay holgura por dos lados: un error de replanteo invade la finca vecina o deja el pilar descentrado en las dos direcciones. Y quitar el apoyo lateral en dos medianerías aumenta el riesgo para los edificios vecinos.",
+ c:["Ejes del pilar y borde de la zapata sobre el linde comprobados","Terreno que aparece coincide con el estudio geotécnico","Medianería protegida: tramos, entibación o medida de proyecto","Fondo protegido hasta hormigonar"],
+ c_esquina:["Ejes del pilar en el vértice y bordes sobre los dos lindes comprobados","Terreno que aparece coincide con el estudio geotécnico","Las dos medianerías protegidas: tramos, entibación o medida de proyecto","Fondo protegido hasta hormigonar"],
+ r:"Buena práctica · linde y medianería",ref:false,
+ antes:"Es el primer paso: sin replanteo y excavación a cota no hay dónde apoyar la zapata."},
+{id:2,t:"Fondo limpio y hormigón de limpieza",
+ q:"Se limpia el fondo, se retira lo suelto y se vierte el hormigón de limpieza (al menos 10 cm) a la cota prevista. Sobre él se marcan los ejes del pilar, el contorno de la zapata y el trazado de la viga o vigas centradoras.",
+ w:"La limpieza regulariza el fondo y evita que la armadura toque el terreno. Si se hormigona directamente contra el terreno sin prepararlo, el recubrimiento mínimo sube a 70 mm.",
+ c:["Fondo limpio, sin agua ni material suelto","Limpieza con el espesor mínimo y a la cota prevista","Ejes y contorno marcados sobre la limpieza"],
+ r:"Guía CE 4.1.3 (70 mm contra terreno)",ref:true,
+ antes:"Necesita la excavación a cota: la limpieza fija la superficie tal cual esté."},
+{id:3,t:"Encofrar el borde que da al linde",
+ q:"Se coloca un encofrado de tablones o paneles a lo largo del borde de la zapata que da al linde, para que el hormigón no invada la finca vecina y el borde quede recto. Se arriostra para que aguante el vertido.",
+ q_esquina:"Se coloca un encofrado de tablones o paneles a lo largo de los dos bordes de la zapata que dan al linde, para que el hormigón no invada las fincas vecinas y los bordes queden rectos. Se arriostra para que aguante el vertido.",
+ w:"La zapata no puede salirse del límite de la parcela y en esa cara no hay holgura para trabajar. Sin encofrado, el hormigón se vierte contra el terreno cortado o contra el muro vecino y el borde queda irregular.",
+ w_esquina:"La zapata no puede salirse del límite de la parcela y en esas dos caras no hay holgura para trabajar. Sin encofrado, el hormigón se vierte contra el terreno cortado o contra el muro vecino y los bordes quedan irregulares.",
+ c:["Encofrado alineado con el linde y sin invadir la finca vecina","Arriostrado y estanco","Altura del encofrado igual al canto de la zapata"],
+ c_esquina:["Encofrado alineado con los dos lindes y sin invadir las fincas vecinas","Arriostrado y estanco, también en el vértice","Altura del encofrado igual al canto de la zapata"],
+ r:"Buena práctica · borde de zapata en el linde",ref:false,
+ antes:"Necesita la limpieza ya hormigonada y los ejes marcados sobre ella."},
+{id:4,t:"Armar la zapata y colocar el arranque del pilar",
+ q:"Se monta la parrilla sobre separadores de hormigón, mortero o plástico rígido, a no más de 50 veces el diámetro ni 100 cm. El arranque del pilar se coloca descentrado hacia el borde del linde, atado y aplomado, con las armaduras del pilar hasta la capa inferior de la parrilla.",
+ q_esquina:"Se monta la parrilla sobre separadores de hormigón, mortero o plástico rígido, a no más de 50 veces el diámetro ni 100 cm, con la misma armadura en las dos direcciones. El arranque del pilar se coloca en el vértice, atado y aplomado, con las armaduras del pilar hasta la capa inferior de la parrilla.",
+ w:"El pilar queda en el borde y la reacción del terreno en el centro de la zapata: ese desequilibrio es el que absorbe la viga centradora. Si el arranque se coloca centrado por error, lo construido no corresponde al cálculo.",
+ w_esquina:"El pilar queda en el vértice y la reacción del terreno en el centro de la zapata: el desequilibrio se da en las dos direcciones, y se absorbe con las vigas centradoras. Si el arranque no está en su posición, lo construido no corresponde al cálculo.",
+ c:["Parrilla con diámetros y separaciones según plano","Separadores suficientes y de material admitido","Arranque del pilar en la posición excéntrica del plano, aplomado y atado","Armaduras del pilar hasta la capa inferior"],
+ r:"Guía CE 8.3 · DB SE-C 4.5.1.4",ref:true,
+ antes:"Necesita el encofrado del borde y la limpieza como plano de apoyo."},
+{id:5,t:"Armar y anclar la viga centradora",
+ q:"Se arma la viga centradora hacia la zapata del pilar interior y se ancla su armadura longitudinal en la zapata de borde, contando el anclaje desde el eje del pilar. Se arma junto con la zapata para hormigonar todo a la vez.",
+ q_esquina:"Se arman las vigas centradoras, dos en ángulo recto hacia las zapatas contiguas o una en diagonal, y se anclan sus armaduras longitudinales en la zapata de esquina, contando el anclaje desde el eje del pilar. Se arman junto con la zapata para hormigonar todo a la vez.",
+ w:"La viga hace que la zapata de borde no gire: lleva el momento del pilar excéntrico hacia el pilar interior y redistribuye las presiones sobre el terreno. Sin ella, la zapata se inclina hacia el interior y la presión deja de ser uniforme.",
+ w_esquina:"Las vigas hacen que la zapata de esquina no gire: llevan el momento del pilar en el vértice hacia los pilares contiguos y redistribuyen las presiones sobre el terreno. Sin ellas, la zapata se inclina hacia el interior.",
+ c:["Armadura de la viga según plano, con cercos y separadores","Anclaje en la zapata de borde, medido desde el eje del pilar","Viga a su cota y alineada con el pilar interior","Viga y zapata preparadas para hormigonar a la vez"],
+ c_esquina:["Armadura de cada viga según plano, con cercos y separadores","Anclaje en la zapata de esquina, medido desde el eje del pilar","Las dos vigas, o la diagonal, a su cota y alineadas","Vigas y zapata preparadas para hormigonar a la vez"],
+ r:"DB SE-C 4.1.1 (vigas centradoras)",ref:true,lk:true,
+ antes:"Necesita la parrilla y el arranque del pilar: la viga se ancla en la zapata armada."},
+{id:6,t:"Hormigonado conjunto de zapata y viga",
+ q:"Se revisan armaduras, arranque y encofrado antes de verter. El hormigón se vierte sin caída libre y se vibra alrededor de las barras y en el nudo de la viga con la zapata. No se circula sobre el hormigón fresco.",
+ w:"El nudo entre la zapata y la viga es el punto crítico: si se hormigonan por separado, queda una junta fría justo donde se transmite el momento. La caída libre segrega el hormigón y desplaza las armaduras.",
+ c:["Armaduras, arranque y encofrado revisados y aprobados","Vertido continuo y sin caída libre","Vibrado sistemático, también en el nudo viga-zapata","Encofrado del linde sin movimientos durante el vertido"],
+ r:"DB SE-C 4.5.1.4 (zapatas)",ref:true,
+ antes:"Es el paso que no se puede deshacer: solo se vierte con todo lo anterior revisado."},
+{id:7,t:"Curado",
+ q:"Una vez fraguado, se mantiene húmedo y protegido del sol, del viento y de las heladas. No se cargan ni se transita sobre el hormigón fresco, y el encofrado del linde se retira cuando la dirección facultativa lo autorice.",
+ w:"El hormigón gana resistencia mientras tiene agua para hidratar el cemento. Sin curado aparecen fisuras de retracción en la cara más expuesta de la zapata y de la viga.",
+ c:["Superficie protegida y húmeda tras el fraguado","Sin tránsito ni cargas sobre el hormigón fresco","Plazo de curado y de desencofrado fijado por la dirección facultativa"],
+ r:"Código Estructural art. 52.5",ref:true,
+ antes:"Va después de hormigonar: no se cura un hormigón que aún no está colocado."}
+];
+function sv(s,k){return s[k+"_"+tipo]!==undefined?s[k+"_"+tipo]:s[k]}
+
+var FAILS=[
+{k:"medianera",s:"Meses después, el pilar de borde se ha inclinado hacia dentro y hay fisuras en la zapata de medianera.",
+ o:["La viga centradora no se ejecutó o no estaba anclada en la zapata de borde","El hormigón era HA-25","El curado fue largo","La limpieza era de 10 cm"],a:0,
+ cons:"Sin viga, la zapata de borde gira por el momento del pilar excéntrico: la presión se concentra en un lado y el pilar se inclina.",
+ prev:"Paso 5: viga centradora anclada desde el eje del pilar y hormigonada a la vez que la zapata."},
+{k:"medianera",s:"Al excavar junto al linde aparece una grieta en el muro del edificio vecino.",
+ o:["La excavación no se protegió ni se hizo por tramos","El hormigón de limpieza era muy fino","La armadura no tenía separadores","El pilar estaba aplomado"],a:0,
+ cons:"Se pierde el apoyo lateral del edificio vecino: daños en sus muros y responsabilidad legal.",
+ prev:"Paso 1: tramos, entibación o las medidas de protección que fije el proyecto."},
+{k:"medianera",s:"Al terminar, el borde de la zapata sobresale diez centímetros dentro de la finca vecina.",
+ o:["No se encofró el borde ni se replanteó con precisión respecto del linde","Se curó con agua","Los separadores eran de mortero","La viga estaba anclada"],a:0,
+ cons:"Invadir la finca del vecino es un problema legal además de constructivo, y obliga a demoler o negociar.",
+ prev:"Pasos 1 y 3: replantear el borde sobre el linde y encofrarlo para que el hormigón no se salga."},
+{k:"esquina",s:"La zapata de esquina asienta en diagonal y se fisura en las dos direcciones.",
+ o:["Faltó una de las dos vigas centradoras o no estaba anclada","El hormigón era HA-30","El curado se hizo con agua","El arranque estaba aplomado"],a:0,
+ cons:"Con solo una dirección equilibrada, la zapata gira en la otra y el pilar se desplaza hacia el interior.",
+ prev:"Paso 5: dos vigas en ángulo recto (o una diagonal), ambas ancladas y hormigonadas con la zapata."},
+{k:"esquina",s:"Tras levantar el pilar de esquina se ve que está a 8 cm del vértice previsto en una de las dos direcciones.",
+ o:["El arranque se colocó sin replantear bien los dos lindes","El hormigón se vibró","La limpieza era de 10 cm","Se usó encofrado"],a:0,
+ cons:"El momento de desequilibrio cambia y las vigas centradoras deben resistir más de lo previsto.",
+ prev:"Pasos 1 y 4: replantear el vértice sobre los dos lindes y fijar el arranque, aplomado y arriostrado."},
+{k:"esquina",s:"Durante la excavación de una esquina entre dos medianerías se desploma parte del terreno hacia el solar.",
+ o:["Se excavó la esquina de una vez, sin tramos ni protección en las dos medianerías","Se usó vibrador","Los separadores eran de plástico","El pilar estaba atado"],a:0,
+ cons:"Se pierde el apoyo de dos edificios a la vez: daños en ambos y riesgo para los operarios.",
+ prev:"Paso 1: excavar por tramos o con entibación en las dos medianerías."},
+{k:"todas",s:"A los pocos días, la superficie de la zapata está polvorienta y con fisuras finas.",
+ o:["No se curó, o se hizo mal, en los primeros días","Los pilares estaban aplomados","La viga tenía cercos","El replanteo era correcto"],a:0,
+ cons:"Mala hidratación y retracción en la capa superficial: fisuración y menor resistencia.",
+ prev:"Paso 7: curado desde el primer momento, con la superficie húmeda y protegida."},
+{k:"todas",s:"Años después se ven manchas de óxido en la base de la zapata y el hormigón se desconcha cerca de la armadura.",
+ o:["La parrilla estaba apoyada en el terreno, sin separadores ni limpieza","El encofrado era de madera","El hormigón era HA-30","La viga tenía patillas"],a:0,
+ cons:"Una armadura sin recubrimiento se corroe, aumenta de volumen y rompe el hormigón.",
+ prev:"Pasos 2 y 4: hormigón de limpieza y parrilla sobre separadores adecuados."}
+];
+var EXAM=[
+{k:"todas",q:"¿Por qué una zapata de medianera o de esquina necesita viga centradora?",o:["Porque el pilar queda en el borde y la reacción del terreno en el centro, y la viga absorbe ese desequilibrio","Porque no lleva armadura","Para sustituir al hormigón de limpieza","Para evitar el curado"],a:0,e:"Sin ella, la zapata giraría por el momento del pilar excéntrico."},
+{k:"todas",q:"¿Desde dónde se cuenta el anclaje de la armadura de la viga centradora en la zapata?",o:["Desde el eje del pilar","Desde la cara de la zapata","Desde el borde de la zanja","No se ancla"],a:0,e:"Se ancla desde el eje del pilar, no desde la cara de la zapata."},
+{k:"todas",q:"Según la Guía CE, ¿a qué distancia máxima se colocan los separadores de la parrilla inferior de una zapata?",o:["50 veces el diámetro, sin pasar de 100 cm","200 cm","20 cm","No hay límite"],a:0,e:"Es el criterio de la tabla de separadores de la Guía CE."},
+{k:"todas",q:"El recubrimiento mínimo de una pieza hormigonada contra el terreno, sin preparación ni limpieza, es de:",o:["70 mm","20 mm","35 mm","10 mm"],a:0,e:"Salvo que se prepare el terreno y se disponga hormigón de limpieza."},
+{k:"todas",q:"¿Hasta dónde deben bajar las armaduras verticales del pilar en la zapata?",o:["Hasta la capa inferior de armadura de la zapata","Hasta la mitad del canto","No importa","Solo hasta la cara superior"],a:0,e:"Lo indica el DB SE-C para zapatas."},
+{k:"todas",q:"¿Qué dice el DB SE-C sobre el vertido del hormigón de una zapata?",o:["Evitar la caída libre y no circular sobre el hormigón fresco","Verter desde la máxima altura","Hormigonar antes de limpiar el fondo","Pisar el hormigón para nivelarlo"],a:0,e:"La caída libre segrega el hormigón y desplaza las armaduras."},
+{k:"todas",q:"¿Por qué se hormigonan a la vez la zapata y la viga centradora?",o:["Para evitar una junta fría en el nudo donde se transmite el momento","Para que fragüe antes","Porque no hay encofrado","Para ahorrar hormigón"],a:0,e:"El nudo viga-zapata es el punto crítico."},
+{k:"todas",q:"¿Qué hace el curado del hormigón?",o:["Mantiene el agua para hidratar el cemento y evita fisuras de retracción","Acelera el replanteo","Sustituye a la limpieza","Aumenta la excentricidad"],a:0,e:"Sin curado aparecen fisuras de retracción en la superficie."},
+{k:"medianera",q:"¿Para qué se encofra el borde de la zapata que da al linde?",o:["Para que el hormigón no invada la finca vecina y el borde quede recto","Para curar el hormigón","Para anclar la viga","Para sustituir la limpieza"],a:0,e:"En esa cara no hay holgura para trabajar."},
+{k:"medianera",q:"¿Qué hay que cuidar al excavar junto a la medianería?",o:["Que no se pierda el apoyo lateral del edificio vecino, con tramos, entibación o las medidas del proyecto","Solo la profundidad","Nada, es cosa del vecino","Excavar de golpe para ahorrar tiempo"],a:0,e:"Una excavación mal controlada daña el edificio vecino."},
+{k:"medianera",q:"En la zapata de medianera, ¿cómo se coloca el arranque del pilar respecto del centro de la zapata?",o:["Descentrado hacia el borde del linde","Exactamente en el centro","Fuera de la zapata","En la viga"],a:0,e:"Esa excentricidad es la que obliga a la viga centradora."},
+{k:"esquina",q:"¿Cuántas vigas centradoras lleva una zapata de esquina?",o:["Dos en ángulo recto hacia las zapatas contiguas, o una en diagonal","Ninguna","Cuatro","Siempre una"],a:0,e:"El desequilibrio se da en las dos direcciones."},
+{k:"esquina",q:"¿Dónde queda el arranque del pilar en una zapata de esquina?",o:["En el vértice, junto a los dos lindes","En el centro","Fuera de la parcela","En la viga"],a:0,e:"El desequilibrio se produce en las dos direcciones."},
+{k:"esquina",q:"¿Qué hay que proteger al excavar una esquina entre dos medianerías?",o:["Las dos medianerías, con tramos, entibación o las medidas del proyecto","Solo una","Ninguna","Solo la solera"],a:0,e:"Se pierde el apoyo lateral de dos edificios a la vez."}
+];
+
+var $=function(s){return document.querySelector(s)};
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
+var MODES=[["rec","Recorrido paso a paso"],["ord","Ordena el proceso"],["fal","¿Qué falla?"],["exa","Repaso tipo examen"]];
+var mode="rec",cur=0,order=[],fi=0,ex=null;
+
+function seg(){
+  $("#seg").innerHTML=Object.keys(TIPOS).map(function(k){return '<button type="button" data-k="'+k+'" aria-pressed="'+(k===tipo)+'">'+TIPOS[k]+'</button>'}).join("");
+  document.querySelectorAll("#seg button").forEach(function(b){b.onclick=function(){setTipo(b.dataset.k)}});
+  $("#tocalc").href=tipo+".html";var _b=document.querySelector(".mbadge b");if(_b&&{medianera:"ZM",esquina:"ZE"}[tipo])_b.textContent={medianera:"ZM",esquina:"ZE"}[tipo];
+  $("#tocalc").textContent="Calcular esta zapata →";
+}
+function setTipo(k){tipo=k;try{history.replaceState(null,"","#"+k)}catch(e){}seg();order=[];fi=0;ex=null;render()}
+function tabs(){
+  $("#tabs").innerHTML=MODES.map(function(m){return '<button class="tab" role="tab" aria-selected="'+(m[0]===mode)+'" data-m="'+m[0]+'">'+m[1]+'</button>'}).join("");
+  document.querySelectorAll(".tab").forEach(function(b){b.onclick=function(){mode=b.dataset.m;tabs();render()}});
+}
+
+function svg(n){
+  var on=function(i){return n>=i?" on":""};
+  var only=function(i){return n===i?" on":""};
+  var zb=[44,252].map(function(x){return '<path d="M'+x+' 160 V184 H'+(x+96)+' V160" fill="none" stroke="var(--rebar)" stroke-width="3" stroke-linejoin="round"/>'}).join("");
+  var arr=[56,68,294,306].map(function(x){return '<line x1="'+x+'" y1="40" x2="'+x+'" y2="182" stroke="var(--rebar)" stroke-width="3"/>'}).join("");
+  var est=[100,128,156,184,212,240,268].map(function(x){return '<line x1="'+x+'" y1="157" x2="'+x+'" y2="171" stroke="var(--rebar)" stroke-width="1.5"/>'}).join("");
+  var E=tipo==="esquina";
+  return '<svg class="sec" viewBox="0 0 400 270" role="img" aria-label="Sección perpendicular al linde de una zapata de borde con su viga centradora, en construcción">'+
+  '<defs><pattern id="h" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="var(--soil-edge)" stroke-width="1"/></pattern></defs>'+
+  '<rect x="0" y="60" width="400" height="210" fill="var(--soil)"/><rect x="0" y="60" width="400" height="210" fill="url(#h)" opacity=".5"/>'+
+  '<line x1="0" y1="60" x2="400" y2="60" stroke="var(--soil-edge)" stroke-width="1.5"/>'+
+  '<rect x="0" y="0" width="30" height="132" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.5"/><rect x="0" y="110" width="34" height="22" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.5"/>'+
+  '<g class="g'+on(1)+'"><path d="M34 60 V202 H160 V190 H240 V202 H372 V58 H34" fill="var(--soft)" stroke="var(--soil-edge)" stroke-width="1.5"/>'+
+  '<line x1="34" y1="22" x2="34" y2="215" stroke="var(--muted)" stroke-dasharray="6 3 1 3"/><rect x="0" y="0" width="30" height="132" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.5"/><rect x="0" y="110" width="34" height="22" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.5"/></g>'+
+  '<g class="g'+only(1)+'"><text x="40" y="30">linde'+(E?' (otro en planta)':'')+'</text><text x="2" y="70">vecino</text></g>'+
+  '<g class="g'+on(2)+'"><rect x="34" y="190" width="126" height="12" fill="var(--concrete)" stroke="var(--concrete-edge)"/><rect x="160" y="178" width="80" height="12" fill="var(--concrete)" stroke="var(--concrete-edge)"/><rect x="240" y="190" width="132" height="12" fill="var(--concrete)" stroke="var(--concrete-edge)"/></g>'+
+  '<g class="g'+only(2)+'"><text x="164" y="245">limpieza ≥ 10 cm</text></g>'+
+  '<g class="g'+(n>=3&&n<=6?" on":"")+'"><rect x="31" y="146" width="5" height="46" fill="var(--accent)"/><line x1="31" y1="150" x2="12" y2="170" stroke="var(--accent)" stroke-width="2"/></g>'+
+  '<g class="g'+only(3)+'"><text x="44" y="130">encofrado en el linde</text></g>'+
+  '<g class="g'+on(6)+'"><rect x="36" y="150" width="119" height="40" fill="var(--concrete)" opacity=".92" stroke="var(--concrete-edge)" stroke-width="1.5"/><rect x="245" y="150" width="123" height="40" fill="var(--concrete)" opacity=".92" stroke="var(--concrete-edge)" stroke-width="1.5"/><rect x="155" y="150" width="90" height="28" fill="var(--concrete)" opacity=".92" stroke="var(--concrete-edge)" stroke-width="1.5"/></g>'+
+  '<g class="g'+on(4)+'">'+zb+arr+'<rect x="72" y="184" width="8" height="6" fill="var(--accent)"/><rect x="110" y="184" width="8" height="6" fill="var(--accent)"/><rect x="280" y="184" width="8" height="6" fill="var(--accent)"/><rect x="320" y="184" width="8" height="6" fill="var(--accent)"/></g>'+
+  '<g class="g'+only(4)+'"><text x="80" y="110">arranque excéntrico</text></g>'+
+  '<g class="g'+on(5)+'"><line x1="62" y1="157" x2="300" y2="157" stroke="var(--rebar)" stroke-width="3"/><line x1="62" y1="171" x2="300" y2="171" stroke="var(--rebar)" stroke-width="3"/>'+est+'<path d="M65 157 V176" fill="none" stroke="var(--accent)" stroke-width="3"/><rect x="186" y="172" width="7" height="6" fill="var(--accent)"/><rect x="214" y="172" width="7" height="6" fill="var(--accent)"/></g>'+
+  '<g class="g'+only(5)+'"><text x="150" y="140">'+(E?'viga centradora (1 de 2)':'viga centradora')+'</text></g>'+
+  '<g class="g'+only(6)+'"><text x="140" y="140">hormigonado conjunto</text></g>'+
+  '<g class="g'+only(7)+'"><line x1="38" y1="145" x2="366" y2="145" stroke="var(--water)" stroke-width="3" stroke-dasharray="10 4"/><path d="M130 132 q4 8 0 12 q-4-4 0-12 M200 124 q4 8 0 12 q-4-4 0-12 M270 132 q4 8 0 12 q-4-4 0-12" fill="var(--water)"/><text x="48" y="118">protegido y húmedo</text></g>'+
+  '</svg>';
+}
+
+function renderRec(){
+  var s=STEPS[cur];
+  var chips='<div class="chips">'+STEPS.map(function(x,i){return '<button class="chip'+(i<cur?' done':'')+'" aria-current="'+(i===cur)+'" data-i="'+i+'" aria-label="Paso '+x.id+'">'+x.id+'</button>'}).join("")+'</div>';
+  var r=sv(s,"r");
+  $("#main").innerHTML='<div class="box"><div class="eyebrow" style="margin-bottom:8px">'+TIPOS[tipo]+'</div>'+chips+'<div class="grid"><div>'+svg(s.id)+'</div><div>'+
+   '<span class="pill'+(s.ref?'':' bp')+'">'+(s.ref?'Referencia: ':'')+esc(r)+'</span>'+
+   '<h2 style="margin-top:8px">'+s.id+'. '+esc(s.t)+'</h2><p>'+esc(sv(s,"q"))+'</p>'+
+   '<h3>Por qué se hace así</h3><div class="why">'+esc(sv(s,"w"))+'</div>'+
+   '<h3>Control antes de pasar al siguiente</h3><ul class="ctl">'+sv(s,"c").map(function(c){return '<li>'+esc(c)+'</li>'}).join("")+'</ul>'+(s.lk?'<p style="margin-top:12px"><a class="back" href="proceso-vigas.html#centradora">Ver el proceso de la viga centradora →</a></p>':'')+
+   '</div></div><div class="nav"><button class="btn sec" id="prev" '+(cur===0?'disabled':'')+'>← Anterior</button><button class="btn" id="next" '+(cur===STEPS.length-1?'disabled':'')+'>Siguiente →</button></div></div>';
+  document.querySelectorAll(".chip").forEach(function(b){b.onclick=function(){cur=+b.dataset.i;renderRec()}});
+  $("#prev").onclick=function(){cur--;renderRec()};$("#next").onclick=function(){cur++;renderRec()};
+}
+
+function newOrder(){do{order=shuffle(STEPS.map(function(s){return s.id}))}while(order.every(function(v,i){return v===i+1}))}
+function renderOrd(res){
+  if(!order.length)newOrder();
+  var html='<div class="box"><div class="eyebrow" style="margin-bottom:8px">'+TIPOS[tipo]+'</div><h2>Ordena el proceso</h2><p>Coloca los pasos de ejecución en el orden correcto con las flechas.</p><ol class="ord">'+
+   order.map(function(id,i){var s=STEPS[id-1];var cl=res?(id===i+1?' class="ok"':' class="no"'):'';
+    return '<li'+cl+'><span class="t">'+esc(s.t)+'</span><span class="mv"><button data-i="'+i+'" data-d="-1" aria-label="Subir">↑</button><button data-i="'+i+'" data-d="1" aria-label="Bajar">↓</button></span></li>'}).join("")+'</ol>';
+  if(res){
+    var fb=-1;order.forEach(function(id,i){if(fb<0&&id!==i+1)fb=i});
+    if(fb<0){html+='<div class="fb ok"><strong>Orden correcto.</strong> Cada paso prepara el siguiente: replanteo y excavación protegida, limpieza, encofrado del linde, zapata armada, viga centradora anclada, hormigonado conjunto y curado.</div>'}
+    else{var w=fb+1,st=STEPS[w-1];
+      html+='<div class="fb bad"><strong>El paso '+w+' debería ir en la posición '+w+'.</strong> Ahora tienes «'+esc(STEPS[order[fb]-1].t)+'» en esa posición. Recuerda: '+esc(st.antes)+'</div>'}
+  }
+  html+='<div class="nav"><button class="btn sec" id="rs">Mezclar de nuevo</button><button class="btn" id="ck">Comprobar</button></div></div>';
+  $("#main").innerHTML=html;
+  document.querySelectorAll(".mv button").forEach(function(b){b.onclick=function(){var i=+b.dataset.i,j=i+(+b.dataset.d);if(j<0||j>=order.length)return;var t=order[i];order[i]=order[j];order[j]=t;renderOrd(false)}});
+  $("#rs").onclick=function(){newOrder();renderOrd(false)};$("#ck").onclick=function(){renderOrd(true)};
+}
+
+function fails(){return FAILS.filter(function(f){return f.k==="todas"||f.k===tipo})}
+function renderFal(){
+  var L=fails();if(fi>=L.length)fi=0;var f=L[fi];
+  $("#main").innerHTML='<div class="box"><div class="meta"><span>'+TIPOS[tipo].toUpperCase()+' · CASO '+(fi+1)+' / '+L.length+'</span></div><h2>¿Qué falla?</h2><div class="sym">'+esc(f.s)+'</div><h3>¿Cuál es la causa más probable?</h3><div class="opts">'+f.o.map(function(o,i){return '<button class="opt" data-i="'+i+'">'+esc(o)+'</button>'}).join("")+'</div><div id="fb"></div>'+
+   '<div class="nav"><button class="btn sec" id="fp" '+(fi===0?'disabled':'')+'>← Caso anterior</button><button class="btn" id="fn" '+(fi===L.length-1?'disabled':'')+'>Caso siguiente →</button></div></div>';
+  document.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){
+    var i=+b.dataset.i;document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});
+    document.querySelectorAll(".opt")[f.a].classList.add("ok");if(i!==f.a)b.classList.add("no");
+    $("#fb").innerHTML='<div class="fb '+(i===f.a?'ok':'bad')+'"><strong>'+(i===f.a?'Correcto.':'No es esa.')+'</strong> Causa: «'+esc(f.o[f.a])+'».<br><strong>Consecuencia:</strong> '+esc(f.cons)+'<br><strong>Cómo se evita:</strong> '+esc(f.prev)+'</div>'}});
+  $("#fp").onclick=function(){fi--;renderFal()};$("#fn").onclick=function(){fi++;renderFal()};
+}
+
+function startExam(){
+  var pool=EXAM.filter(function(q){return q.k==="todas"||q.k===tipo});
+  var own=pool.filter(function(q){return q.k===tipo}),common=pool.filter(function(q){return q.k==="todas"});
+  var pick=own.concat(shuffle(common).slice(0,6));
+  ex={qs:shuffle(pick).map(function(q){var idx=shuffle(q.o.map(function(_,i){return i}));return{q:q.q,o:idx.map(function(i){return q.o[i]}),a:idx.indexOf(q.a),e:q.e}}),i:0,s:0};
+}
+function renderExa(){
+  if(!ex)startExam();
+  if(ex.i>=ex.qs.length){
+    var p=Math.round(ex.s/ex.qs.length*100);
+    $("#main").innerHTML='<div class="box"><h2>Resultado</h2><div class="score">'+ex.s+' / '+ex.qs.length+'</div><p>'+(p>=80?'Muy bien: dominas el orden y el porqué de cada paso.':p>=50?'Vas bien. Repasa en el recorrido los pasos donde has fallado.':'Conviene repasar el recorrido paso a paso y volver a intentarlo.')+'</p><div class="nav"><button class="btn sec" id="rv">Ir al recorrido</button><button class="btn" id="rt">Nuevo examen</button></div></div>';
+    $("#rt").onclick=function(){startExam();renderExa()};$("#rv").onclick=function(){mode="rec";cur=0;tabs();render()};return}
+  var q=ex.qs[ex.i];
+  $("#main").innerHTML='<div class="box"><div class="meta"><span>'+TIPOS[tipo].toUpperCase()+' · PREGUNTA '+(ex.i+1)+' / '+ex.qs.length+'</span><span>ACIERTOS '+ex.s+'</span></div><h2>'+esc(q.q)+'</h2><div class="opts">'+q.o.map(function(o,i){return '<button class="opt" data-i="'+i+'">'+esc(o)+'</button>'}).join("")+'</div><div id="fb"></div><div class="nav"><span></span><button class="btn" id="nx" style="visibility:hidden">'+(ex.i===ex.qs.length-1?'Ver resultado':'Siguiente →')+'</button></div></div>';
+  document.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){
+    var i=+b.dataset.i;document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});
+    document.querySelectorAll(".opt")[q.a].classList.add("ok");if(i!==q.a)b.classList.add("no");else ex.s++;
+    $("#fb").innerHTML='<div class="fb '+(i===q.a?'ok':'bad')+'"><strong>'+(i===q.a?'Correcto.':'Incorrecto.')+'</strong> '+esc(q.e)+'</div>';
+    $("#nx").style.visibility="visible"}});
+  $("#nx").onclick=function(){ex.i++;renderExa()};
+}
+function render(){ if(mode==="rec")renderRec(); else if(mode==="ord")renderOrd(false); else if(mode==="fal")renderFal(); else renderExa(); }
+(function(){var h=(location.hash||"").replace("#","");if(TIPOS[h])tipo=h;})();
+seg();tabs();render();
+</script>
+</body></html>

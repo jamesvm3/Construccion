@@ -1,0 +1,365 @@
+<!doctype html><html><head><meta charset=utf8>
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.pick{font-family:var(--mono);font-size:12.5px;border-collapse:collapse;width:100%}
+.pick td,.pick th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}
+.pick th{color:var(--muted);font-weight:500}
+.pick td:first-child,.pick th:first-child{text-align:left}
+.tbl{overflow-x:auto}
+</style></head><body>
+<title>Forjado unidireccional</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#eef0ee; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#cfd5d3;
+  --soft:#f5f7f6; --accent:#1f5f7a; --accent-soft:#e1edf2; --rebar:#b0392b;
+  --concrete:#d9dcd8; --concrete-edge:#8e9692; --soil:#e8dcc3; --soil-edge:#b9a77d; --steel:#c3ccd4; --steel-edge:#5d6b77; --load:#a86608;
+  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+    --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+    --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#3b3626; --soil-edge:#7a6a46; --steel:#46525c; --steel-edge:#8a99a6; --load:#e3a849;
+    --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+  --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+  --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#3b3626; --soil-edge:#7a6a46; --steel:#46525c; --steel-edge:#8a99a6; --load:#e3a849;
+  --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 60px}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--cond);font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance;letter-spacing:-.01em}
+.src{font-size:13px;color:var(--muted);max-width:44ch}
+.mode{display:flex;align-items:center;gap:10px;font-size:14px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:6px}
+.grid{display:grid;grid-template-columns:350px 1fr;gap:22px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;flex-direction:column;gap:14px}
+@media (max-width:860px){aside{position:static}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
+.box h2{font-family:var(--cond);font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--accent)}
+.field{display:grid;grid-template-columns:1fr 124px 46px;align-items:center;gap:8px;padding-block:5px;border-bottom:1px dashed var(--line)}
+.field:last-child{border-bottom:0}
+.field label{font-size:13.5px}
+.field .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
+input[type=number],select{width:100%;font-family:var(--mono);font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--soft);color:var(--ink);text-align:right}
+select{text-align:left}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+.helper{margin-top:10px;font-size:13px}
+.helper summary{cursor:pointer;color:var(--accent);font-weight:500}
+.helper .field{grid-template-columns:1fr 84px 46px}
+button{font-family:var(--sans);font-size:13px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:6px 12px;border-radius:4px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+.summary{background:var(--ink);color:var(--bg);border-radius:6px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:18px 32px;align-items:baseline}
+.summary .big{font-family:var(--cond);font-size:26px;font-weight:700;letter-spacing:.01em}
+.summary .lab{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;display:block}
+.drawing{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:620px){.drawing{grid-template-columns:1fr}}
+.drawing .box{padding:10px 12px}
+.drawing h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:500}
+svg{display:block;width:100%;height:auto}
+main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.step-h{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--soft)}
+.num{font-family:var(--mono);font-weight:600;font-size:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--accent);color:var(--accent);flex:none}
+.step-h h2{font-family:var(--cond);font-size:19px;margin:0;font-weight:700}
+.step-h .tag{margin-left:auto}
+.step-b{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.why{font-size:14px;color:var(--muted);max-width:70ch;margin:0}
+.calc{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 14px;align-items:baseline;padding:8px 10px;border-radius:4px;background:var(--soft)}
+@media (max-width:520px){.row{grid-template-columns:1fr}}
+.row .k{font-size:13.5px;font-weight:500}
+.f{font-family:var(--mono);font-size:13.5px;overflow-wrap:anywhere}
+.f .gen{color:var(--muted)}
+.f .res{color:var(--accent);font-weight:600}
+.f sub{font-size:.75em}
+.practice .res,.practice .sug,.practice .step-h .tag,.practice .summary,.practice .drawing svg,.practice .row .pill{filter:blur(7px);user-select:none}
+.try{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;border-top:1px dashed var(--line);padding-top:10px}
+.try input{width:110px}
+.pill{font-family:var(--mono);font-size:11.5px;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.info{background:var(--accent-soft);color:var(--accent)}
+.decide{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px;border:1.5px solid var(--accent);border-radius:4px;background:var(--accent-soft)}
+.decide label{font-weight:600;font-size:14px}
+.decide input,.decide select{width:110px}
+.decide .sug{font-size:13px;color:var(--muted)}
+.note{font-size:13px;border-left:3px solid var(--warn);padding:6px 10px;background:var(--warn-soft);color:var(--ink);border-radius:0 4px 4px 0}
+.note.extra{border-left-color:var(--accent);background:var(--accent-soft)}
+footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px}
+@media (prefers-reduced-motion:no-preference){.res,.pill{transition:filter .25s ease}}
+.pick{font-family:var(--mono);font-size:12.5px;border-collapse:collapse;width:100%}
+.pick td,.pick th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}
+.pick th{color:var(--muted);font-weight:500}
+.pick td:first-child,.pick th:first-child{text-align:left}
+.tbl{overflow-x:auto}
+ </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="mute.css">
+
+<div class="wrap">
+<a href="index.html#H" style="display:inline-flex;align-items:center;margin-bottom:14px;font:600 14px var(--sans);color:var(--panel);background:var(--ink);border:1px solid var(--ink);border-radius:6px;padding:6px 14px 6px 11px;text-decoration:none">← Menú de calculadoras</a>
+<header class="top mat-H">
+  <div>
+    <div class="mbadge">FU</div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Hormigón · Estructura</small>Forjado unidireccional</h1></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+    <label class="mode" for="practica"><input type="checkbox" id="practica"> Modo práctica: ocultar resultados</label>
+    <div class="hint" style="margin:0">Calcula tú, escribe tu resultado en cada paso y comprueba.</div>
+    <div class="src">Ficha HU «Forjado unidireccional» de <em>Cálculo rápido de estructuras</em> (S. Mute), con la Guía de aplicación del Código Estructural.</div>
+  </div>
+</header>
+
+<div class="grid">
+<aside>
+  <div class="box">
+    <h2>Datos de partida</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"><button type="button" id="clear">Limpiar datos</button></div>
+    <div class="field"><label for="qk">Carga superficial característica q<sub>k</sub> (con peso propio)</label><input id="qk" type="number" step="any"><span class="u">kN/m²</span></div>
+    <div class="field"><label for="L">Luz del vano L (en la dirección de las viguetas)</label><input id="L" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="pos">Situación del vano</label><select id="pos"><option value="ai">Aislado (biapoyado)</option><option value="ex" selected>Extremo</option><option value="in">Interior</option><option value="vo">Voladizo</option></select><span class="u"></span></div>
+    <div class="field"><label for="tip">Tipo de forjado</label><select id="tip"><option value="ar">Vigueta armada o en obra</option><option value="pr" selected>Vigueta pretensada</option><option value="al">Losa alveolar pretensada</option></select><span class="u"></span></div>
+    <div class="field"><label for="pl">Planta</label><select id="pl"><option value="t" selected>Piso con tabiques</option><option value="c">Cubierta</option></select><span class="u"></span></div>
+    <div class="field"><label for="ie">Intereje entre viguetas</label><input id="ie" type="number" step="any" placeholder="0,70"><span class="u">m</span></div>
+    <div class="field"><label for="bw">Ancho del nervio b (cortante)</label><input id="bw" type="number" step="any" placeholder="10"><span class="u">cm</span></div>
+    <details class="helper">
+      <summary>Cargas orientativas de vivienda</summary>
+      <p class="hint">Peso propio de un forjado de viguetas y bovedillas de 25 + 5 cm ≈ 3,0-3,5 kN/m²; solado ≈ 1,0; tabiquería ≈ 1,0; sobrecarga de uso en vivienda 2,0 kN/m² (DB SE-AE). Total habitual ≈ 7-8 kN/m².</p>
+    </details>
+    <p class="hint">Mute recuerda que este forjado solo suele ser viable en viviendas y que las viguetas no deben pasar de unos 7 m de luz.</p>
+  </div>
+</aside>
+
+<main>
+  <section>
+    <div class="summary" id="summary"></div>
+    <div class="drawing">
+      <div class="box"><h3>Momentos por metro de ancho</h3><svg id="sec" viewBox="0 0 360 230" role="img" aria-label="Ley de momentos del vano"></svg></div>
+      <div class="box"><h3>Sección transversal</h3><svg id="pl2" viewBox="0 0 360 230" role="img" aria-label="Sección del forjado con viguetas y bovedillas"></svg></div>
+    </div>
+  </section>
+
+  <article class="step" id="s1">
+    <div class="step-h"><span class="num">1</span><h2>Carga de cálculo por metro de ancho</h2><span class="tag" id="t1"></span></div>
+    <div class="step-b">
+      <p class="why">El paño de forjado se calcula por franjas de 1 m de ancho: la carga superficial (kN/m²) por 1 m da una carga lineal (kN/m) sobre esa franja. Se mayora con γ<sub>f</sub> = 1,5. Al final, el resultado por metro se reparte entre las viguetas que caben en ese metro (una cada intereje).</p>
+      <div class="calc"><div class="row"><span class="k">q<sub>d</sub></span><span class="f" id="f11"></span></div></div>
+      <div class="note">Mute usa 1,4 como coeficiente medio de mayoración; en la asignatura usamos 1,5, del lado de la seguridad.</div>
+      <div class="try"><span>Tu q<sub>d</sub>:</span><input type="number" step="any" id="try1" aria-label="Tu carga de cálculo en kN/m"><span class="u">kN/m</span><span id="c1"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s2">
+    <div class="step-h"><span class="num">2</span><h2>Canto del forjado</h2><span class="tag" id="t2"></span></div>
+    <div class="step-b">
+      <p class="why">Para no tener que calcular la flecha, el canto debe cumplir h ≥ L/λ, con la esbeltez λ de la tabla de Mute según el tipo de forjado, la planta y la situación del vano. Como todo el forjado se encofra a la misma altura, se toma un canto común, el mayor de los vanos más habituales.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Esbeltez λ</span><span class="f" id="f21"></span></div>
+        <div class="row"><span class="k">Canto mínimo</span><span class="f" id="f22"></span></div>
+      </div>
+      <div class="decide"><label for="hDef">Canto h</label><input id="hDef" type="number" step="1" placeholder="auto"><span class="u">cm</span><span class="sug" id="sug2"></span></div>
+      <div class="note extra">Canto orientativo de Mute: 4 m → 20 cm; 5-6 m → 25 cm; 7 m → 30 cm. La tabla vale para HA-25, acero B500 y tensiones bajas.</div>
+      <div class="try"><span>Tu canto mínimo:</span><input type="number" step="any" id="try2" aria-label="Tu canto mínimo en cm"><span class="u">cm</span><span id="c2"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s3">
+    <div class="step-h"><span class="num">3</span><h2>Momentos por metro</h2><span class="tag" id="t3"></span></div>
+    <div class="step-b">
+      <p class="why" id="why3"></p>
+      <div class="calc">
+        <div class="row"><span class="k">Positivo m⁺</span><span class="f" id="f31"></span></div>
+        <div class="row"><span class="k">Negativo en apoyos</span><span class="f" id="f32"></span></div>
+      </div>
+      <div class="note extra">Mute trunca el momento negativo a la cara del apoyo (a a/4 del eje en vigas planas), lo que lo reduce algo. Aquí se toma el valor en el eje, del lado de la seguridad. En un forjado real, el negativo de cada apoyo es el mayor de los dos vanos que llegan a él.</div>
+      <div class="try"><span>Tu m⁺:</span><input type="number" step="any" id="try3" aria-label="Tu momento positivo en kN·m/m"><span class="u">kN·m/m</span><span id="c3"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s4">
+    <div class="step-h"><span class="num">4</span><h2>Armado superior (negativos) por vigueta</h2><span class="tag" id="t4"></span></div>
+    <div class="step-b">
+      <p class="why">Sobre los apoyos se coloca en obra una armadura superior por cada vigueta (por intereje). Con brazo 0,8·h: A<sup>−</sup> = m<sup>−</sup>·intereje/(0,8·h·f<sub>yd</sub>). Su longitud se obtiene del diagrama de momentos más un canto y la longitud de anclaje a cada lado.</p>
+      <div class="calc">
+        <div class="row"><span class="k">A<sup>−</sup> por vigueta</span><span class="f" id="f41"></span></div>
+        <div class="row"><span class="k">Redondos</span><span class="f" id="f42"></span></div>
+      </div>
+      <div class="note extra">Además se dispone un mallazo de reparto en la capa de compresión y la armadura mínima por cuantía geométrica.</div>
+      <div class="try"><span>Tu A<sup>−</sup>:</span><input type="number" step="any" id="try4" aria-label="Tu armadura superior en cm²"><span class="u">cm²</span><span id="c4"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s5">
+    <div class="step-h"><span class="num">5</span><h2>Armado inferior (positivos) por vigueta</h2><span class="tag" id="t5"></span></div>
+    <div class="step-b">
+      <p class="why" id="why5"></p>
+      <div class="calc">
+        <div class="row"><span class="k">Momento por vigueta</span><span class="f" id="f51"></span></div>
+        <div class="row" id="rowA5"><span class="k">A<sup>+</sup> por vigueta</span><span class="f" id="f52"></span></div>
+      </div>
+      <div class="try"><span>Tu momento por vigueta:</span><input type="number" step="any" id="try5" aria-label="Tu momento por vigueta en kN·m"><span class="u">kN·m</span><span id="c5"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s6">
+    <div class="step-h"><span class="num">6</span><h2>Cortante y macizado</h2><span class="tag" id="t6"></span></div>
+    <div class="step-b">
+      <p class="why">El cortante máximo por metro sale del equilibrio del vano con sus momentos en los apoyos: v = q·L/2 + |m<sub>der</sub> − m<sub>izq</sub>|/L (en voladizo, q·L). Por vigueta es v·intereje. Sin cercos, el nervio resiste aproximadamente V = b·d·f<sub>v,d</sub>, con d ≈ 0,9·h. Si no basta, se macizan las bovedillas junto al apoyo, que da más ancho de hormigón.</p>
+      <div class="calc">
+        <div class="row"><span class="k">v por metro</span><span class="f" id="f61"></span></div>
+        <div class="row"><span class="k">Por vigueta</span><span class="f" id="f62"></span></div>
+        <div class="row"><span class="k">Resiste el nervio</span><span class="f" id="f63"></span></div>
+      </div>
+      <div class="note extra">Se toman los valores de ejemplo de Mute: f<sub>v,d</sub> ≈ 0,7 N/mm² con hormigón HA-25 en obra (vigueta armada) y ≈ 1,1 N/mm² en el hormigón precomprimido de la vigueta pretensada o la losa alveolar. Los debe respaldar el fabricante. La Guía del Código Estructural propone 0,5 N/mm² para predimensionar vigas, más conservador.</div>
+    </div>
+  </article>
+
+  <div class="box" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px"><p style="margin:0;flex:1 1 240px;font-size:13.5px;color:var(--muted)">Ya sabes cuánto mide y cómo se arma el forjado. ¿Y cómo se construye? Repasa el proceso de ejecución paso a paso.</p><a href="proceso-unidireccional.html" style="font:600 14px var(--sans);color:var(--panel);background:var(--bad);border:1px solid var(--bad);border-radius:4px;padding:9px 16px;text-decoration:none">Proceso constructivo</a></div>
+  <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con la Guía de aplicación del Código Estructural y el DB SE-C. Tampoco sustituye a la ficha de características del fabricante de viguetas, al despiece de negativos ni a la comprobación de forjados autoportantes antes de fraguar. Unidades: kN, m, cm y N/mm². Errores o sugerencias: <a href="mailto:jaimevergara@ugr.es">jaimevergara@ugr.es</a>. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const nf=(x,d=2)=>isFinite(x)?x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const v=id=>parseFloat($(id).value);
+const R=s=>`<span class="res">${s}</span>`;
+const G=s=>`<span class="gen">${s}</span>`;
+const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+function check(tryId,outId,val,tol){
+  const t=parseFloat(String($(tryId).value).replace(',','.'));
+  if(!isFinite(t)||!isFinite(val)){$(outId).innerHTML='';return;}
+  const ok=Math.abs(t-val)<=Math.max(Math.abs(val)*tol,1e-9);
+  $(outId).innerHTML=ok?pill('ok','Correcto'):pill('bad','Revisa: no coincide');
+}
+/* Esbeltez λ de Mute (tabla HU 1/3): [aislado, extremo, interior, voladizo] */
+const LAM={c:{ar:[20,24,28,9],pr:[22,27,30,11],al:[40,null,null,null]},t:{ar:[17,21,23,7],pr:[19,23,27,8],al:[32,null,null,null]}};
+const POSI={ai:0,ex:1,in:2,vo:3};
+const CANTOS=[20,22,25,26,28,30,32,35,40,45];
+const NOM={ai:'aislado',ex:'extremo',in:'interior',vo:'voladizo'};
+const OUT=['f11','f21','f22','f31','f32','f41','f42','f51','f52','f61','f62','f63','t1','t2','t3','t4','t5','t6','c1','c2','c3','c4','c5'];
+function empty(msg){
+  OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
+  $('sug2').textContent='';
+  $('summary').innerHTML=`<div><span class="lab">Sin datos</span><span class="big">${msg||'Introduce la carga q<sub>k</sub> y la luz'}</span></div>`;
+  $('sec').innerHTML='';$('pl2').innerHTML='';
+}
+function calc(){
+  const qk=v('qk'),L=v('L'),pos=$('pos').value,tip=$('tip').value,pl=$('pl').value;
+  const ie=v('ie')>0?v('ie'):0.70, bw=v('bw')>0?v('bw'):10;
+  if(!(qk>0&&L>0)){empty();return;}
+  const lam=LAM[pl][tip][POSI[pos]];
+  if(lam==null){empty('La losa alveolar solo se usa como vano aislado (biapoyado)');return;}
+  const q=1.5*qk;
+  $('f11').innerHTML=`${G('q<sub>d</sub> = 1,5·q<sub>k</sub>·1 m')} = 1,5·${nf(qk)}·1 = ${R(nf(q)+' kN/m')}`;
+  $('t1').innerHTML=pill('info',nf(q)+' kN/m');check('try1','c1',q,0.01);
+  const hmin=100*L/lam, hS=CANTOS.find(c=>c>=hmin-1e-9)||Math.ceil(hmin);
+  const hI=v('hDef'), h=hI>0?hI:hS;
+  $('f21').innerHTML=`${$('tip').selectedOptions[0].text}, ${pl==='c'?'cubierta':'piso con tabiques'}, vano ${NOM[pos]} → ${R('λ = '+lam)}`;
+  $('f22').innerHTML=`${G('h ≥ L/λ')} = ${nf(L*100,0)}/${lam} = ${R(nf(hmin,1)+' cm')} `+(L>(tip==='al'?12:7)?pill('warn',tip==='al'?'luz > 12 m':'luz > 7 m'):'');
+  $('sug2').textContent=`Sugerido: ${hS} cm (canto comercial)`;
+  $('t2').innerHTML=pill(h>=hmin-1e-9?'ok':'bad',`h = ${nf(h,0)} cm`);check('try2','c2',hmin,0.01);
+  // Momentos (plásticos, Mute)
+  let mp,mL,mR,txt,fp,fL,fR;
+  if(pos==='ai'){mp=q*L*L/8;mL=0;mR=0;fp='q·L²/8';txt='Vano aislado y biapoyado: solo momento positivo, m⁺ = qL²/8; en los apoyos no hay negativo (se coloca una armadura mínima de atado).';}
+  else if(pos==='ex'){mp=q*L*L/11.6;mR=mp;mL=mp/4;fp='q·L²/11,6';fL='m⁺/4';fR='q·L²/11,6';txt='Mute usa momentos plásticos: el hormigón armado permite redistribuir y se igualan positivo y negativo. Vano extremo: m⁺ = qL²/11,6 en el vano y el mismo valor en el apoyo interior; en el apoyo extremo se coloca al menos m⁺/4.';}
+  else if(pos==='in'){mp=q*L*L/16;mL=mp;mR=mp;fp='q·L²/16';fL=fR='q·L²/16';txt='Vano interior, con momentos plásticos: m⁺ = m⁻ = qL²/16 (los dos suman el isostático qL²/8).';}
+  else{mp=0;mL=q*L*L/2;mR=0;fL='q·L²/2';txt='Voladizo: solo momento negativo en el empotramiento, m<sub>vol</sub> = qL²/2. Este momento también reduce el positivo del vano contiguo (Mute: m = qL²/12 − m<sub>vol</sub>/3).';}
+  $('why3').innerHTML=txt;
+  $('f31').innerHTML=pos==='vo'?`${R('0')} ${pill('info','voladizo')}`:`${G('m⁺ = '+fp)} = ${nf(q)}·${nf(L)}²/${fp.split('/')[1]} = ${R(nf(mp)+' kN·m/m')}`;
+  const mneg=Math.max(mL,mR);
+  $('f32').innerHTML=pos==='ai'?`${R('0')} ${pill('info','biapoyado')}`:pos==='vo'?`${G('m⁻ = q·L²/2')} = ${nf(q)}·${nf(L)}²/2 = ${R(nf(mL)+' kN·m/m')}`:`${pos==='ex'?'apoyo extremo '+G('m⁺/4')+' = '+R(nf(mL)+' kN·m/m')+' · apoyo interior ':''}${G('m⁻ = '+fR)} = ${R(nf(mR)+' kN·m/m')}`;
+  $('t3').innerHTML=pill('info',pos==='vo'?`m⁻ ${nf(mL,1)}`:`m⁺ ${nf(mp,1)}`);check('try3','c3',mp,0.02);
+  // Armado superior
+  const fyd=500/1.15/10, hm=h/100;
+  const As=mneg>0?mneg*ie/(0.8*hm*fyd):0;
+  const bars=[[8,0.503],[10,0.785],[12,1.131],[16,2.011]];
+  let pick='';if(As>0){for(const [d,a] of bars){if(a>=As-1e-9){pick=`1Ø${d}`;break;}if(2*a>=As-1e-9){pick=`2Ø${d}`;break;}}if(!pick)pick='más de 2Ø16: más canto';}
+  $('f41').innerHTML=mneg>0?`${G('A⁻ = m⁻·intereje/(0,8·h·f<sub>yd</sub>)')} = ${nf(mneg)}·${nf(ie)}/(0,8·${nf(hm,2)}·${nf(fyd,2)}) = ${R(nf(As,2)+' cm²/vigueta')}`:`${R('mínima')} ${pill('info','sin negativo de cálculo')}`;
+  $('f42').innerHTML=As>0?`${R(pick)} por vigueta, en el apoyo con más momento`:'1Ø8 por vigueta de atado en los apoyos';
+  $('t4').innerHTML=pill('info',As>0?pick:'mínima');check('try4','c4',As,0.02);
+  // Armado inferior
+  const Mv=mp*ie;
+  const why5={ar:'La vigueta armada o en obra lleva acero B500 normal. Con brazo 0,85·h: A⁺ = m⁺·intereje/(0,85·h·f<sub>yd</sub>). No se despieza: ocupa toda la vigueta.',pr:'En vigueta pretensada no se calcula la armadura: el fabricante da el momento que resiste cada vigueta (ficha de características). En obra basta con indicar el momento positivo y el cortante máximos que debe resistir por vigueta para elegirla del catálogo.',al:'En losa alveolar ocurre lo mismo que con la vigueta pretensada: se elige del catálogo del fabricante con el momento y el cortante por metro de ancho o por placa.'}[tip];
+  $('why5').innerHTML=why5;
+  $('f51').innerHTML=pos==='vo'?`${R('0')} ${pill('info','voladizo: solo negativos')}`:`${G('M = m⁺·intereje')} = ${nf(mp)}·${nf(ie)} = ${R(nf(Mv)+' kN·m/vigueta')}`;
+  $('rowA5').hidden=tip!=='ar';
+  const Ap=Mv/(0.85*hm*fyd);
+  let pick2='';for(const [d,a] of bars){if(a>=Ap-1e-9){pick2=`1Ø${d}`;break;}if(2*a>=Ap-1e-9){pick2=`2Ø${d}`;break;}}
+  $('f52').innerHTML=`${G('A⁺ = m⁺·intereje/(0,85·h·f<sub>yd</sub>)')} = ${nf(mp)}·${nf(ie)}/(0,85·${nf(hm,2)}·${nf(fyd,2)}) = ${R(nf(Ap,2)+' cm²')} → ${R(pick2||'más de 2Ø16')}`;
+  $('t5').innerHTML=pill('info',pos==='vo'?'—':nf(Mv,1)+' kN·m');check('try5','c5',Mv,0.02);
+  // Cortante
+  const fvd=tip==='ar'?0.07:0.11; // kN/cm² (Mute)
+  const vm=pos==='vo'?q*L:q*L/2+Math.abs(mR-mL)/L, Vv=vm*ie, d=0.9*h, Vr=bw*d*fvd;
+  $('f61').innerHTML=pos==='vo'?`${G('v = q·L')} = ${nf(q)}·${nf(L)} = ${R(nf(vm)+' kN/m')}`:`${G('v = q·L/2 + |m<sub>der</sub> − m<sub>izq</sub>|/L')} = ${nf(q*L/2)} + ${nf(Math.abs(mR-mL)/L)} = ${R(nf(vm)+' kN/m')}`;
+  $('f62').innerHTML=`${G('V = v·intereje')} = ${nf(vm)}·${nf(ie)} = ${R(nf(Vv)+' kN')}`;
+  const okV=Vv<=Vr+1e-9;
+  $('f63').innerHTML=`${G('b·d·f<sub>v,d</sub>')} = ${nf(bw,0)}·${nf(d,1)}·${nf(fvd,2)} = ${R(nf(Vr,1)+' kN')} `+(okV?pill('ok','cumple sin macizar'):pill('warn','macizar bovedillas junto al apoyo'));
+  $('t6').innerHTML=okV?pill('ok','Cumple'):pill('warn','Macizado');
+  $('summary').innerHTML=`
+    <div><span class="lab">Forjado · vano ${NOM[pos]} de ${nf(L)} m</span><span class="big">h = ${nf(h,0)} cm</span></div>
+    <div><span class="lab">${pos==='vo'?'Momento negativo':'Momento positivo'}</span><span class="big">${nf(pos==='vo'?mL:mp,1)} kN·m/m</span></div>
+    <div><span class="lab">Negativos por vigueta</span><span class="big">${As>0?pick:'mínima'}</span></div>
+    <div><span class="lab">Cortante por vigueta</span><span class="big">${nf(Vv,1)} kN</span></div>`;
+  draw(pos,L,mp,mL,mR,h,ie);
+}
+function draw(pos,L,mp,mL,mR,h,ie){
+  const x0=40,x1=320,y=110;let g='';
+  g+=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="var(--ink)" stroke-width="1.5"/>`;
+  const pin=x=>`<path d="M${x} ${y} l-7 12 h14 z" fill="none" stroke="var(--ink)" stroke-width="1.2"/>`;
+  if(pos==='vo'){g+=`<line x1="${x0}" y1="${y-20}" x2="${x0}" y2="${y+20}" stroke="var(--ink)" stroke-width="2"/>`;}else g+=pin(x0)+pin(x1);
+  const N=60,pts=[],mx=Math.max(mp,mL,mR)||1,sc=70/mx;
+  for(let i=0;i<=N;i++){const t=i/N;let m;
+    if(pos==='vo')m=-mL*(1-t)*(1-t);
+    else{const m0=(mp+ (mL+mR)/2); m=4*m0*t*(1-t)-mL*(1-t)-mR*t;}   // isostática descolgada de la línea de negativos
+    pts.push([x0+(x1-x0)*t,y+m*sc]);}
+  g+=`<path d="M${x0} ${y} L${pts.map(p=>p.join(' ')).join(' L')} L${x1} ${y} Z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>`;
+  const lab=(x,yy,t,c)=>`<text x="${x}" y="${yy}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="${c||'var(--accent)'}">${t}</text>`;
+  if(pos!=='vo'&&mp>0)g+=lab((x0+x1)/2,y+mp*sc+16,'m⁺ = '+nf(mp,1));
+  if(mL>0)g+=lab(x0+30,y-mL*sc-8,'m⁻ = '+nf(mL,1),'var(--bad)');
+  if(mR>0)g+=lab(x1-30,y-mR*sc-8,'m⁻ = '+nf(mR,1),'var(--bad)');
+  g+=lab((x0+x1)/2,y+-0+0-0+ (pos==='vo'?40:-10),'L = '+nf(L)+' m','var(--muted)');
+  $('sec').innerHTML=g;
+  // sección transversal: capa de compresión, viguetas, bovedillas
+  const W=320,x=20,top=70,hc=5,ht=Math.max(h,15)*3.4,nb=Math.max(2,Math.round(1.6/ie));
+  let q=`<rect x="${x}" y="${top}" width="${W}" height="${hc*3.4}" fill="var(--concrete)" stroke="var(--concrete-edge)"/>`;
+  const sp=W/nb;
+  for(let i=0;i<nb;i++){const cx=x+sp*(i+0.5);
+    q+=`<path d="M${cx-sp/2+9} ${top+hc*3.4} h${sp-18} v${ht-hc*3.4-6} q${-(sp-18)/2} -18 ${-(sp-18)} 0 z" fill="var(--soil)" stroke="var(--soil-edge)"/>`;}
+  for(let i=0;i<=nb;i++){const cx=x+sp*i;q+=`<path d="M${cx-9} ${top+hc*3.4} h18 v${ht-hc*3.4-12} h-4 v12 h-10 v-12 h-4 z" fill="var(--concrete)" stroke="var(--concrete-edge)"/>`;}
+  q+=`<line x1="${x}" y1="${top+5}" x2="${x+W}" y2="${top+5}" stroke="var(--rebar)" stroke-dasharray="3 2"/>`;
+  q+=`<text x="${x+W/2}" y="${top+ht+22}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">intereje ${nf(ie)} m · canto ${nf(h,0)} cm</text>`;
+  q+=`<text x="${x}" y="${top-8}" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--muted)">capa de compresión con mallazo</text>`;
+  $('pl2').innerHTML=q;
+}
+$('clear').addEventListener('click',()=>{
+  ['qk','L','ie','bw','hDef','try1','try2','try3','try4','try5'].forEach(id=>{$(id).value='';});
+  $('pos').value='ex';$('tip').value='pr';$('pl').value='t';
+  calc();$('qk').focus();
+});
+$('practica').addEventListener('change',()=>document.querySelector('.wrap').classList.toggle('practice',$('practica').checked));
+document.querySelectorAll('input,select').forEach(el=>{if(el.id!=='practica')el.addEventListener('input',calc);});
+calc();
+})();
+</script>
+
+<script src="pdf.js"></script>
+</body></html>

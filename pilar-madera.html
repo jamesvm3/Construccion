@@ -1,0 +1,325 @@
+<!doctype html><html><head><meta charset=utf8>
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.pick{font-family:var(--mono);font-size:12.5px;border-collapse:collapse;width:100%}
+.pick td,.pick th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}
+.pick th{color:var(--muted);font-weight:500}
+.pick td:first-child,.pick th:first-child{text-align:left}
+.tbl{overflow-x:auto}
+</style></head><body>
+<title>Soporte de madera</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#eef0ee; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#cfd5d3;
+  --soft:#f5f7f6; --accent:#1f5f7a; --accent-soft:#e1edf2; --rebar:#b0392b;
+  --concrete:#d9dcd8; --concrete-edge:#8e9692; --steel:#c3ccd4; --steel-edge:#5d6b77; --wood:#e6cc9f; --wood-edge:#a07a48; --char:#3b3330; --load:#a86608;
+  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+    --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+    --concrete:#3a4446; --concrete-edge:#6e7b7d; --steel:#46525c; --steel-edge:#8a99a6; --wood:#4d3b25; --wood-edge:#9b7a50; --char:#111; --load:#e3a849;
+    --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+  --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+  --concrete:#3a4446; --concrete-edge:#6e7b7d; --steel:#46525c; --steel-edge:#8a99a6; --wood:#4d3b25; --wood-edge:#9b7a50; --char:#111; --load:#e3a849;
+  --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 60px}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--cond);font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance;letter-spacing:-.01em}
+.src{font-size:13px;color:var(--muted);max-width:44ch}
+.mode{display:flex;align-items:center;gap:10px;font-size:14px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:6px}
+.grid{display:grid;grid-template-columns:350px 1fr;gap:22px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;flex-direction:column;gap:14px}
+@media (max-width:860px){aside{position:static}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
+.box h2{font-family:var(--cond);font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--accent)}
+.field{display:grid;grid-template-columns:1fr 124px 46px;align-items:center;gap:8px;padding-block:5px;border-bottom:1px dashed var(--line)}
+.field:last-child{border-bottom:0}
+.field label{font-size:13.5px}
+.field .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
+input[type=number],select{width:100%;font-family:var(--mono);font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--soft);color:var(--ink);text-align:right}
+select{text-align:left}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+.helper{margin-top:10px;font-size:13px}
+.helper summary{cursor:pointer;color:var(--accent);font-weight:500}
+.helper .field{grid-template-columns:1fr 84px 46px}
+button{font-family:var(--sans);font-size:13px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:6px 12px;border-radius:4px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+.summary{background:var(--ink);color:var(--bg);border-radius:6px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:18px 32px;align-items:baseline}
+.summary .big{font-family:var(--cond);font-size:26px;font-weight:700;letter-spacing:.01em}
+.summary .lab{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;display:block}
+.drawing{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:620px){.drawing{grid-template-columns:1fr}}
+.drawing .box{padding:10px 12px}
+.drawing h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:500}
+svg{display:block;width:100%;height:auto}
+main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.step-h{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--soft)}
+.num{font-family:var(--mono);font-weight:600;font-size:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--accent);color:var(--accent);flex:none}
+.step-h h2{font-family:var(--cond);font-size:19px;margin:0;font-weight:700}
+.step-h .tag{margin-left:auto}
+.step-b{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.why{font-size:14px;color:var(--muted);max-width:70ch;margin:0}
+.calc{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 14px;align-items:baseline;padding:8px 10px;border-radius:4px;background:var(--soft)}
+@media (max-width:520px){.row{grid-template-columns:1fr}}
+.row .k{font-size:13.5px;font-weight:500}
+.f{font-family:var(--mono);font-size:13.5px;overflow-wrap:anywhere}
+.f .gen{color:var(--muted)}
+.f .res{color:var(--accent);font-weight:600}
+.f sub{font-size:.75em}
+.practice .res,.practice .sug,.practice .step-h .tag,.practice .summary,.practice .drawing svg,.practice .row .pill{filter:blur(7px);user-select:none}
+.try{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;border-top:1px dashed var(--line);padding-top:10px}
+.try input{width:110px}
+.pill{font-family:var(--mono);font-size:11.5px;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.info{background:var(--accent-soft);color:var(--accent)}
+.decide{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px;border:1.5px solid var(--accent);border-radius:4px;background:var(--accent-soft)}
+.decide label{font-weight:600;font-size:14px}
+.decide input,.decide select{width:110px}
+.decide .sug{font-size:13px;color:var(--muted)}
+.note{font-size:13px;border-left:3px solid var(--warn);padding:6px 10px;background:var(--warn-soft);color:var(--ink);border-radius:0 4px 4px 0}
+.note.extra{border-left-color:var(--accent);background:var(--accent-soft)}
+footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px}
+@media (prefers-reduced-motion:no-preference){.res,.pill{transition:filter .25s ease}}
+.pick{font-family:var(--mono);font-size:12.5px;border-collapse:collapse;width:100%}
+.pick td,.pick th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}
+.pick th{color:var(--muted);font-weight:500}
+.pick td:first-child,.pick th:first-child{text-align:left}
+.tbl{overflow-x:auto}
+ </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="mute.css">
+
+<div class="wrap">
+<a href="index.html#M" style="display:inline-flex;align-items:center;margin-bottom:14px;font:600 14px var(--sans);color:var(--panel);background:var(--ink);border:1px solid var(--ink);border-radius:6px;padding:6px 14px 6px 11px;text-decoration:none">← Menú de calculadoras</a>
+<header class="top mat-M">
+  <div>
+    <div class="mbadge">SM</div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Madera · Vigas y soportes</small>Soporte de madera</h1></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+    <label class="mode" for="practica"><input type="checkbox" id="practica"> Modo práctica: ocultar resultados</label>
+    <div class="hint" style="margin:0">Calcula tú, escribe tu resultado en cada paso y comprueba.</div>
+    <div class="src">Ficha MS «Madera. Axil. Soportes» de <em>Cálculo rápido de estructuras</em> (S. Mute), con el DB SE-M (6.3.2).</div>
+  </div>
+</header>
+
+<div class="grid">
+<aside>
+  <div class="box">
+    <h2>Datos de partida</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"><button type="button" id="clear">Limpiar datos</button></div>
+    <div class="field"><label for="Nk">Axil característico N<sub>k</sub></label><input id="Nk" type="number" step="any"><span class="u">kN</span></div>
+    <div class="field"><label for="Mk">Momento característico en cabeza M<sub>k</sub> (opcional)</label><input id="Mk" type="number" step="any" placeholder="0"><span class="u">kN·m</span></div>
+    <div class="field"><label for="H">Altura del soporte H</label><input id="H" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="beta">Apoyos en los extremos</label><select id="beta"><option value="1">β = 1 · art.-art.</option><option value="0.7">β = 0,7 · emp.-art.</option><option value="0.5">β = 0,5 · emp.-emp.</option><option value="2">β = 2 · ménsula</option></select><span class="u"></span></div>
+    <div class="field"><label for="cl">Clase resistente</label><select id="cl"><option>C18</option><option selected>C24</option><option>D30</option><option>GL24h</option></select><span class="u"></span></div>
+    <div class="field"><label for="forma">Sección</label><select id="forma"><option value="r">Rectangular</option><option value="c">Circular</option></select><span class="u"></span></div>
+    <p class="hint">Escribe los datos de tu ejercicio. La sección se elige en el paso 3: si la dejas en blanco, se propone la menor que cumple.</p>
+  </div>
+</aside>
+
+<main>
+  <section>
+    <div class="summary" id="summary"></div>
+    <div class="drawing">
+      <div class="box"><h3>Longitud de pandeo</h3><svg id="sec" viewBox="0 0 360 230" role="img" aria-label="Soporte con su deformada de pandeo"></svg></div>
+      <div class="box"><h3>Sección</h3><svg id="pl" viewBox="0 0 360 230" role="img" aria-label="Sección del soporte"></svg></div>
+    </div>
+  </section>
+
+  <article class="step" id="s1">
+    <div class="step-h"><span class="num">1</span><h2>Esfuerzos de cálculo</h2><span class="tag" id="t1"></span></div>
+    <div class="step-b">
+      <p class="why">Se mayoran el axil y, si lo hay, el momento con γ<sub>f</sub> = 1,5. El momento en cabeza aparece, por ejemplo, cuando una viga apoya en un lateral del soporte (M = V·e).</p>
+      <div class="calc">
+        <div class="row"><span class="k">N<sub>d</sub></span><span class="f" id="f11"></span></div>
+        <div class="row"><span class="k">M<sub>d</sub> en cabeza</span><span class="f" id="f12"></span></div>
+      </div>
+      <div class="note">Mute usa 1,4 como coeficiente medio de mayoración; en la asignatura usamos 1,5, del lado de la seguridad.</div>
+      <div class="try"><span>Tu N<sub>d</sub>:</span><input type="number" step="any" id="try1" aria-label="Tu axil de cálculo en kN"><span class="u">kN</span><span id="c1"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s2">
+    <div class="step-h"><span class="num">2</span><h2>Longitud de pandeo y tensión de cálculo</h2><span class="tag" id="t2"></span></div>
+    <div class="step-b">
+      <p class="why">L<sub>k</sub> = β·H: biapoyado β = 1 (lo habitual en madera, cuyas uniones rara vez empotran), en ménsula β = 2. La tensión de cálculo a compresión paralela a la fibra es f<sub>c,0,d</sub> = f<sub>c,0,k</sub>/1,6; Mute la usa también con flexión, como simplificación segura, porque es menor que la de flexión.</p>
+      <div class="calc">
+        <div class="row"><span class="k">L<sub>k</sub></span><span class="f" id="f21"></span></div>
+        <div class="row"><span class="k">f<sub>c,0,d</sub></span><span class="f" id="f22"></span></div>
+      </div>
+      <div class="try"><span>Tu L<sub>k</sub>:</span><input type="number" step="any" id="try2" aria-label="Tu longitud de pandeo en m"><span class="u">m</span><span id="c2"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s3">
+    <div class="step-h"><span class="num">3</span><h2>Sección de tanteo y sus propiedades</h2><span class="tag" id="t3"></span></div>
+    <div class="step-b">
+      <p class="why">A compresión no se puede despejar la sección: hay que tantear una y comprobarla. El pandeo se produce hacia el lado más débil, así que se usa el radio de giro mínimo: i = a/√12 en rectangular (a, lado menor) e i = D/4 en circular.</p>
+      <div class="decide" id="decR"><label for="aDef">Sección a × b</label><input id="aDef" type="number" step="1" placeholder="auto" aria-label="Lado menor a en cm"><span>×</span><input id="bDef" type="number" step="1" placeholder="auto" aria-label="Lado mayor b en cm"><span class="u">cm</span><span class="sug" id="sug3"></span></div>
+      <div class="decide" id="decC"><label for="dDef">Diámetro D</label><input id="dDef" type="number" step="1" placeholder="auto"><span class="u">cm</span><span class="sug" id="sug3c"></span></div>
+      <div class="calc">
+        <div class="row"><span class="k">Área A</span><span class="f" id="f31"></span></div>
+        <div class="row"><span class="k">Radio de giro mínimo</span><span class="f" id="f32"></span></div>
+        <div class="row"><span class="k">Módulo resistente W</span><span class="f" id="f33"></span></div>
+      </div>
+    </div>
+  </article>
+
+  <article class="step" id="s4">
+    <div class="step-h"><span class="num">4</span><h2>Esbeltez y coeficiente de pandeo χ</h2><span class="tag" id="t4"></span></div>
+    <div class="step-b">
+      <p class="why">La esbeltez mecánica es λ = L<sub>k</sub>/i<sub>mín</sub> y no debe pasar de 200. Con λ y la clase de madera se lee χ en la tabla de Mute (aquí se interpola entre columnas). Mute da también una fórmula aproximada: 1/χ ≈ 1 + (λ/72)³.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Esbeltez λ</span><span class="f" id="f41"></span></div>
+        <div class="row"><span class="k">χ (tabla)</span><span class="f" id="f42"></span></div>
+        <div class="row"><span class="k">χ (fórmula)</span><span class="f" id="f43"></span></div>
+      </div>
+      <div class="try"><span>Tu χ:</span><input type="number" step="any" id="try4" aria-label="Tu coeficiente chi"><span id="c4"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s5">
+    <div class="step-h"><span class="num">5</span><h2>Comprobación</h2><span class="tag" id="t5"></span></div>
+    <div class="step-b">
+      <p class="why">En la sección central se produce el pandeo: N<sub>d</sub>/(A·χ) + M<sub>d,m</sub>/W ≤ f<sub>c,0,d</sub>. En los extremos no hay pandeo, pero suele estar el momento máximo: N<sub>d</sub>/A + M<sub>d,e</sub>/W ≤ f<sub>c,0,d</sub>. Sin momento basta la primera.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Sección central</span><span class="f" id="f51"></span></div>
+        <div class="row" id="rowE"><span class="k">Sección extrema</span><span class="f" id="f52"></span></div>
+      </div>
+      <div class="note extra" id="n5">Con momento en cabeza y pie articulado, el momento en el centro del soporte es la mitad del de cabeza (M<sub>d,m</sub> = M<sub>d,e</sub>/2). El momento se toma en el plano del lado mayor b.</div>
+      <div class="try"><span>Tu σ (sección central):</span><input type="number" step="any" id="try5" aria-label="Tu tensión en N/mm²"><span class="u">N/mm²</span><span id="c5"></span></div>
+    </div>
+  </article>
+
+  <div class="box" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px"><p style="margin:0;flex:1 1 240px;font-size:13.5px;color:var(--muted)">Ya sabes qué sección necesita el soporte. ¿Y cómo se ejecuta en obra? Repasa el proceso paso a paso.</p><a href="proceso-madera.html" style="font:600 14px var(--sans);color:var(--panel);background:var(--bad);border:1px solid var(--bad);border-radius:4px;padding:9px 16px;text-decoration:none">Proceso constructivo</a></div>
+  <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con el DB SE-M. Tampoco sustituye a la comprobación completa de flexocompresión, compresión perpendicular en apoyos, uniones ni resistencia al fuego. Unidades: kN, m, cm y N/mm². Errores o sugerencias: <a href="mailto:jaimevergara@ugr.es">jaimevergara@ugr.es</a>. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</main>
+</div>
+</div>
+
+<script src="madera.js"></script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const nf=(x,d=2)=>isFinite(x)?x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const v=id=>parseFloat($(id).value);
+const R=s=>`<span class="res">${s}</span>`;
+const G=s=>`<span class="gen">${s}</span>`;
+const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+function check(tryId,outId,val,tol){
+  const t=parseFloat(String($(tryId).value).replace(',','.'));
+  if(!isFinite(t)||!isFinite(val)){$(outId).innerHTML='';return;}
+  const ok=Math.abs(t-val)<=Math.max(Math.abs(val)*tol,1e-9);
+  $(outId).innerHTML=ok?pill('ok','Correcto'):pill('bad','Revisa: no coincide');
+}
+const OUT=['f11','f12','f21','f22','f31','f32','f33','f41','f42','f43','f51','f52','t1','t2','t3','t4','t5','c1','c2','c4','c5'];
+function empty(){
+  OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
+  $('sug3').textContent='';$('sug3c').textContent='';
+  $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce N<sub>k</sub> y la altura H</span></div>';
+  $('sec').innerHTML='';$('pl').innerHTML='';
+}
+function props(circ,a,b){
+  if(circ){const D=a;return {A:Math.PI*D*D/4,i:D/4,W:Math.PI*D**3/32};}
+  return {A:a*b,i:a/Math.sqrt(12),W:a*b*b/6};
+}
+function evalS(circ,a,b,Nd,Md,Lk,cl,fd){
+  const p=props(circ,a,b), lam=Lk*100/p.i, chi=window.chiMadera(cl,lam);
+  const sc=Nd/(p.A*chi)+(Md>0?Md/2*100/p.W:0), se=Nd/p.A+(Md>0?Md*100/p.W:0);
+  return {...p,lam,chi,sc,se,ok:lam<=200+1e-9&&sc<=fd+1e-9&&se<=fd+1e-9};
+}
+function calc(){
+  const Nk=v('Nk'),Mk=v('Mk')>0?v('Mk'):0,H=v('H'),beta=v('beta'),cl=$('cl').value,m=window.MADERA[cl],circ=$('forma').value==='c';
+  $('decR').hidden=circ;$('decC').hidden=!circ;
+  if(!(Nk>0&&H>0)){empty();return;}
+  const Nd=1.5*Nk, Md=1.5*Mk;
+  $('f11').innerHTML=`${G('N<sub>d</sub> = 1,5·N<sub>k</sub>')} = 1,5·${nf(Nk)} = ${R(nf(Nd,1)+' kN')}`;
+  $('f12').innerHTML=Mk>0?`${G('M<sub>d</sub> = 1,5·M<sub>k</sub>')} = 1,5·${nf(Mk)} = ${R(nf(Md)+' kN·m')}`:`${R('0')} ${pill('info','sin momento')}`;
+  $('t1').innerHTML=pill('info',nf(Nd,0)+' kN');check('try1','c1',Nd,0.01);
+  const Lk=beta*H, fd=m.fc0/1.6;
+  $('f21').innerHTML=`${G('L<sub>k</sub> = β·H')} = ${nf(beta,1)}·${nf(H)} = ${R(nf(Lk)+' m')}`;
+  $('f22').innerHTML=`${G('f<sub>c,0,d</sub> = f<sub>c,0,k</sub>/1,6')} = ${nf(m.fc0)}/1,6 = ${R(nf(fd,3)+' kN/cm² = '+nf(fd*10,1)+' N/mm²')}`;
+  $('t2').innerHTML=pill('info',nf(Lk)+' m');check('try2','c2',Lk,0.01);
+  // sugerencia: menor sección cuadrada (o circular) en cm pares que cumple
+  let sS=null;for(let s=8;s<=60;s+=2){if(evalS(circ,s,s,Nd,Md,Lk,cl,fd).ok){sS=s;break;}}
+  let a,b;
+  if(circ){const dI=v('dDef');a=dI>0?dI:sS;b=a;$('sug3c').textContent=sS?`Sugerido: D = ${sS} cm`:'Ninguna sección hasta 60 cm cumple';}
+  else{const aI=v('aDef'),bI=v('bDef');a=aI>0?aI:sS;b=bI>0?bI:(aI>0?aI:sS);if(a>b){const t=a;a=b;b=t;}
+    $('sug3').textContent=sS?`Sugerido: ${sS} × ${sS} cm (la menor cuadrada que cumple)`:'Ninguna sección hasta 60 cm cumple';}
+  if(!a){['f31','f32','f33','f41','f42','f43','f51','f52'].forEach(id=>$(id).innerHTML='<span class="gen">—</span>');$('summary').innerHTML='<div><span class="lab">Soporte</span><span class="big">Sección mayor de 60 cm</span></div>';return;}
+  const r=evalS(circ,a,b,Nd,Md,Lk,cl,fd);
+  $('t3').innerHTML=pill('info',circ?`Ø${nf(a,0)} cm`:`${nf(a,0)} × ${nf(b,0)} cm`);
+  $('f31').innerHTML=circ?`${G('A = π·D²/4')} = π·${nf(a,0)}²/4 = ${R(nf(r.A,0)+' cm²')}`:`${G('A = a·b')} = ${nf(a,0)}·${nf(b,0)} = ${R(nf(r.A,0)+' cm²')}`;
+  $('f32').innerHTML=circ?`${G('i = D/4')} = ${nf(a,0)}/4 = ${R(nf(r.i,2)+' cm')}`:`${G('i = a/√12')} = ${nf(a,0)}/√12 = ${R(nf(r.i,2)+' cm')}`;
+  $('f33').innerHTML=circ?`${G('W = π·D³/32')} = ${R(nf(r.W,0)+' cm³')}`:`${G('W = a·b²/6')} = ${nf(a,0)}·${nf(b,0)}²/6 = ${R(nf(r.W,0)+' cm³')}`;
+  const chiF=1/(1+Math.pow(r.lam/72,3));
+  $('f41').innerHTML=`${G('λ = L<sub>k</sub>/i<sub>mín</sub>')} = ${nf(Lk*100,0)}/${nf(r.i,2)} = ${R(nf(r.lam,1))} `+(r.lam>200?pill('bad','> 200'):pill('ok','≤ 200'));
+  $('f42').innerHTML=`${cl}, λ = ${nf(r.lam,1)} → ${R('χ = '+nf(r.chi,3))}`;
+  $('f43').innerHTML=`${G('1/χ ≈ 1 + (λ/72)³')} → χ ≈ ${nf(chiF,3)}`;
+  $('t4').innerHTML=pill(r.lam>200?'bad':'info',`χ = ${nf(r.chi,2)}`);check('try4','c4',r.chi,0.03);
+  $('rowE').hidden=!(Md>0);$('n5').hidden=!(Md>0);
+  $('f51').innerHTML=(Md>0?`${G('N<sub>d</sub>/(A·χ) + (M<sub>d</sub>/2)/W')} = ${nf(Nd,1)}/(${nf(r.A,0)}·${nf(r.chi,3)}) + ${nf(Md/2)}·100/${nf(r.W,0)}`:`${G('σ = N<sub>d</sub>/(A·χ)')} = ${nf(Nd,1)}/(${nf(r.A,0)}·${nf(r.chi,3)})`)+` = ${R(nf(r.sc*10,1)+' N/mm²')} ≤ ${nf(fd*10,1)} → ${R(nf(100*r.sc/fd,0)+' %')} `+(r.sc<=fd+1e-9?pill('ok','cumple'):pill('bad','no cumple'));
+  $('f52').innerHTML=`${G('N<sub>d</sub>/A + M<sub>d</sub>/W')} = ${nf(Nd,1)}/${nf(r.A,0)} + ${nf(Md)}·100/${nf(r.W,0)} = ${R(nf(r.se*10,1)+' N/mm²')} `+(r.se<=fd+1e-9?pill('ok','cumple'):pill('bad','no cumple'));
+  $('t5').innerHTML=r.ok?pill('ok','Cumple'):pill('bad','No cumple: sección mayor');
+  check('try5','c5',r.sc*10,0.02);
+  const ap=100*Math.max(r.sc,r.se)/fd;
+  $('summary').innerHTML=`
+    <div><span class="lab">Soporte · L<sub>k</sub> = ${nf(Lk)} m</span><span class="big">${circ?'Ø'+nf(a,0):nf(a,0)+' × '+nf(b,0)} cm ${cl}</span></div>
+    <div><span class="lab">Esbeltez</span><span class="big">λ = ${nf(r.lam,0)}</span></div>
+    <div><span class="lab">Aprovechamiento</span><span class="big">${nf(ap,0)} %</span></div>`;
+  draw(beta,H,Lk,circ,a,b);
+}
+function draw(beta,H,Lk,circ,a,b){
+  const xb=90,y0=20,y1=205,h=y1-y0;let g='';
+  const fix=y=>`<line x1="${xb-22}" y1="${y}" x2="${xb+22}" y2="${y}" stroke="var(--ink)" stroke-width="2.2"/>`+[0,1,2,3,4].map(i=>`<line x1="${xb-20+i*10}" y1="${y}" x2="${xb-26+i*10}" y2="${y+(y<100?-7:7)}" stroke="var(--ink)" stroke-width="1"/>`).join('');
+  g+=`<rect x="${xb-7}" y="${y0}" width="14" height="${h}" fill="var(--wood)" stroke="var(--wood-edge)" opacity=".5"/>`;
+  const N=40,pts=[];for(let i=0;i<=N;i++){const t=i/N;let d;if(beta===1)d=Math.sin(Math.PI*t);else if(beta===0.5)d=(1-Math.cos(2*Math.PI*t))/2;else if(beta===0.7)d=Math.sin(1.43*Math.PI*t)*(1-t)*1.6;else d=1-Math.cos(Math.PI*(1-t)/2);pts.push([xb+d*26,y1-h*t]);}
+  g+=`<path d="M${pts.map(q=>q.join(' ')).join(' L')}" fill="none" stroke="var(--accent)" stroke-width="3"/>`;
+  if(beta===1)g+=`<path d="M${xb} ${y1} l-9 12 h18 z" fill="none" stroke="var(--ink)" stroke-width="1.3"/><circle cx="${xb}" cy="${y0}" r="4" fill="var(--panel)" stroke="var(--ink)"/>`;
+  else if(beta===0.7)g+=fix(y1)+`<circle cx="${xb}" cy="${y0}" r="4" fill="var(--panel)" stroke="var(--ink)"/>`;
+  else if(beta===0.5)g+=fix(y1)+fix(y0);else g+=fix(y1);
+  g+=`<text x="${xb+60}" y="${(y0+y1)/2-6}" font-family="IBM Plex Mono,monospace" font-size="12" fill="var(--ink)">H = ${nf(H)} m</text><text x="${xb+60}" y="${(y0+y1)/2+12}" font-family="IBM Plex Mono,monospace" font-size="12" fill="var(--accent)">L<tspan font-size="9" dy="2">k</tspan><tspan dy="-2"> = ${nf(Lk)} m</tspan></text>`;
+  $('sec').innerHTML=g;
+  const cx=120,cy=115;let q='';
+  if(circ){const r=80;q+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="var(--wood)" stroke="var(--wood-edge)" stroke-width="1.5"/>`;for(let i=1;i<=4;i++)q+=`<circle cx="${cx}" cy="${cy}" r="${r*i/5}" fill="none" stroke="var(--wood-edge)" stroke-width=".8" opacity=".6"/>`;q+=`<text x="${cx}" y="${cy+r+16}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">D = ${nf(a,0)} cm</text>`;}
+  else{const s=Math.min(170/b,170/a),W=b*s,Hh=a*s;q+=`<rect x="${cx-W/2}" y="${cy-Hh/2}" width="${W}" height="${Hh}" fill="var(--wood)" stroke="var(--wood-edge)" stroke-width="1.5"/>`;for(let i=1;i<=3;i++)q+=`<ellipse cx="${cx}" cy="${cy}" rx="${W*0.13*i}" ry="${Hh*0.13*i}" fill="none" stroke="var(--wood-edge)" stroke-width=".8" opacity=".6"/>`;
+    q+=`<text x="${cx}" y="${cy+Hh/2+16}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">b = ${nf(b,0)} cm</text><text x="${cx+W/2+6}" y="${cy+4}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--muted)">a = ${nf(a,0)}</text>`;}
+  $('pl').innerHTML=q;
+}
+$('clear').addEventListener('click',()=>{
+  ['Nk','Mk','H','aDef','bDef','dDef','try1','try2','try4','try5'].forEach(id=>{$(id).value='';});
+  $('beta').value='1';$('cl').value='C24';$('forma').value='r';
+  calc();$('Nk').focus();
+});
+$('practica').addEventListener('change',()=>document.querySelector('.wrap').classList.toggle('practice',$('practica').checked));
+document.querySelectorAll('input,select').forEach(el=>{if(el.id!=='practica')el.addEventListener('input',calc);});
+calc();
+})();
+</script>
+
+<script src="pdf.js"></script>
+</body></html>

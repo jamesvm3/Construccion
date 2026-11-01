@@ -1,0 +1,398 @@
+<!doctype html><html><head><meta charset=utf8>
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Muro de contención C2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#eef0ee; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#cfd5d3;
+  --soft:#f5f7f6; --accent:#1f5f7a; --accent-soft:#e1edf2; --rebar:#b0392b;
+  --concrete:#d9dcd8; --concrete-edge:#8e9692;
+  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+    --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+    --concrete:#3a4446; --concrete-edge:#6e7b7d;
+    --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+  --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+  --concrete:#3a4446; --concrete-edge:#6e7b7d;
+  --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 60px}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--cond);font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance;letter-spacing:-.01em}
+.src{font-size:13px;color:var(--muted);max-width:44ch}
+.mode{display:flex;align-items:center;gap:10px;font-size:14px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:6px}
+.grid{display:grid;grid-template-columns:350px 1fr;gap:22px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;flex-direction:column;gap:14px}
+@media (max-width:860px){aside{position:static}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
+.box h2{font-family:var(--cond);font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--accent)}
+.field{display:grid;grid-template-columns:1fr 124px 46px;align-items:center;gap:8px;padding-block:5px;border-bottom:1px dashed var(--line)}
+.field:last-child{border-bottom:0}
+.field label{font-size:13.5px}
+.field .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
+input[type=number],select{width:100%;font-family:var(--mono);font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--soft);color:var(--ink);text-align:right}
+select{text-align:left}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+.helper{margin-top:10px;font-size:13px}
+.helper summary{cursor:pointer;color:var(--accent);font-weight:500}
+.helper .field{grid-template-columns:1fr 84px 46px}
+button{font-family:var(--sans);font-size:13px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:6px 12px;border-radius:4px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+.summary{background:var(--ink);color:var(--bg);border-radius:6px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:18px 32px;align-items:baseline}
+.summary .big{font-family:var(--cond);font-size:26px;font-weight:700;letter-spacing:.01em}
+.summary .lab{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;display:block}
+.drawing{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:620px){.drawing{grid-template-columns:1fr}}
+.drawing .box{padding:10px 12px}
+.drawing h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:500}
+svg{display:block;width:100%;height:auto}
+main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.step-h{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--soft)}
+.num{font-family:var(--mono);font-weight:600;font-size:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--accent);color:var(--accent);flex:none}
+.step-h h2{font-family:var(--cond);font-size:19px;margin:0;font-weight:700}
+.step-h .tag{margin-left:auto}
+.step-b{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.why{font-size:14px;color:var(--muted);max-width:70ch;margin:0}
+.calc{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 14px;align-items:baseline;padding:8px 10px;border-radius:4px;background:var(--soft)}
+@media (max-width:520px){.row{grid-template-columns:1fr}}
+.row .k{font-size:13.5px;font-weight:500}
+.f{font-family:var(--mono);font-size:13.5px;overflow-wrap:anywhere}
+.f .gen{color:var(--muted)}
+.f .res{color:var(--accent);font-weight:600}
+.f sub{font-size:.75em}
+.practice .res,.practice .sug,.practice .step-h .tag,.practice .summary,.practice .drawing svg,.practice .row .pill{filter:blur(7px);user-select:none}
+.try{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;border-top:1px dashed var(--line);padding-top:10px}
+.try input{width:110px}
+.pill{font-family:var(--mono);font-size:11.5px;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.info{background:var(--accent-soft);color:var(--accent)}
+.decide{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px;border:1.5px solid var(--accent);border-radius:4px;background:var(--accent-soft)}
+.decide label{font-weight:600;font-size:14px}
+.decide input,.decide select{width:110px}
+.decide .sug{font-size:13px;color:var(--muted)}
+.note{font-size:13px;border-left:3px solid var(--warn);padding:6px 10px;background:var(--warn-soft);color:var(--ink);border-radius:0 4px 4px 0}
+.note.extra{border-left-color:var(--accent);background:var(--accent-soft)}
+footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px}
+@media (prefers-reduced-motion:no-preference){.res,.pill{transition:filter .25s ease}}
+ </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="mute.css">
+
+<div class="wrap">
+<a href="index.html#H" style="display:inline-flex;align-items:center;margin-bottom:14px;font:600 14px var(--sans);color:var(--panel);background:var(--ink);border:1px solid var(--ink);border-radius:6px;padding:6px 14px 6px 11px;text-decoration:none">← Menú de calculadoras</a>
+<header class="top mat-H">
+  <div>
+    <div class="mbadge">MC</div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Hormigón · Muros de contención</small>Muro de contención</h1></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+    <label class="mode" for="practica"><input type="checkbox" id="practica"> Modo práctica: ocultar resultados</label>
+    <div class="hint" style="margin:0">Calcula tú, escribe tu resultado en cada paso y comprueba.</div>
+    <div class="src">Ficha HM.2 «Muro de contención» de <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo), con γ<sub>f</sub> = 1,5 y los coeficientes de seguridad del DB SE-C.</div>
+  </div>
+</header>
+
+<div class="grid">
+<aside>
+  <div class="box">
+    <h2>Datos de partida</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"><button type="button" id="clear">Limpiar datos</button></div>
+    <div class="field"><label for="H1">Altura del alzado H<sub>1</sub> (tierras contenidas)</label><input id="H1" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="q">Sobrecarga sobre el terreno q</label><input id="q" type="number" step="any"><span class="u">kN/m²</span></div>
+    <div class="field"><label for="gam">Peso específico del terreno γ</label><input id="gam" type="number" step="any"><span class="u">kN/m³</span></div>
+    <div class="field"><label for="phiT">Ángulo de rozamiento interno φ</label><input id="phiT" type="number" step="any"><span class="u">°</span></div>
+    <div class="field"><label for="sig">Tensión admisible σ<sub>adm</sub></label><input id="sig" type="number" step="any"><span class="u">kN/m²</span></div>
+    <div class="field"><label for="Nk">Axil en coronación N<sub>k</sub> (opcional)</label><input id="Nk" type="number" step="any"><span class="u">kN/m</span></div>
+    <div class="field"><label for="Np">Parte permanente de N<sub>k</sub> (opcional)</label><input id="Np" type="number" step="any"><span class="u">kN/m</span></div>
+    <div class="field"><label for="fyk">Límite elástico acero f<sub>yk</sub></label><select id="fyk"><option value="400">400 (B400S)</option><option value="500" selected>500 (B500S)</option></select><span class="u">N/mm²</span></div>
+    <div class="field"><label for="fck">Hormigón f<sub>ck</sub></label><select id="fck"><option value="25" selected>25 (HA-25)</option><option value="30">30 (HA-30)</option></select><span class="u">N/mm²</span></div>
+    <p class="hint">Valores usuales: γ = 17 a 20 kN/m³ y φ = 25° a 35°. El cálculo vale para muros drenados y se hace por metro de muro. «Limpiar datos» lo deja todo en blanco.</p>
+  </div>
+</aside>
+
+<main>
+  <section>
+    <div class="summary" id="summary"></div>
+    <div class="drawing">
+      <div class="box"><h3>Sección y fuerzas</h3><svg id="sec" viewBox="0 0 360 260" role="img" aria-label="Sección del muro con el empuje y los pesos"></svg></div>
+      <div class="box"><h3>Armado</h3><svg id="arm" viewBox="0 0 360 260" role="img" aria-label="Esquema de armado del muro"></svg></div>
+    </div>
+  </section>
+
+  <article class="step" id="s1">
+    <div class="step-h"><span class="num">1</span><h2>Empuje del terreno</h2><span class="tag" id="t1"></span></div>
+    <div class="step-b">
+      <p class="why">Un muro de contención puede moverse un poco hacia fuera, así que el terreno empuja con su empuje activo, de coeficiente K<sub>a</sub> = (1 − sen φ)/(1 + sen φ). El empuje tiene dos partes: la de las tierras, triangular, con resultante a H/3 de la base; y la de la sobrecarga, rectangular, a H/2. H es la altura total, alzado más zapata. El empuje pasivo delante de la zapata no se recomienda considerar.</p>
+      <div class="calc">
+        <div class="row"><span class="k">K<sub>a</sub></span><span class="f" id="f11"></span></div>
+        <div class="row"><span class="k">Altura total H</span><span class="f" id="f12"></span></div>
+        <div class="row"><span class="k">Empujes</span><span class="f" id="f13"></span></div>
+      </div>
+      <div class="try"><span>Tu E total:</span><input type="number" step="any" id="try1" aria-label="Tu empuje en kN/m"><span class="u">kN/m</span><span id="c1"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s2">
+    <div class="step-h"><span class="num">2</span><h2>Geometría</h2><span class="tag" id="t2"></span></div>
+    <div class="step-b">
+      <p class="why">Arroyo da puntos de partida: espesor del alzado ≈ H<sub>1</sub>/10 y ancho de zapata del orden de H<sub>1</sub>/3. Después se ajusta: para el vuelco se alarga el talón (las tierras que pesan sobre él estabilizan) y para bajar la tensión se alarga la puntera. La calculadora sugiere el menor ancho que cumple las tres comprobaciones con la puntera en un tercio del ancho.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Espesor de partida</span><span class="f" id="f21"></span></div>
+        <div class="row"><span class="k">Ancho de partida</span><span class="f" id="f22"></span></div>
+      </div>
+      <div class="decide"><label for="eDef">Espesor e</label><input id="eDef" type="number" step="0.05" placeholder="auto"><span class="u">m</span><label for="hzDef">Canto zapata</label><input id="hzDef" type="number" step="0.05" placeholder="auto"><span class="u">m</span></div>
+      <div class="decide"><label for="BDef">Ancho zapata B</label><input id="BDef" type="number" step="0.05" placeholder="auto"><span class="u">m</span><label for="pDef">Puntera p</label><input id="pDef" type="number" step="0.05" placeholder="auto"><span class="u">m</span><span class="sug" id="sug2"></span></div>
+      <div class="calc"><div class="row"><span class="k">Talón</span><span class="f" id="f23"></span></div></div>
+      <div class="note">Espesor mínimo práctico de 25 cm para poder hormigonar y armar con dos mallas; canto de zapata igual al espesor del alzado y no menor de 30 cm (criterio de partida, no de la ficha). El tacón contra el deslizamiento es caro y poco eficaz.</div>
+    </div>
+  </article>
+
+  <article class="step" id="s3">
+    <div class="step-h"><span class="num">3</span><h2>Pesos estabilizadores</h2><span class="tag" id="t3"></span></div>
+    <div class="step-b">
+      <p class="why">Por metro de muro pesan el alzado (P<sub>m</sub>), la zapata (P<sub>z</sub>) y las tierras sobre el talón (P<sub>t</sub>), con el hormigón a 25 kN/m³. Se miden sus brazos respecto al punto A, el borde de la puntera, que es sobre el que volcaría el muro. La sobrecarga sobre el talón no se cuenta, porque puede no estar.</p>
+      <div class="calc">
+        <div class="row"><span class="k">P<sub>m</sub> alzado</span><span class="f" id="f31"></span></div>
+        <div class="row"><span class="k">P<sub>z</sub> zapata</span><span class="f" id="f32"></span></div>
+        <div class="row"><span class="k">P<sub>t</sub> tierras</span><span class="f" id="f33"></span></div>
+      </div>
+      <div class="try"><span>Tu P<sub>t</sub>:</span><input type="number" step="any" id="try3" aria-label="Tu peso de tierras en kN/m"><span class="u">kN/m</span><span id="c3"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s4">
+    <div class="step-h"><span class="num">4</span><h2>Comprobaciones de estabilidad</h2><span class="tag" id="t4"></span></div>
+    <div class="step-b">
+      <p class="why"><b>Deslizamiento</b>: el rozamiento de las cargas permanentes con el terreno, tomado como (2/3)·tg φ, debe superar 1,5 veces el empuje. <b>Vuelco</b>: los momentos estabilizadores respecto a A deben superar 1,8 veces los del empuje. <b>Tensión</b>: la carga vertical total repartida en el ancho B no debe superar σ<sub>adm</sub>. Los coeficientes 1,5 y 1,8 son los de la tabla 2.1 del DB SE-C.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Deslizamiento</span><span class="f" id="f41"></span></div>
+        <div class="row"><span class="k">Vuelco</span><span class="f" id="f42"></span></div>
+        <div class="row"><span class="k">Tensión media</span><span class="f" id="f43"></span></div>
+        <div class="row"><span class="k">Excentricidad</span><span class="f" id="f44"></span></div>
+      </div>
+      <div class="note extra">La ficha comprueba la tensión media. Se añade, como información, dónde cae la resultante: si se sale del tercio central (e &gt; B/6), parte de la zapata se despega y conviene alargar la puntera.</div>
+      <div class="try"><span>Tu coef. al vuelco:</span><input type="number" step="any" id="try4" aria-label="Tu coeficiente de seguridad al vuelco"><span id="c4"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s5">
+    <div class="step-h"><span class="num">5</span><h2>Armadura del alzado</h2><span class="tag" id="t5"></span></div>
+    <div class="step-b">
+      <p class="why">El alzado es una ménsula empotrada en la zapata y cargada por el empuje sobre su altura H<sub>1</sub>. En el arranque: M<sub>d</sub> = 1,5·½·K<sub>a</sub>·H<sub>1</sub>²·(γ·H<sub>1</sub>/3 + q) y V<sub>d</sub> = 1,5·K<sub>a</sub>·H<sub>1</sub>·(γ·H<sub>1</sub>/2 + q). La armadura principal va vertical en el trasdós (la cara de las tierras). El muro se dimensiona para que no necesite armadura de cortante.</p>
+      <div class="calc">
+        <div class="row"><span class="k">M<sub>d</sub> en el arranque</span><span class="f" id="f51"></span></div>
+        <div class="row"><span class="k">V<sub>d</sub> en el arranque</span><span class="f" id="f52"></span></div>
+        <div class="row"><span class="k">Cortante sin armadura</span><span class="f" id="f53"></span></div>
+        <div class="row"><span class="k">A<sub>s</sub> vertical trasdós</span><span class="f" id="f54"></span></div>
+        <div class="row"><span class="k">A<sub>s</sub> mínima</span><span class="f" id="f55"></span></div>
+      </div>
+      <div class="decide"><label for="phiV">Ø vertical</label><select id="phiV"><option>10</option><option selected>12</option><option>16</option><option>20</option></select><span class="u">mm</span></div>
+      <div class="calc"><div class="row"><span class="k">Redondos por metro</span><span class="f" id="f56"></span></div></div>
+      <div class="note extra">Arroyo usa γ<sub>f</sub> = 1,6. Mínimas tomadas de la EHE-08 (tabla 42.3.5): vertical 0,9 ‰ (B 500 S) o 1,2 ‰ (B 400 S) de la sección y horizontal 3,2 ‰ o 4,0 ‰, repartidas entre las dos caras; comprobar en el Código Estructural. El intradós y la armadura horizontal llevan la mínima.</div>
+      <div class="try"><span>Tu M<sub>d</sub>:</span><input type="number" step="any" id="try5" aria-label="Tu momento en kN·m/m"><span class="u">kN·m/m</span><span id="c5"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s6">
+    <div class="step-h"><span class="num">6</span><h2>Armadura de la zapata</h2><span class="tag" id="t6"></span></div>
+    <div class="step-b">
+      <p class="why">La ficha deja A<sub>s1</sub> y A<sub>s2</sub> para calcular. La puntera es un voladizo empujado hacia arriba por el terreno: tracciona la cara inferior (A<sub>s2</sub>). El talón soporta el peso de las tierras y de la zapata, mayor que la reacción del terreno bajo él: tracciona la cara superior (A<sub>s1</sub>). Se toma la tensión media y γ<sub>f</sub> = 1,5.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Puntera (A<sub>s2</sub>, inferior)</span><span class="f" id="f61"></span></div>
+        <div class="row"><span class="k">Talón (A<sub>s1</sub>, superior)</span><span class="f" id="f62"></span></div>
+        <div class="row"><span class="k">A<sub>s</sub> mínima por cara</span><span class="f" id="f63"></span></div>
+      </div>
+      <div class="note extra">Simplificación de predimensionado con presión uniforme. Con la resultante excéntrica la presión bajo la puntera es mayor, y su armadura también.</div>
+    </div>
+  </article>
+
+  <div class="box" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px"><p style="margin:0;flex:1 1 240px;font-size:13.5px;color:var(--muted)">Ya sabes cuánto mide y cómo se arma el muro de contención. ¿Y cómo se construye? Repasa el proceso de ejecución paso a paso.</p><a href="proceso-contencion.html" style="font:600 14px var(--sans);color:var(--panel);background:var(--bad);border:1px solid var(--bad);border-radius:4px;padding:9px 16px;text-decoration:none">Proceso constructivo</a></div>
+  <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con la Guía de aplicación del Código Estructural y el DB SE-C. Tampoco sustituye al cálculo según el DB SE-C y el Código Estructural. Muro drenado, terreno horizontal y trasdós vertical. Unidades: kN, m, cm, mm y N/mm². Errores o sugerencias: <a href="mailto:jaimevergara@ugr.es">jaimevergara@ugr.es</a>. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const nf=(x,d=2)=>isFinite(x)?x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const v=id=>parseFloat($(id).value);
+const R=s=>`<span class="res">${s}</span>`;
+const G=s=>`<span class="gen">${s}</span>`;
+const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+function check(tryId,outId,val,tol){
+  const t=parseFloat(String($(tryId).value).replace(',','.'));
+  if(!isFinite(t)||!isFinite(val)){$(outId).innerHTML='';return;}
+  const ok=Math.abs(t-val)<=Math.max(Math.abs(val)*tol,1e-9);
+  $(outId).innerHTML=ok?pill('ok','Correcto'):pill('bad','Revisa: no coincide');
+}
+const OUT=['f11','f12','f13','f21','f22','f23','f31','f32','f33','f41','f42','f43','f44','f51','f52','f53','f54','f55','f56','f61','f62','f63','t1','t2','t3','t4','t5','t6','c1','c3','c4','c5'];
+function empty(){
+  OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
+  $('sug2').textContent='';
+  $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce H<sub>1</sub>, q, γ, φ y σ<sub>adm</sub></span></div>';
+  $('sec').innerHTML='';$('arm').innerHTML='';
+}
+const up5=x=>Math.ceil(x/0.05-1e-9)*0.05;
+function stab(g){ // g: H1,e,hz,B,p,q,gam,Ka,phi,Nk,Np
+  const H=g.H1+g.hz, t=g.B-g.p-g.e;
+  const E1=0.5*g.Ka*g.gam*H*H, E2=g.Ka*g.q*H, E=E1+E2;
+  const Pm=25*g.e*g.H1, Pz=25*g.B*g.hz, Pt=g.gam*g.H1*Math.max(t,0);
+  const xm=g.p+g.e/2, xz=g.B/2, xt=g.p+g.e+t/2;
+  const Vp=g.Np+Pm+Pz+Pt, Vt=g.Nk+Pm+Pz+Pt;
+  const FSd=(2/3)*Math.tan(g.phi)*Vp/E;
+  const Mest=Pm*xm+Pz*xz+Pt*xt+g.Np*xm, Mdes=E1*H/3+E2*H/2, FSv=Mest/Mdes;
+  const sm=Vt/g.B;
+  const Mv=Pm*xm+Pz*xz+Pt*xt+g.Nk*xm;
+  const xr=(Mv-Mdes)/Vt, ex=g.B/2-xr;
+  return {H,t,E1,E2,E,Pm,Pz,Pt,xm,xz,xt,Vp,Vt,FSd,Mest,Mdes,FSv,sm,xr,ex};
+}
+function calc(){
+  const H1=v('H1'),q=v('q'),gam=v('gam'),phiD=v('phiT'),sig=v('sig'),fyk=v('fyk'),fck=v('fck');
+  const Nk=v('Nk')>0?v('Nk'):0, Np=v('Np')>0?Math.min(v('Np'),Nk||v('Np')):0;
+  if(!(H1>0&&q>=0&&gam>0&&phiD>0&&sig>0)){empty();return;}
+  const phi=phiD*Math.PI/180, Ka=(1-Math.sin(phi))/(1+Math.sin(phi));
+  // geometría
+  const eS=up5(Math.max(H1/10,0.25)), eIn=v('eDef'), e=eIn>0?eIn:eS;
+  const hzS=up5(Math.max(e,0.30)), hzIn=v('hzDef'), hz=hzIn>0?hzIn:hzS;
+  const base={H1,e,hz,q,gam,Ka,phi,Nk,Np};
+  let BS=NaN;
+  for(let B=up5(Math.max(H1/3,e+0.3));B<=4*H1+3;B+=0.05){const p=up5(B/3);if(B-p-e<0)continue;const s=stab({...base,B,p});if(s.FSd>=1.5&&s.FSv>=1.8&&s.sm<=sig){BS=B;break;}}
+  const BIn=v('BDef'), B=BIn>0?BIn:(isFinite(BS)?BS:up5(H1/3));
+  const pIn=v('pDef'), p=pIn>=0&&$('pDef').value!==''?pIn:up5(B/3);
+  const s=stab({...base,B,p});
+  // 1
+  $('f11').innerHTML=`${G('K<sub>a</sub> = (1 − sen φ)/(1 + sen φ)')} = (1 − sen ${nf(phiD,0)}°)/(1 + sen ${nf(phiD,0)}°) = ${R(nf(Ka,3))}`;
+  $('f12').innerHTML=`${G('H = H<sub>1</sub> + canto de zapata')} = ${nf(H1)} + ${nf(hz)} = ${R(nf(s.H)+' m')}`;
+  $('f13').innerHTML=`${G('E<sub>1</sub> = ½·K<sub>a</sub>·γ·H²')} = ½·${nf(Ka,3)}·${nf(gam,1)}·${nf(s.H)}² = ${R(nf(s.E1,1))} · ${G('E<sub>2</sub> = K<sub>a</sub>·q·H')} = ${R(nf(s.E2,1))} · E = ${R(nf(s.E,1)+' kN/m')}`;
+  $('t1').innerHTML=pill('info','E = '+nf(s.E,1)+' kN/m');
+  check('try1','c1',s.E,0.02);
+  // 2
+  $('f21').innerHTML=`${G('e ≈ H<sub>1</sub>/10')} = ${nf(H1/10,3)} m → ${R(nf(eS)+' m')}${H1/10<0.25?' (mínimo 25 cm)':''}`;
+  $('f22').innerHTML=`${G('B ≈ H<sub>1</sub>/3')} = ${R(nf(H1/3,3)+' m')}`;
+  $('sug2').textContent=isFinite(BS)?`Sugerido: B = ${nf(BS)} m (el menor que cumple) · puntera ${nf(up5(BS/3))} m · e = ${nf(eS)} · canto ${nf(hzS)}`:'No se encuentra un ancho que cumpla: revisa los datos';
+  $('f23').innerHTML=`${G('t = B − p − e')} = ${nf(B)} − ${nf(p)} − ${nf(e)} = ${R(nf(s.t)+' m')}`+(s.t<0?' '+pill('bad','negativo'):'');
+  $('t2').innerHTML=pill('info',`B = ${nf(B)} m`);
+  // 3
+  $('f31').innerHTML=`${G('P<sub>m</sub> = 25·e·H<sub>1</sub>')} = 25·${nf(e)}·${nf(H1)} = ${R(nf(s.Pm,1)+' kN/m')} · brazo ${nf(s.xm,3)} m`;
+  $('f32').innerHTML=`${G('P<sub>z</sub> = 25·B·canto')} = 25·${nf(B)}·${nf(hz)} = ${R(nf(s.Pz,1)+' kN/m')} · brazo ${nf(s.xz,3)} m`;
+  $('f33').innerHTML=`${G('P<sub>t</sub> = γ·H<sub>1</sub>·t')} = ${nf(gam,1)}·${nf(H1)}·${nf(s.t)} = ${R(nf(s.Pt,1)+' kN/m')} · brazo ${nf(s.xt,3)} m`;
+  check('try3','c3',s.Pt,0.02);
+  // 4
+  const okD=s.FSd>=1.5, okV=s.FSv>=1.8, okS=s.sm<=sig, okE=Math.abs(s.ex)<=B/6;
+  $('f41').innerHTML=`${G('(2/3)·tg φ·(N<sub>k,perm</sub> + P<sub>m</sub> + P<sub>z</sub> + P<sub>t</sub>)/E')} = (2/3)·tg ${nf(phiD,0)}°·${nf(s.Vp,1)}/${nf(s.E,1)} = ${R(nf(s.FSd))} `+(okD?pill('ok','≥ 1,5'):pill('bad','< 1,5'));
+  $('f42').innerHTML=`${G('M<sub>estab</sub>/M<sub>desest</sub>')} = ${nf(s.Mest,1)}/(${nf(s.E1,1)}·${nf(s.H)}/3 + ${nf(s.E2,1)}·${nf(s.H)}/2) = ${nf(s.Mest,1)}/${nf(s.Mdes,1)} = ${R(nf(s.FSv))} `+(okV?pill('ok','≥ 1,8'):pill('bad','< 1,8: alarga el talón'));
+  $('f43').innerHTML=`${G('σ = (N<sub>k</sub> + P<sub>m</sub> + P<sub>z</sub> + P<sub>t</sub>)/B')} = ${nf(s.Vt,1)}/${nf(B)} = ${R(nf(s.sm,1)+' kN/m²')} `+(okS?pill('ok','≤ σadm'):pill('bad','> σadm: alarga la puntera'));
+  $('f44').innerHTML=`${G('e = B/2 − x<sub>R</sub>')} = ${nf(B/2,3)} − ${nf(s.xr,3)} = ${R(nf(s.ex,3)+' m')} `+(okE?pill('ok','≤ B/6 = '+nf(B/6,3)):pill('warn','> B/6: zapata parcialmente despegada'));
+  $('t4').innerHTML=(okD&&okV&&okS)?pill('ok','Cumple'):pill('bad','No cumple');
+  check('try4','c4',s.FSv,0.02);
+  // 5
+  const fyd=fyk/1.15;
+  const Md=1.5*0.5*Ka*H1*H1*(gam*H1/3+q), Vd=1.5*Ka*H1*(gam*H1/2+q);
+  const d=e-0.05, k=Math.min(2,1+Math.sqrt(200/(d*1000))), vmin=0.035*Math.pow(k,1.5)*Math.sqrt(fck), Vu=vmin*1000*d;
+  const As=10*Md/(0.8*e*fyd), rv=fyk>=500?0.0009:0.0012, Asmin=rv*100*e*100, Asd=Math.max(As,Asmin);
+  $('f51').innerHTML=`${G('1,5·½·K<sub>a</sub>·H<sub>1</sub>²·(γ·H<sub>1</sub>/3 + q)')} = 1,5·½·${nf(Ka,3)}·${nf(H1)}²·(${nf(gam,1)}·${nf(H1)}/3 + ${nf(q,1)}) = ${R(nf(Md,1)+' kN·m/m')}`;
+  $('f52').innerHTML=`${G('1,5·K<sub>a</sub>·H<sub>1</sub>·(γ·H<sub>1</sub>/2 + q)')} = 1,5·${nf(Ka,3)}·${nf(H1)}·(${nf(gam,1)}·${nf(H1)}/2 + ${nf(q,1)}) = ${R(nf(Vd,1)+' kN/m')}`;
+  $('f53').innerHTML=`${G('0,035·k<sup>3/2</sup>·√f<sub>ck</sub>·b·d')} = 0,035·${nf(k,2)}<sup>3/2</sup>·√${fck}·1000·${nf(d,2)} = ${R(nf(Vu,1)+' kN/m')} `+(Vd<=Vu?pill('ok','≥ V<sub>d</sub>'):pill('bad','< V<sub>d</sub>: aumenta e'));
+  $('f54').innerHTML=`${G('A<sub>s</sub> = M<sub>d</sub>·10/(0,8·e·f<sub>yd</sub>)')} = ${nf(Md,1)}·10/(0,8·${nf(e)}·${nf(fyd)}) = ${R(nf(As)+' cm²/m')}`;
+  $('f55').innerHTML=`${G('vertical: ρ·100·e')} = ${nf(rv*1000,1)}‰·100·${nf(e*100,0)} = ${nf(Asmin)} cm²/m · horizontal ${nf((fyk>=500?3.2:4.0),1)}‰ = ${nf((fyk>=500?0.0032:0.004)*100*e*100)} cm²/m (dos caras)`;
+  const phiV=v('phiV'), Ab=Math.PI*Math.pow(phiV/20,2), nb=Math.max(4,Math.ceil(Asd/Ab-1e-9)), sv=Math.floor(100/nb);
+  $('f56').innerHTML=`${G('A<sub>s</sub>/A<sub>Ø</sub>')} = ${nf(Asd)}/${nf(Ab,3)} = ${nf(Asd/Ab)} → ${R(nb+' Ø'+phiV+' /m (c/'+sv+' cm)')} `+(sv>30?pill('warn','s > 30'):'');
+  $('t5').innerHTML=pill('info',`Ø${phiV} c/${sv}`);
+  check('try5','c5',Md,0.02);
+  // 6
+  const hzb=hz, Mp=1.5*s.sm*p*p/2, qdown=gam*H1+25*hz-s.sm, Mt=Math.max(0,1.5*qdown*s.t*s.t/2);
+  const Ap=10*Mp/(0.8*hzb*fyd), At=10*Mt/(0.8*hzb*fyd), Azmin=0.0009*100*hzb*100*(fyk>=500?1:1.111);
+  $('f61').innerHTML=`${G('M<sub>d</sub> = 1,5·σ·p²/2')} = 1,5·${nf(s.sm,1)}·${nf(p)}²/2 = ${nf(Mp,1)} kN·m/m → ${R(nf(Ap)+' cm²/m')}`;
+  $('f62').innerHTML=`${G('M<sub>d</sub> = 1,5·(γ·H<sub>1</sub> + 25·canto − σ)·t²/2')} = 1,5·(${nf(gam*H1,1)} + ${nf(25*hz,1)} − ${nf(s.sm,1)})·${nf(s.t)}²/2 = ${nf(Mt,1)} kN·m/m → ${R(nf(At)+' cm²/m')}`;
+  $('f63').innerHTML=`${G('0,9 ‰ por cara')} = ${R(nf(Azmin)+' cm²/m')}`;
+  $('t6').innerHTML=pill('info',`inf. ${nf(Math.max(Ap,Azmin),1)} · sup. ${nf(Math.max(At,Azmin),1)} cm²/m`);
+  $('summary').innerHTML=`
+    <div><span class="lab">Alzado y zapata</span><span class="big">e ${nf(e)} · B ${nf(B)} × ${nf(hz)} m</span></div>
+    <div><span class="lab">Seguridad desliz. / vuelco</span><span class="big">${nf(s.FSd)} / ${nf(s.FSv)}</span></div>
+    <div><span class="lab">Tensión media</span><span class="big">${nf(s.sm,0)} kN/m²</span></div>
+    <div><span class="lab">Vertical trasdós</span><span class="big">Ø${phiV} c/${sv}</span></div>`;
+  draw(H1,e,hz,B,p,s);
+}
+function draw(H1,e,hz,B,p,s){
+  const H=H1+hz, sc=Math.min(190/H,210/B), x0=120, yb=236, ya=yb-hz*sc, yt=yb-H*sc;
+  const xA=x0+B*sc, xm0=xA-(p+e)*sc; // tierras a la izquierda, puntera a la derecha
+  const F='font-family="IBM Plex Mono,monospace"';
+  const tx=(x,y,t,o={})=>`<text x="${x}" y="${y}" ${F} font-size="${o.s||10}" fill="${o.c||'var(--muted)'}"${o.a?` text-anchor="${o.a}"`:''}>${t}</text>`;
+  const arrH=(x1,x2,y,c)=>`<line x1="${x1}" y1="${y}" x2="${x2-2}" y2="${y}" stroke="${c}" stroke-width="2"/><polygon points="${x2-8},${y-4} ${x2-8},${y+4} ${x2},${y}" fill="${c}"/>`;
+  const arrV=(x,y1,y2,c)=>`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2-2}" stroke="${c}" stroke-width="2"/><polygon points="${x-4},${y2-8} ${x+4},${y2-8} ${x},${y2}" fill="${c}"/>`;
+  let g=`<rect x="${x0}" y="${yt}" width="${xm0-x0}" height="${H1*sc}" fill="var(--soil,#e8dcc3)" opacity=".7"/>`;
+  g+=`<rect x="${x0}" y="${ya}" width="${B*sc}" height="${hz*sc}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/>`;
+  g+=`<rect x="${xm0}" y="${yt}" width="${e*sc}" height="${H1*sc}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/>`;
+  // sobrecarga (no se cuenta como estabilizante)
+  if(s.E2>0){g+=`<line x1="${x0}" y1="${yt-14}" x2="${xm0}" y2="${yt-14}" stroke="var(--muted)" stroke-dasharray="4 3"/>`;
+    for(let i=0;i<4;i++){const x=x0+(i+0.5)*(xm0-x0)/4; g+=`<line x1="${x}" y1="${yt-14}" x2="${x}" y2="${yt-3}" stroke="var(--muted)" stroke-dasharray="2 2"/><polygon points="${x-3},${yt-6} ${x+3},${yt-6} ${x},${yt-1}" fill="var(--muted)"/>`;}
+    g+=tx(x0,yt-19,'q (no estabiliza)',{s:9});}
+  // empuje: rectángulo (sobrecarga) + triángulo (tierras)
+  const ex=x0-8, pq=s.E2/s.H, pg=2*s.E1/s.H, k=Math.min(70/(pq+pg),3), wq=pq*k, wg=pg*k;
+  if(wq>0) g+=`<rect x="${ex-wq}" y="${yt}" width="${wq}" height="${H*sc}" fill="var(--accent)" opacity=".12" stroke="var(--accent)" stroke-opacity=".5"/>`;
+  g+=`<polygon points="${ex-wq},${yt} ${ex-wq},${yb} ${ex-wq-wg},${yb}" fill="var(--accent)" opacity=".28" stroke="var(--accent)"/>`;
+  const y1=yb-H*sc/3, y2=yb-H*sc/2, xl=Math.min(ex-wq-wg-6,ex-74);
+  g+=arrH(xl,ex,y1,'var(--accent)')+tx(xl,y1-5,`E₁ = ${nf(s.E1,0)}`,{c:'var(--accent)',s:10});
+  if(s.E2>0) g+=arrH(xl,ex,y2,'var(--accent)')+tx(xl,y2-5,`E₂ = ${nf(s.E2,0)}`,{c:'var(--accent)',s:10});
+  // pesos en sus centros de gravedad (brazos medidos desde A)
+  const W=(x,yc,t)=>arrV(x,yc-16,yc+16,'var(--ink)')+tx(x+5,yc-6,t,{c:'var(--ink)',s:10});
+  g+=W(xA-s.xm*sc,yt+H1*sc*0.35,'P<tspan dy="3" font-size="8">m</tspan>');
+  if(s.Pt>0) g+=W(xA-s.xt*sc,yt+H1*sc*0.55,'P<tspan dy="3" font-size="8">t</tspan>');
+  g+=arrV(xA-s.xz*sc,ya-4,yb+18,'var(--ink)')+tx(xA-s.xz*sc+5,yb+16,'P<tspan dy="3" font-size="8">z</tspan>',{c:'var(--ink)'});
+  g+=`<circle cx="${xA}" cy="${yb}" r="4" fill="var(--rebar)"/>`+tx(xA+6,yb-4,'A',{c:'var(--rebar)',s:11});
+  g+=tx((x0+xm0)/2,yt+H1*sc*0.2,'tierras',{a:'middle'});
+  g+=tx(xA-p*sc/2,ya-6,'puntera',{a:'middle'})+tx(x0+6,ya+hz*sc/2+4,'talón',{c:'var(--ink)'});
+  $('sec').innerHTML=g;
+  // armado
+  let a=`<rect x="${x0}" y="${ya}" width="${B*sc}" height="${hz*sc}" fill="var(--concrete)" stroke="var(--concrete-edge)"/><rect x="${xm0}" y="${yt}" width="${e*sc}" height="${H1*sc}" fill="var(--concrete)" stroke="var(--concrete-edge)"/>`;
+  const c=Math.max(3,0.05*sc), pat=Math.max(12,0.25*sc), xi=xm0+e*sc-c, yi=yb-c, ys=ya+c;
+  a+=`<line x1="${x0+c}" y1="${ys}" x2="${xm0+e*sc+pat}" y2="${ys}" stroke="var(--rebar)" stroke-width="2.6"/><line x1="${xm0+e*sc+pat}" y1="${ys}" x2="${xA-c}" y2="${ys}" stroke="var(--rebar)" stroke-width="1"/>`; // superior: As1 en el talón
+  a+=`<line x1="${xm0-pat}" y1="${yi}" x2="${xA-c}" y2="${yi}" stroke="var(--rebar)" stroke-width="2.6"/><line x1="${x0+c}" y1="${yi}" x2="${xm0-pat}" y2="${yi}" stroke="var(--rebar)" stroke-width="1"/>`; // inferior: As2 en la puntera
+  a+=`<path d="M${xi} ${yt+c} L${xi} ${yi-3} L${xi+pat} ${yi-3}" fill="none" stroke="var(--rebar)" stroke-width="1.2"/>`; // intradós, mínima
+  a+=`<path d="M${xm0+c} ${yt+c} L${xm0+c} ${yi-3} L${xm0+c-pat} ${yi-3}" fill="none" stroke="var(--rebar)" stroke-width="3"/>`; // trasdós con patilla
+  a+=tx(xm0-6,yt+H1*sc/2,'A<tspan dy="3" font-size="8">s</tspan> trasdós',{c:'var(--rebar)',a:'end'});
+  a+=tx(xm0+e*sc+6,yt+H1*sc/2,'mínima');
+  a+=tx(x0,ya-6,'A<tspan dy="3" font-size="8">s1</tspan>',{c:'var(--rebar)'});
+  a+=tx(xA,yb+15,'A<tspan dy="3" font-size="8">s2</tspan>',{c:'var(--rebar)',a:'end'});
+  a+=tx(14,22,'Trazo grueso: armadura principal · fino: mínima',{s:9});
+  a+=tx(14,34,'A<tspan dy="3" font-size="7">s1</tspan><tspan dy="-3"> cara superior del talón · A</tspan><tspan dy="3" font-size="7">s2</tspan><tspan dy="-3"> cara inferior de la puntera</tspan>',{s:9});
+  $('arm').innerHTML=a;
+}
+$('clear').addEventListener('click',()=>{
+  ['H1','q','gam','phiT','sig','Nk','Np','eDef','hzDef','BDef','pDef','try1','try3','try4','try5'].forEach(id=>{$(id).value='';});
+  $('fyk').value='500';$('fck').value='25';$('phiV').value='12';
+  calc();$('H1').focus();
+});
+$('practica').addEventListener('change',()=>document.querySelector('.wrap').classList.toggle('practice',$('practica').checked));
+document.querySelectorAll('input,select').forEach(el=>{if(el.id!=='practica')el.addEventListener('input',calc);});
+calc();
+})();
+</script>
+
+<script src="pdf.js"></script>
+</body></html>

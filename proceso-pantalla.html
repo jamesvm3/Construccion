@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Proceso: muro pantalla</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#f4efe9; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#d9d0c6; --soft:#f8f4ef;
+  --accent:#8f2d3a; --accent-soft:#f3e1e3; --accent-ink:#ffffff;
+  --rebar:#2f3b42; --concrete:#d9dcd8; --concrete-edge:#8e9692; --soil:#c9bba3; --soil-edge:#9c8d73; --water:#3b86a8; --wood:#e6cc9f; --wood-edge:#a07a48; --steel:#c3ccd4; --steel-edge:#5d6b77;
+  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
+  --sans:"IBM Plex Sans",system-ui,sans-serif; --cond:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1c1715; --panel:#262019; --ink:#e4e9e7; --muted:#9aa6a8; --line:#463b33; --soft:#2d2620;
+  --accent:#e08a95; --accent-soft:#3d1f25; --accent-ink:#2a1216;
+  --rebar:#c9d3d8; --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#4a4333; --soil-edge:#7a6f58; --water:#6db3d1; --wood:#4d3b25; --wood-edge:#9b7a50; --steel:#46525c; --steel-edge:#8a99a6;
+  --ok:#6fcf8b; --ok-soft:#1b3326; --warn:#e3a74f; --warn-soft:#3a2d14; --bad:#e5705f; --bad-soft:#3a1f1b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1c1715; --panel:#262019; --ink:#e4e9e7; --muted:#9aa6a8; --line:#463b33; --soft:#2d2620;
+  --accent:#e08a95; --accent-soft:#3d1f25; --accent-ink:#2a1216;
+  --rebar:#c9d3d8; --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#4a4333; --soil-edge:#7a6f58; --water:#6db3d1; --wood:#4d3b25; --wood-edge:#9b7a50; --steel:#46525c; --steel-edge:#8a99a6;
+  --ok:#6fcf8b; --ok-soft:#1b3326; --warn:#e3a74f; --warn-soft:#3a2d14; --bad:#e5705f; --bad-soft:#3a1f1b; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans);padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.back{display:inline-flex;gap:6px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--accent);font-size:13px;font-weight:500;text-decoration:none}
+.back:hover{background:var(--accent-soft)}
+.eyebrow{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font:700 30px/1.15 var(--cond);margin:4px 0 6px;text-wrap:balance}
+.lead{color:var(--muted);margin:0;max-width:65ch}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tab{font:500 14px var(--sans);padding:8px 14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;min-width:0}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px}
+@media(max-width:720px){.grid{grid-template-columns:minmax(0,1fr)}}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.chip{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--soft);color:var(--muted);font:500 13px var(--mono);cursor:pointer}
+.chip[aria-current="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.chip.done{color:var(--accent);border-color:var(--accent)}
+svg.sec{width:100%;height:auto;display:block;background:var(--soft);border:1px solid var(--line);border-radius:8px}
+svg text{font:500 10px var(--mono);fill:var(--muted)}
+.g{opacity:0;transition:opacity .35s}.g.on{opacity:1}
+h2{font:700 21px/1.2 var(--cond);margin:0 0 8px}
+h3{font:600 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:14px 0 4px}
+p{margin:0 0 8px}
+.pill{display:inline-block;font:500 11px var(--mono);padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.pill.bp{background:var(--soft);color:var(--muted);border:1px solid var(--line)}
+.why{border-left:3px solid var(--accent);background:var(--accent-soft);padding:8px 12px;border-radius:0 6px 6px 0}
+ul.ctl{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
+ul.ctl li{display:flex;gap:8px}ul.ctl li::before{content:"☐";color:var(--accent)}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:16px}
+.btn{font:500 14px var(--sans);padding:8px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.btn.sec{background:var(--panel);color:var(--accent)}
+.btn:disabled{opacity:.4;cursor:default}
+.ord{list-style:none;margin:12px 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.ord li{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--soft);border-radius:8px;padding:8px 10px}
+.ord li.ok{border-color:var(--ok);background:var(--ok-soft)}.ord li.no{border-color:var(--bad);background:var(--bad-soft)}
+.ord .t{flex:1;min-width:0}
+.mv{display:flex;gap:4px}.mv button{width:32px;height:32px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;cursor:pointer}
+.fb{margin-top:12px;padding:10px 12px;border-radius:8px;border:1px solid var(--line)}
+.fb.ok{background:var(--ok-soft);border-color:var(--ok)}.fb.bad{background:var(--bad-soft);border-color:var(--bad)}.fb.warn{background:var(--warn-soft);border-color:var(--warn)}
+.opts{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.opt{text-align:left;font:400 14px var(--sans);padding:10px 12px;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:8px;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.ok{background:var(--ok-soft);border-color:var(--ok)}.opt.no{background:var(--bad-soft);border-color:var(--bad)}
+.sym{background:var(--warn-soft);border:1px solid var(--warn);border-radius:8px;padding:10px 12px}
+.meta{display:flex;justify-content:space-between;font:500 12px var(--mono);color:var(--muted);margin-bottom:10px}
+.score{font:700 40px var(--cond)}
+footer{font-size:12px;color:var(--muted);max-width:75ch}
+.mode{display:flex;align-items:center;gap:10px;background:var(--accent);color:var(--accent-ink);border-radius:8px;padding:8px 14px;font:600 12px var(--mono);letter-spacing:.1em;text-transform:uppercase}.mode span{font-weight:400;opacity:.85;letter-spacing:.04em;text-transform:none}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="mute.css">
+<link rel="stylesheet" href="proceso.css">
+
+</head><body>
+<div class="wrap">
+  <div style="display:flex;flex-wrap:wrap;gap:8px"><a class="back" href="index.html#H">← Menú de calculadoras</a></div>
+  <header class="top mat-H"><div><div class="mbadge"><b>MP</b><span>PROCESO</span></div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Muros de contención · Pantallas</small>Muro pantalla</h1></div></div><p class="lead">Cuatro formas de repasar cómo se ejecuta una pantalla continua de hormigón: de los muretes guía y la excavación con lodos al hormigonado con tubo Tremie y la excavación por fases. La pantalla se ejecuta antes de excavar y a ciegas: lo que se controla es el lodo, la armadura y el hormigonado.</p></header>
+  <div class="mode">Proceso constructivo <span>· cómo se ejecuta en obra</span></div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <main id="main"></main>
+  <footer>Herramienta de estudio de la asignatura Construcción (ETSIE y ETSA, UGR). Material orientativo para el repaso: en obra rigen el proyecto, el estudio geotécnico y las indicaciones de la dirección facultativa. Las referencias normativas indicadas son las verificadas; el resto de pasos son buena práctica constructiva. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</div>
+
+<script>
+var STEPS=[
+{id:1,t:"Estudiar el terreno, los obstáculos y los vecinos",
+ q:"Antes de ejecutar nada se determina la situación exacta del nivel freático y su evolución, y se comprueba que no hay obstáculos que la pantalla tenga que atravesar (alcantarillas, colectores, galerías, conducciones eléctricas, telefónicas o de gas, pozos, antiguas cimentaciones). Si los hay, se localizan con exactitud para tomar medidas en el proyecto o durante la ejecución. Se tienen en cuenta los edificios medianeros y las vibraciones de los útiles de excavación, sobre todo si se trabaja sin lodos. Si la excavación va a quedar en parte bajo el freático, solo valen pantallas que garanticen la estanqueidad.",
+ w:"Una pantalla se ejecuta antes de excavar y a ciegas: no se ve el terreno que se atraviesa. Lo que no se ha localizado antes (un colector, una cimentación antigua, el nivel del agua) aparece cuando el útil ya está dentro.",
+ c:["Nivel freático y su evolución determinados","Obstáculos enterrados localizados con exactitud","Edificios y servicios próximos identificados","Tipo de pantalla compatible con la estanqueidad necesaria"],
+ r:"DB SE-C 6.3.2 (obstáculos, nivel freático y vibraciones)",ref:true,
+ antes:"Es el primer paso: sin conocer el terreno y lo que hay enterrado no se debe empezar a ejecutar."},
+{id:2,t:"Construir los muretes guía",
+ q:"Se construyen dos muretes guía de hormigón armado «in situ», de entre 0,5 y 1,5 m de profundidad según el terreno. Garantizan el alineamiento de la pantalla, guían los útiles de excavación, evitan el desprendimiento de la zanja en la zona donde fluctúa el lodo y sostienen las jaulas de armadura hasta que endurezca el hormigón. La distancia entre ellos es de 20 a 50 mm mayor que el espesor de la pantalla proyectada, su parte superior es horizontal y conviene que quede al menos 1,5 m sobre la máxima cota prevista del nivel freático. Es recomendable apuntalarlos hasta excavar el panel correspondiente.",
+ w:"Los muretes son la plantilla de la pantalla: de su posición salen el alineamiento, la verticalidad y las tolerancias de todos los paneles, y en su zona alta el terreno es el más débil.",
+ c:["Muretes de hormigón armado, de 0,5 a 1,5 m de profundidad","Separación 20–50 mm mayor que el espesor de la pantalla","Cara superior horizontal y ≥ 1,5 m sobre el freático máximo","Muretes apuntalados hasta excavar el panel"],
+ r:"DB SE-C 6.4.1.2.1 (muretes guía)",ref:true,
+ antes:"Necesita el estudio del terreno hecho: la cota de los muretes depende del nivel freático."},
+{id:3,t:"Excavar el panel con lodos tixotrópicos",
+ q:"La zanja se excava por paneles, de ancho entre la apertura de la cuchara y un máximo según la estabilidad del terreno, generalmente de 2,5 a 4,5 m, y de espesor entre 0,4 y 1,50 m. En suelos sin cohesión (arenas y limos) bajo el freático la zanja no es estable por sí sola: se llena cada módulo con lodos tixotrópicos (bentonitas, sepiolitas…). Se necesitan lodos siempre que la zanja sea más profunda que la altura que se podría excavar con talud vertical indefinido. Cerca de medianerías en mal estado o de edificios sensibles, la longitud de los módulos se reduce todo lo posible.",
+ w:"El lodo es más denso que el agua y presiona las paredes de la zanja, que se mantiene abierta sin entibar. Sin él, en arenas bajo el freático la zanja se cierra y arrastra el terreno de los edificios vecinos.",
+ c:["Ancho y espesor del panel según proyecto","Zanja siempre llena de lodo si el terreno lo requiere","Módulos cortos junto a medianerías o edificios sensibles","Útiles de excavación sin caída libre cerca de edificios si se trabaja sin lodos"],
+ r:"DB SE-C 6.1.1.1 (pantallas continuas), 6.3.2.2.9 (estabilidad de zanjas) y 6.3.2.4.2 (anchura de los módulos)",ref:true,
+ antes:"Necesita los muretes construidos: guían la cuchara y retienen el terreno de la zona alta."},
+{id:4,t:"Controlar el lodo y limpiar el fondo",
+ q:"Antes de hormigonar se comprueba que la perforación está limpia y que el lodo está dentro de las características recomendadas: densidad, viscosidad Marsh (de 32 a 50 s en el lodo fresco y antes de hormigonar), filtrado, pH, contenido en arena y espesor de cake, con valores distintos para el lodo fresco, el lodo listo para reempleo y el lodo antes de hormigonar. Si el lodo está cargado de arena o el fondo tiene sedimentos, se desarena y se limpia.",
+ w:"El hormigón debe desplazar el lodo hacia arriba: si el lodo es denso, está cargado de arena o el fondo tiene sedimentos, el hormigón queda mezclado con ellos y forma bolsas débiles dentro de la pantalla.",
+ c:["Lodo medido: densidad, viscosidad Marsh, pH y contenido en arena","Valores dentro de la tabla 6.6 antes de hormigonar","Fondo del panel limpio","Panel dentro de las tolerancias del proyecto"],
+ r:"DB SE-C 6.4.1.2.4 (puesta en obra y tabla 6.6)",ref:true,
+ antes:"Se controla el lodo cuando la zanja ya está excavada y antes de bajar la armadura y hormigonar."},
+{id:5,t:"Colocar las juntas y la jaula de armadura",
+ q:"Se colocan los encofrados de junta entre paneles (los muretes deben resistir los esfuerzos de su extracción) y se baja la jaula de armadura, que se cuelga de los muretes hasta que endurezca el hormigón. Un panel puede llevar varias jaulas a lo largo de su longitud. Las barras se separan, como mínimo, cinco veces el diámetro del árido para que el hormigón pase y se adhiera, y el recubrimiento es el de las piezas hormigonadas contra el terreno según la Instrucción de Hormigón. Se comprueba que las armaduras están en la posición de los planos antes de hormigonar.",
+ w:"La jaula es la armadura de un elemento que trabaja a flexión: si queda descentrada, con poco recubrimiento o con barras tan juntas que el hormigón no pasa, la pantalla no tiene la capacidad calculada.",
+ c:["Jaula en la posición de los planos y colgada de los muretes","Separación entre barras ≥ 5 veces el diámetro del árido","Recubrimiento de pieza hormigonada contra el terreno","Juntas entre paneles colocadas y extraíbles"],
+ r:"DB SE-C 6.4.1.2.1 (muretes y juntas), 6.1.1.1 (jaulas por panel) y 6.4.1.2.4 (separación de barras)",ref:true,
+ antes:"Necesita la zanja limpia y el lodo controlado: la jaula baja a través del lodo."},
+{id:6,t:"Hormigonar con tubo Tremie",
+ q:"El hormigón debe resistir la segregación, ser plástico, fluido y autocompactante y mantenerse trabajable durante todo el hormigonado; en pantallas armadas se recomienda un contenido de cemento de al menos 325 kg/m³ para hormigón vertido en seco y 375 kg/m³ para hormigón sumergido. Se hormigona con un tubo Tremie estanco y liso por dentro, de diámetro interior mayor de 150 mm y de más de 6 veces el tamaño máximo del árido. Se limita a 2,50 m el recorrido horizontal por cada tubo. Para empezar, el tubo se apoya en el fondo y se levanta de 10 a 20 cm. El hormigón rellena la sección completa, sin vacíos, bolsas ni lavado, y sube desplazando el lodo.",
+ w:"El hormigón no se puede verter desde arriba a través del lodo: se lavaría y segregaría. Con el tubo sumergido, el hormigón nuevo sale por abajo y empuja hacia arriba lo anterior y el lodo.",
+ c:["Hormigón con la dosificación y ensayos previos del proyecto","Tubo Tremie estanco, de diámetro > 150 mm y > 6 veces el árido","Recorrido horizontal por tubo ≤ 2,50 m","Tubo levantado de 10 a 20 cm del fondo al empezar"],
+ r:"DB SE-C 6.4.1.2.3 (dosificación) y 6.4.1.2.4 (tubo Tremie)",ref:true,
+ antes:"Necesita la armadura colocada y el lodo y el fondo conformes."},
+{id:7,t:"Excavar por fases y sujetar la pantalla",
+ q:"Con la pantalla ya hormigonada y endurecida se excava por fases. En cada fase se analiza la ejecución, la excavación, la introducción de los puntales o anclajes, el agotamiento si hay agua, la sujeción por los forjados del edificio y, al final, la eliminación de los elementos provisionales. La pantalla no debe quedar en ninguna fase en una situación no contemplada en el cálculo. En cada fase se comprueba la estabilidad global, la del fondo, la de la pantalla, la de los sujetadores y la de los edificios próximos.",
+ w:"Una pantalla es flexible y se sostiene empotrada en el terreno y, si hace falta, sujeta por puntales, anclajes o forjados. Si se excava más de lo que se ha calculado antes de colocar la sujeción, la pantalla trabaja en una situación para la que no está dimensionada.",
+ c:["Excavación solo hasta la cota de la fase prevista","Sujeción (puntal, anclaje o forjado) colocada antes de seguir bajando","Agotamiento sin comprometer la estabilidad de taludes ni de vecinos","Movimientos de la pantalla y de los vecinos controlados en cada fase"],
+ r:"DB SE-C 6.4.1.2.1 (fases y sujeción), 6.3.2.2 (estabilidad por fases) y 6.3.2.4.3 (elementos de sujeción)",ref:true,
+ antes:"Necesita la pantalla hormigonada y endurecida: se excava delante de ella, nunca antes."},
+{id:8,t:"Acabar la cara vista e impermeabilizar",
+ q:"La pantalla no puede considerarse un elemento totalmente terminado ni absolutamente impermeable, porque se hormigona contra el propio terreno. Es necesario prever un acabado final de su superficie. Si la excavación llega por debajo del nivel freático, se prevé una impermeabilización suplementaria al propio hormigón según el DB-HS, sección 1. En el proyecto se evita además cualquier pérdida de agua no admisible a través o por debajo de la pantalla.",
+ w:"El hormigón vertido bajo lodo contra el terreno deja una superficie irregular y puntos débiles en las juntas entre paneles. Si el sótano debe quedar seco, la estanqueidad hay que construirla, no darla por supuesta.",
+ c:["Cara vista saneada y regularizada","Juntas entre paneles tratadas","Impermeabilización suplementaria si hay freático (DB-HS 1)","Sin pérdidas de agua a través ni por debajo de la pantalla"],
+ r:"DB SE-C 6.1.1 (acabado e impermeabilización) y 6.4.1.2.1 (estanqueidad)",ref:true,
+ antes:"Es el último paso: se hace cuando la excavación deja la cara de la pantalla a la vista."}
+];
+var FAILS=[
+{s:"Al excavar la zanja en una arena bajo el nivel freático, las paredes se desmoronan y aparecen asientos en la acera y en el edificio vecino.",
+ o:["La zanja se excavó sin lodos tixotrópicos","Los muretes eran de hormigón armado","La zanja tenía 0,6 m de espesor","El panel era de 3 m"],a:0,
+ cons:"Sin el lodo que apoya las paredes, el terreno se cierra sobre la zanja y arrastra lo que hay en superficie.",
+ prev:"Paso 3: en suelos sin cohesión bajo el freático, llenar cada módulo de zanja con lodo tixotrópico."},
+{s:"Los paneles de la pantalla salen desalineados y los muretes guía se han movido al extraer el útil de las juntas.",
+ o:["Los muretes eran poco profundos, estaban sin apuntalar y no resistían los esfuerzos","El hormigón tenía 375 kg/m³ de cemento","La jaula era demasiado ancha","El lodo era fresco"],a:0,
+ cons:"Los muretes son la plantilla de la pantalla: si se mueven, se pierden el alineamiento y las tolerancias.",
+ prev:"Paso 2: muretes de hormigón armado de 0,5 a 1,5 m, apuntalados hasta excavar el panel y capaces de resistir la extracción de las juntas."},
+{s:"En el sótano aparecen, al excavar, zonas de la pantalla con bolsas de arena y hormigón mezclado con lodo.",
+ o:["Se hormigonó con el lodo cargado de arena y el fondo sin limpiar","Se usó tubo Tremie","El hormigón era autocompactante","El panel tenía una jaula"],a:0,
+ cons:"El hormigón no desplaza el lodo ni los sedimentos y queda con zonas débiles que no resisten el empuje.",
+ prev:"Paso 4: comprobar el lodo (tabla 6.6) y limpiar el fondo antes de hormigonar."},
+{s:"La pantalla tiene vacíos y zonas segregadas en la parte alta de los paneles más anchos.",
+ o:["Se alimentaba con un solo tubo Tremie un panel de recorrido horizontal mayor de 2,5 m","El hormigón era de alta resistencia","El panel estaba limpio","La jaula era de una pieza"],a:0,
+ cons:"El hormigón no llega uniformemente a toda la sección y deja coqueras y bolsas.",
+ prev:"Paso 6: limitar a 2,50 m el recorrido horizontal por tubo y repartir bien el hormigón entre varios tubos."},
+{s:"Se excava hasta el fondo del sótano sin haber colocado los puntales ni los anclajes del nivel superior, y la pantalla se deforma de forma alarmante.",
+ o:["Se excavó más allá de la fase calculada sin colocar la sujeción","La pantalla era de 0,6 m","Se usó hormigón armado","Había lodos"],a:0,
+ cons:"La pantalla, flexible, trabaja en una situación no contemplada en el cálculo, con deformaciones y esfuerzos mayores que los dimensionados.",
+ prev:"Paso 7: excavar por fases y colocar la sujeción antes de seguir bajando."},
+{s:"Un edificio medianero se agrieta mientras se ejecutan los paneles contiguos a su medianería.",
+ o:["Se excavaron módulos largos junto a una medianería sensible sin controlar los movimientos","Se usó lodo bentonítico","El murete era horizontal","El hormigón era sumergido"],a:0,
+ cons:"Cuanto mayor es el módulo abierto, mayores son los movimientos horizontales y verticales del terreno que sostiene el edificio.",
+ prev:"Pasos 1 y 3: tener identificados los edificios próximos y reducir todo lo posible la longitud de los módulos junto a ellos."},
+{s:"El sótano, bajo el nivel freático, presenta humedades y filtraciones por las juntas entre paneles aunque la pantalla se ejecutó correctamente.",
+ o:["Se dio por impermeable la pantalla sin prever impermeabilización suplementaria","La armadura tenía poco recubrimiento","El murete guía era profundo","El lodo era fresco"],a:0,
+ cons:"La pantalla se hormigona contra el terreno y tiene juntas: no es absolutamente impermeable.",
+ prev:"Paso 8: prever el acabado final y una impermeabilización suplementaria (DB-HS 1) si hay freático."}
+];
+var EXAM=[
+{q:"¿Qué se hace antes que nada al planear una pantalla?",o:["Comprobar el nivel freático y los obstáculos enterrados","Hormigonar un panel","Pedir las armaduras","Pintar la pantalla"],a:0,e:"DB SE-C 6.3.2: colectores, galerías, cimentaciones antiguas y el nivel freático."},
+{q:"¿Qué espesor suele tener una pantalla continua de hormigón?",o:["Entre 0,4 y 1,50 m","Entre 5 y 10 cm","Entre 3 y 5 m","Solo 20 cm"],a:0,e:"DB SE-C 6.1.1.1."},
+{q:"¿Cuál es el ancho habitual de los paneles?",o:["De 2,5 a 4,5 m","De 20 a 40 cm","De 10 a 15 m","De 1 mm"],a:0,e:"Desde la apertura de la cuchara hasta un máximo según la estabilidad del terreno."},
+{q:"¿Qué profundidad suelen tener los muretes guía?",o:["Entre 0,5 y 1,5 m","Entre 10 y 20 m","Entre 5 y 10 cm","Ninguna"],a:0,e:"DB SE-C 6.4.1.2.1: de hormigón armado y «in situ»."},
+{q:"¿Qué separación hay entre los muretes guía?",o:["20 a 50 mm mayor que el espesor de la pantalla","Igual al espesor","1 m mayor","No importa"],a:0,e:"DB SE-C 6.4.1.2.1."},
+{q:"¿A qué altura conviene que quede la cara superior del murete guía?",o:["Al menos 1,5 m sobre la máxima cota prevista del nivel freático","A la cota del freático","1 m por debajo","Da igual"],a:0,e:"DB SE-C 6.4.1.2.1."},
+{q:"¿Cuándo se emplean lodos tixotrópicos?",o:["Cuando la zanja es más profunda que la altura que se podría excavar con talud vertical indefinido","Nunca","Solo en roca","Solo con tablestacas"],a:0,e:"DB SE-C 6.3.2.2.9."},
+{q:"¿Qué debe hacerse con la longitud de los módulos junto a medianerías en mal estado?",o:["Reducirla todo lo posible","Alargarla","Duplicarla","Ignorarla"],a:0,e:"Así se limitan los movimientos del terreno bajo el edificio vecino."},
+{q:"¿Cuándo se procede al hormigonado de la pantalla?",o:["Cuando la perforación está limpia y las armaduras en su posición","Antes de bajar las armaduras","Sin limpiar el fondo","Cuando se acaba el lodo"],a:0,e:"DB SE-C 6.4.1.2.4."},
+{q:"¿Cuál es el diámetro interior mínimo del tubo Tremie?",o:["Mayor de 150 mm y de 6 veces el tamaño máximo del árido","10 mm","30 mm","No hay mínimo"],a:0,e:"DB SE-C 6.4.1.2.4."},
+{q:"¿Cuál es el recorrido horizontal máximo por tubo Tremie?",o:["2,50 m","25 m","25 cm","No se limita"],a:0,e:"DB SE-C 6.4.1.2.4: si hace falta, se usan varios tubos."},
+{q:"¿Es una pantalla absolutamente impermeable?",o:["No: se hormigona contra el terreno y hay que prever acabado e impermeabilización suplementaria bajo freático","Sí, siempre","Solo si es de 1 m de espesor","Solo si tiene lodos"],a:0,e:"DB SE-C 6.1.1 y DB-HS 1."}
+];
+var $=function(s){return document.querySelector(s)};
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
+
+var MODES=[["rec","Recorrido paso a paso"],["ord","Ordena el proceso"],["fal","¿Qué falla?"],["exa","Repaso tipo examen"]];
+var mode="rec",cur=0;
+
+function tabs(){
+  $("#tabs").innerHTML=MODES.map(function(m){return '<button class="tab" role="tab" aria-selected="'+(m[0]===mode)+'" data-m="'+m[0]+'">'+m[1]+'</button>'}).join("");
+  document.querySelectorAll(".tab").forEach(function(b){b.onclick=function(){mode=b.dataset.m;tabs();render()}});
+}
+
+function svg(n){
+  var on=function(i){return n>=i?" on":""};
+  var Wl='<rect x="190" y="60" width="24" height="170" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.5"/>';
+  return '<svg class="sec" viewBox="0 0 400 270" role="img" aria-label="Sección de una pantalla continua de hormigón: muretes guía, zanja con lodo, jaula de armadura, tubo Tremie y excavación por fases con sujeción">'+
+  '<rect x="0" y="60" width="400" height="210" fill="var(--soil)" stroke="var(--soil-edge)" stroke-width="1.2"/>'+
+  '<g class="g'+on(1)+'"><line x1="0" y1="130" x2="400" y2="130" stroke="var(--water)" stroke-width="1.5" stroke-dasharray="6 3"/><text x="330" y="125" style="font-size:9px">freático</text><circle cx="290" cy="190" r="14" fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/><text x="262" y="222" style="font-size:9px">obstáculo</text><rect x="300" y="14" width="86" height="46" fill="var(--soft)" stroke="var(--soil-edge)"/><text x="310" y="42" style="font-size:9px">edif. vecino</text></g>'+
+  '<g class="g'+on(2)+'"><rect x="168" y="52" width="22" height="42" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.5"/><rect x="214" y="52" width="22" height="42" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.5"/><text x="226" y="46" style="font-size:9px">murete guía</text></g>'+
+  '<g class="g'+on(3)+'" style="opacity:'+(n>=3&&n<6?1:0)+'"><rect x="190" y="60" width="24" height="170" fill="var(--water)" fill-opacity=".38" stroke="var(--water)" stroke-width="1"/><text x="226" y="170" style="font-size:9px">lodo tixotrópico</text></g>'+
+  '<g class="g'+on(4)+'" style="opacity:'+(n===4?1:0)+'"><circle cx="110" cy="170" r="13" fill="none" stroke="var(--ok)" stroke-width="2"/><path d="M104 170 l4 5 l9-11" stroke="var(--ok)" stroke-width="2.5" fill="none"/><text x="16" y="200" style="font-size:9px">lodo conforme, fondo limpio</text></g>'+
+  '<g class="g'+on(6)+'">'+(n>=6?Wl:'')+'</g>'+
+  '<g class="g'+on(5)+'" style="opacity:'+(n>=5&&n<7?1:0)+'">'+[196,208].map(function(x){return '<line x1="'+x+'" y1="64" x2="'+x+'" y2="224" stroke="var(--rebar)" stroke-width="2.2"/>'}).join("")+[80,100,120,140,160,180,200].map(function(y){return '<line x1="196" y1="'+y+'" x2="208" y2="'+y+'" stroke="var(--rebar)" stroke-width="1.2"/>'}).join("")+'<line x1="189" y1="64" x2="189" y2="226" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/><text x="226" y="112" style="font-size:9px">jaula y junta</text></g>'+
+  '<g class="g'+on(6)+'" style="opacity:'+(n===6?1:0)+'"><path d="M194 20 h12 l-3 12 h-6 z" fill="var(--steel)" stroke="var(--steel-edge)" stroke-width="1.5"/><line x1="200" y1="32" x2="200" y2="216" stroke="var(--steel-edge)" stroke-width="3"/><text x="226" y="30" style="font-size:9px">tubo Tremie</text></g>'+
+  '<g class="g'+on(7)+'"><rect x="0" y="60" width="168" height="100" fill="var(--soft)"/><rect x="168" y="94" width="22" height="66" fill="var(--soft)"/><rect x="120" y="102" width="70" height="8" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/><text x="20" y="90" style="font-size:9px">forjado o puntal que sujeta</text><text x="20" y="150" style="font-size:9px">excavación por fases</text></g>'+
+  '<g class="g'+on(8)+'"><line x1="188" y1="112" x2="188" y2="160" stroke="var(--accent)" stroke-width="3"/><text x="20" y="124" style="font-size:9px">acabado e impermeabilización</text></g>'+
+  '</svg>';
+}
+
+function renderRec(){
+  var s=STEPS[cur];
+  var chips='<div class="chips">'+STEPS.map(function(x,i){return '<button class="chip'+(i<cur?' done':'')+'" aria-current="'+(i===cur)+'" data-i="'+i+'" aria-label="Paso '+x.id+'">'+x.id+'</button>'}).join("")+'</div>';
+  $("#main").innerHTML='<div class="box">'+chips+'<div class="grid"><div>'+svg(s.id)+'</div><div>'+
+   '<span class="pill'+(s.ref?'':' bp')+'">'+(s.ref?'Referencia: ':'')+esc(s.r)+'</span>'+
+   '<h2 style="margin-top:8px">'+s.id+'. '+esc(s.t)+'</h2><p>'+esc(s.q)+'</p>'+
+   '<h3>Por qué se hace así</h3><div class="why">'+esc(s.w)+'</div>'+
+   '<h3>Control antes de pasar al siguiente</h3><ul class="ctl">'+s.c.map(function(c){return '<li>'+esc(c)+'</li>'}).join("")+'</ul>'+
+   '</div></div><div class="nav"><button class="btn sec" id="prev" '+(cur===0?'disabled':'')+'>← Anterior</button><button class="btn" id="next" '+(cur===STEPS.length-1?'disabled':'')+'>Siguiente →</button></div></div>';
+  document.querySelectorAll(".chip").forEach(function(b){b.onclick=function(){cur=+b.dataset.i;renderRec()}});
+  $("#prev").onclick=function(){cur--;renderRec()};$("#next").onclick=function(){cur++;renderRec()};
+}
+
+var order=[];
+function newOrder(){do{order=shuffle(STEPS.map(function(s){return s.id}))}while(order.every(function(v,i){return v===i+1}))}
+function renderOrd(res){
+  var html='<div class="box"><h2>Ordena el proceso</h2><p>Coloca los pasos de montaje de la estructura en el orden correcto con las flechas.</p><ol class="ord">'+
+   order.map(function(id,i){var s=STEPS[id-1];var cl=res?(id===i+1?' class="ok"':' class="no"'):'';
+    return '<li'+cl+'><span class="t">'+esc(s.t)+'</span><span class="mv"><button data-i="'+i+'" data-d="-1" aria-label="Subir">↑</button><button data-i="'+i+'" data-d="1" aria-label="Bajar">↓</button></span></li>'}).join("")+'</ol>';
+  if(res){
+    var firstBad=-1;order.forEach(function(id,i){if(firstBad<0&&id!==i+1)firstBad=i});
+    if(firstBad<0){html+='<div class="fb ok"><strong>Orden correcto.</strong> Cada paso prepara el siguiente: estudio previo, muretes, excavación con lodos, control del lodo, armadura, hormigonado, excavación por fases y acabado.</div>'}
+    else{var wrongId=firstBad+1;var st=STEPS[wrongId-1];
+      html+='<div class="fb bad"><strong>El paso '+wrongId+' debería ir en la posición '+wrongId+'.</strong> Ahora tienes «'+esc(STEPS[order[firstBad]-1].t)+'» en esa posición. Recuerda: '+esc(st.antes)+'</div>'}
+  }
+  html+='<div class="nav"><button class="btn sec" id="rs">Mezclar de nuevo</button><button class="btn" id="ck">Comprobar</button></div></div>';
+  $("#main").innerHTML=html;
+  document.querySelectorAll(".mv button").forEach(function(b){b.onclick=function(){var i=+b.dataset.i,j=i+(+b.dataset.d);if(j<0||j>=order.length)return;var t=order[i];order[i]=order[j];order[j]=t;renderOrd(false)}});
+  $("#rs").onclick=function(){newOrder();renderOrd(false)};$("#ck").onclick=function(){renderOrd(true)};
+}
+
+var fi=0,fdone=false;
+function renderFal(){
+  var f=FAILS[fi];
+  var opts=f.o.map(function(o,i){return '<button class="opt" data-i="'+i+'">'+esc(o)+'</button>'}).join("");
+  $("#main").innerHTML='<div class="box"><div class="meta"><span>CASO '+(fi+1)+' / '+FAILS.length+'</span></div><h2>¿Qué falla?</h2><div class="sym">'+esc(f.s)+'</div><h3>¿Cuál es la causa más probable?</h3><div class="opts">'+opts+'</div><div id="fb"></div>'+
+   '<div class="nav"><button class="btn sec" id="fp" '+(fi===0?'disabled':'')+'>← Caso anterior</button><button class="btn" id="fn" '+(fi===FAILS.length-1?'disabled':'')+'>Caso siguiente →</button></div></div>';
+  document.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){
+    var i=+b.dataset.i;document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});
+    document.querySelectorAll(".opt")[f.a].classList.add("ok");if(i!==f.a)b.classList.add("no");
+    $("#fb").innerHTML='<div class="fb '+(i===f.a?'ok':'bad')+'"><strong>'+(i===f.a?'Correcto.':'No es esa.')+'</strong> Causa: «'+esc(f.o[f.a])+'».<br><strong>Consecuencia:</strong> '+esc(f.cons)+'<br><strong>Cómo se evita:</strong> '+esc(f.prev)+'</div>'}});
+  $("#fp").onclick=function(){fi--;renderFal()};$("#fn").onclick=function(){fi++;renderFal()};
+}
+
+var ex=null;
+function startExam(){ex={qs:shuffle(EXAM).slice(0,8).map(function(q){var idx=shuffle(q.o.map(function(_,i){return i}));return{q:q.q,o:idx.map(function(i){return q.o[i]}),a:idx.indexOf(q.a),e:q.e}}),i:0,s:0,ans:null}}
+function renderExa(){
+  if(!ex)startExam();
+  if(ex.i>=ex.qs.length){
+    var p=Math.round(ex.s/ex.qs.length*100);
+    $("#main").innerHTML='<div class="box"><h2>Resultado</h2><div class="score">'+ex.s+' / '+ex.qs.length+'</div><p>'+(p>=80?'Muy bien: dominas el orden y el porqué de cada paso.':p>=50?'Vas bien. Repasa en el recorrido los pasos donde has fallado.':'Conviene repasar el recorrido paso a paso y volver a intentarlo.')+'</p><div class="nav"><button class="btn sec" id="rv">Ir al recorrido</button><button class="btn" id="rt">Nuevo examen</button></div></div>';
+    $("#rt").onclick=function(){startExam();renderExa()};$("#rv").onclick=function(){mode="rec";cur=0;tabs();render()};return}
+  var q=ex.qs[ex.i];
+  $("#main").innerHTML='<div class="box"><div class="meta"><span>PREGUNTA '+(ex.i+1)+' / '+ex.qs.length+'</span><span>ACIERTOS '+ex.s+'</span></div><h2>'+esc(q.q)+'</h2><div class="opts">'+q.o.map(function(o,i){return '<button class="opt" data-i="'+i+'">'+esc(o)+'</button>'}).join("")+'</div><div id="fb"></div><div class="nav"><span></span><button class="btn" id="nx" style="visibility:hidden">'+(ex.i===ex.qs.length-1?'Ver resultado':'Siguiente →')+'</button></div></div>';
+  document.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){
+    var i=+b.dataset.i;document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});
+    document.querySelectorAll(".opt")[q.a].classList.add("ok");if(i!==q.a)b.classList.add("no");else ex.s++;
+    $("#fb").innerHTML='<div class="fb '+(i===q.a?'ok':'bad')+'"><strong>'+(i===q.a?'Correcto.':'Incorrecto.')+'</strong> '+esc(q.e)+'</div>';
+    $("#nx").style.visibility="visible"}});
+  $("#nx").onclick=function(){ex.i++;renderExa()};
+}
+
+function render(){ if(mode==="rec")renderRec(); else if(mode==="ord"){if(!order.length)newOrder();renderOrd(false)} else if(mode==="fal")renderFal(); else renderExa(); }
+tabs();render();
+</script>
+</body></html>
