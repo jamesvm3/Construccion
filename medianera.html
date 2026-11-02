@@ -434,16 +434,17 @@ function drawBulbo(a,a2,s,zc,ov,h1,h2){
   let g=`<rect x="0" y="${Y(0)}" width="${W}" height="${Y(zMax)-Y(0)+14}" fill="var(--soil,#e8dcc3)" opacity=".35"/>`;
   g+=`<line x1="0" y1="${Y(0)}" x2="${W}" y2="${Y(0)}" stroke="var(--soil-edge,#a8977a)" stroke-width="1.5"/>`;
   const p1=iso(-a/2,a/2,h1), p2=hasS?iso(a/2+s,a/2+s+a2,h2):'';
-  g+=`<path d="${p1}" fill="var(--accent)" fill-opacity=".16" stroke="var(--accent)" stroke-width="1.4"/>`;
-  if(hasS) g+=`<path d="${p2}" fill="var(--accent)" fill-opacity=".16" stroke="var(--accent)" stroke-width="1.4"/>`;
+  g+=`<defs><linearGradient id="gB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".55"/><stop offset=".45" stop-color="var(--accent)" stop-opacity=".22"/><stop offset="1" stop-color="var(--accent)" stop-opacity=".05"/></linearGradient></defs>`;
+  g+=`<path d="${p1}" fill="url(#gB)" stroke="var(--accent)" stroke-width="1.4"/>`;
+  if(hasS) g+=`<path d="${p2}" fill="url(#gB)" stroke="var(--accent)" stroke-width="1.4"/>`;
   if(ov){ g+=`<defs><clipPath id="clipB1"><path d="${p1}"/></clipPath></defs><path d="${p2}" clip-path="url(#clipB1)" fill="var(--bad)" fill-opacity=".45"/>`;
-    g+=T(X(a/2+s/2),Y(ov.zBot)+14,'solape','var(--bad)'); }
+    g+=T(W/2,Y(zMax)+26,'zona roja: solape, las presiones se suman','var(--bad)'); }
   const ft=(x1,x2)=>`<rect x="${X(x1)}" y="${Y(0)-10}" width="${(x2-x1)*sc}" height="10" fill="var(--concrete)" stroke="var(--concrete-edge)"/>`;
   g+=ft(-a/2,a/2)+T(X(0),Y(0)-15,'esta zapata');
   if(hasS){ g+=ft(a/2+s,a/2+s+a2)+T(X(a/2+s+a2/2),Y(0)-15,'vecina'); }
   g+=`<line x1="${X(0)}" y1="${Y(0)}" x2="${X(0)}" y2="${Y(zc)}" stroke="var(--ink)" stroke-dasharray="3 3"/>`+T(X(0)-5,Y(zc)*0.5+Y(0)*0.5,nf(zc)+' m','var(--ink)','end');
   if(hasS&&s>0) g+=T(X(a/2+s/2),s*sc>=44?Y(0)-3:Y(0)+13,'s = '+nf(s));
-  svg.setAttribute('viewBox',`0 0 ${W} ${Math.ceil(Y(zMax)+16)}`); svg.innerHTML=g;
+  svg.setAttribute('viewBox',`0 0 ${W} ${Math.ceil(Y(zMax)+(ov?34:16))}`); svg.innerHTML=g;
 }
 
 function draw(a,b,l,h,na,nb,phi){
