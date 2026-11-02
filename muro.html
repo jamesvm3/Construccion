@@ -464,7 +464,7 @@ function calc(){
     a=isFinite(aIn)&&aIn>0?aIn:aSug;
     hz=isFinite(hIn)&&hIn>0?hIn:0.6;
     $('f60').innerHTML=`${G('P<sub>muro</sub> = e·H·25')} = ${nf(e/100)}·${nf(H)}·25 = ${R(nf(Pm)+' kN/m')}`;
-    $('f61').innerHTML=`${G('a = ')}${G(fr('N<sub>k</sub> + P<sub>muro</sub>','σ<sub>adm</sub>'))} = ${fr(`${nf(Nk)} + ${nf(Pm)}`,nf(sig,0))} = ${R(nf(aT,3)+' m')}`;
+    $('f61').innerHTML=`${G('a = ')}${G(fr('N<sub>k</sub> + P<sub>muro</sub>','σ<sub>adm</sub>'))} = ${fr(`${nf(Nk)} + ${nf(Pm)}`,nf(sig,0))} = ${R(nf(aT,2)+' m')}`;
     $('sug6').textContent=`Sugerido: ${nf(aSug)} m (múltiplo de 5 cm por exceso)`;
     $('sug6b').textContent='Mínimo 0,60 m (ficha)';
     $('t6').innerHTML=(a<aT-1e-9?pill('bad','a menor que el teórico'):pill('ok',`a = ${nf(a)} m`))+' '+(hz<0.6-1e-9?pill('warn','h < 60 cm'):pill('ok',`h = ${nf(hz)} m`));
@@ -483,7 +483,7 @@ function calc(){
     nZ=Math.max(2,Math.ceil(AsL/Ab-1e-9));
     $('f70').innerHTML=`${G('M<sub>d</sub> = 1,5·σ<sub>adm</sub>·')}${G(fr('a²','8'))} = 1,5·${nf(sig,0)}·${fr(`${nf(a)}²`,'8')} = ${R(nf(Md)+' kN·m/m')}`;
     $('f71').innerHTML=`${G('A<sub>s</sub> = ')}${G(fr('10·M<sub>d</sub>','0,8·h·f<sub>yd</sub>'))} = ${fr(`10·${nf(Md)}`,`0,8·${nf(hz)}·${nf(fyd)}`)} = ${R(nf(AsT)+' cm²/m')}`+(AsT<1?' '+pill('warn','muy pequeña: manda la mínima'):'');
-    $('f72').innerHTML=`${G('A<sub>c</sub> = h·a')} = ${nf(hz)}·${nf(a)} = ${nf(hz*a,3)} m² = ${R(nf(Ac,0)+' cm²')}`;
+    $('f72').innerHTML=`${G('A<sub>c</sub> = h·a')} = ${nf(hz)}·${nf(a)} = ${nf(hz*a,2)} m² = ${R(nf(Ac,0)+' cm²')}`;
     $('f73').innerHTML=`${G('A<sub>s,long</sub> = 0,002·A<sub>c</sub>')} = 0,002·${nf(Ac,0)} = ${R(nf(AsL)+' cm²')} <span class="gen">(inferior, en la dirección del muro)</span>`;
     $('f74').innerHTML=`${G('n = ')}${G(fr('A<sub>s,long</sub>','A<sub>Ø</sub>'))} = ${fr(nf(AsL),nf(Ab,3))} = ${nf(AsL/Ab)} → ${R(nZ+' Ø'+phiZ)} <span class="gen">(${nf(nZ*Ab)} cm²)</span>`;
     $('sug7').textContent=`Ø12 es el diámetro mínimo en cimientos`;

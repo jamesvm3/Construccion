@@ -270,9 +270,9 @@ function calc(){
   else{t=S/2-a/4;tf=`${G('t = S/2 − a/4')} = ${nf(S)}/2 − ${nf(a)}/4`;}
   const T=t/z*Nd/n;
   $('f31').innerHTML=`${G('N<sub>d</sub> = 1,5·N<sub>k</sub>')} = 1,5·${nf(Nk)} = ${R(nf(Nd,1)+' kN')}`;
-  $('f32').innerHTML=`${G('z = 0,8·h')} = 0,8·${nf(h/100)} = ${R(nf(z,3)+' m')}`;
-  $('f33').innerHTML=`${tf} = ${R(nf(t,3)+' m')}`;
-  $('f34').innerHTML=`${G('T = (t/z)·N<sub>d</sub>/n')} = (${nf(t,3)}/${nf(z,3)})·${nf(Nd,1)}/${n} = ${R(nf(T,1)+' kN')}`;
+  $('f32').innerHTML=`${G('z = 0,8·h')} = 0,8·${nf(h/100)} = ${R(nf(z,2)+' m')}`;
+  $('f33').innerHTML=`${tf} = ${R(nf(t,2)+' m')}`;
+  $('f34').innerHTML=`${G('T = (t/z)·N<sub>d</sub>/n')} = (${nf(t,2)}/${nf(z,2)})·${nf(Nd,1)}/${n} = ${R(nf(T,1)+' kN')}`;
   $('t3').innerHTML=pill('info',nf(T,0)+' kN');
   check('try3','c3',T,0.02);
   const fyd=Math.min(fyk/1.15,400), As=T*10/fyd;

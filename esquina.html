@@ -99,7 +99,16 @@ main{display:flex;flex-direction:column;gap:16px;min-width:0}
 footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
 .chk{display:flex;align-items:center;gap:8px;font-size:13px}
 @media (prefers-reduced-motion:no-preference){.res,.pill{transition:filter .25s ease}}
- </style>
+ details.extra-step{margin-bottom:18px;border:1.5px dashed var(--ink);border-radius:2px;background:var(--panel)}
+details.extra-step>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:10px 14px;font:700 14px var(--sans);text-transform:uppercase;letter-spacing:.03em}
+details.extra-step>summary::-webkit-details-marker{display:none}
+details.extra-step>summary::before{content:"+";display:inline-grid;place-items:center;width:22px;height:22px;border:2px solid var(--ink);border-radius:50%;font-size:15px;flex:none}
+details.extra-step[open]>summary::before{content:"\2212"}
+details.extra-step>summary small{font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted);margin-left:auto}
+details.extra-step .step-b{padding:4px 14px 14px}
+details.extra-step .in2{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center;padding:10px;background:var(--beige);border-radius:2px;margin-bottom:8px;font-size:14px}
+details.extra-step .in2 input{width:90px}
+</style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
 <link rel="stylesheet" href="mute.css">
 
@@ -124,6 +133,7 @@ footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid 
     <div class="field"><label for="Nk">Axil característico N<sub>k</sub> (sin mayorar)</label><input id="Nk" type="number" step="any"><span class="u">kN</span></div>
     <label class="chk" style="padding-block:7px;border-bottom:1px dashed var(--line)"><input type="checkbox" id="inc" checked> <span>Con vigas centradoras: aumentar N<sub>k</sub> un 40 % para el área</span></label>
     <div class="field"><label for="sig">Tensión admisible σ<sub>adm</sub></label><input id="sig" type="number" step="any"><span class="u">kN/m²</span></div>
+    <div class="hint" style="margin:6px 0 10px">σ<sub>adm</sub> del estudio geotécnico, para el ancho de zapata que calcules. Esta herramienta no calcula asientos. Si hay zapatas próximas, usa la comprobación del final (bulbo de presiones).</div>
     <div class="field"><label for="l">Lado del pilar l</label><input id="l" type="number" step="any"><span class="u">m</span></div>
     <div class="field"><label for="phiP">Diámetro armadura del pilar φ</label><input id="phiP" type="number" step="any"><span class="u">mm</span></div>
     <div class="field"><label for="fyk">Límite elástico acero f<sub>yk</sub></label><select id="fyk"><option value="400">400 (B400S)</option><option value="500" selected>500 (B500S)</option></select><span class="u">N/mm²</span></div>
@@ -238,6 +248,22 @@ footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid 
     </div>
   </article>
 
+  <details class="extra-step" id="sB">
+    <summary>Comprobación complementaria · zapatas próximas <small>opcional · bulbo de presiones</small></summary>
+    <div class="step-b">
+      <p class="why">No cambia el dimensionado. Bajo cada zapata, la presión se reparte en profundidad y se va diluyendo. El DB SE-C (4.4 y E.4.2) llama bulbo de presiones a la zona donde el incremento de presión vertical es al menos el 10 % de la presión de contacto; en una zapata aislada llega a unas 2 veces su ancho. Si dos zapatas están cerca, sus bulbos se solapan y, a efectos de asiento, el terreno trabaja como bajo una zapata del ancho del conjunto. La comprobación usa la fórmula elástica del reparto bajo un rectángulo cargado y supone la zapata vecina a la misma cota.</p>
+      <div class="in2"><label for="sB1">Distancia libre entre bordes, s (hacia el interior, en cualquiera de las dos direcciones)</label><span><input type="number" step="any" id="sB1" min="0" aria-label="Distancia libre entre bordes en metros"> m</span>
+        <label for="aB2">Lado mayor de la zapata vecina</label><span><input type="number" step="any" id="aB2" min="0" aria-label="Lado de la zapata vecina en metros"> m</span></div>
+      <div class="calc">
+        <div class="row"><span class="k">Bulbo de esta zapata</span><span class="f" id="fB1"></span></div>
+        <div class="row"><span class="k">¿Se solapan los bulbos?</span><span class="f" id="fB2"></span></div>
+        <div class="row"><span class="k">Ancho a considerar</span><span class="f" id="fB3"></span></div>
+      </div>
+      <div class="box" style="margin-top:10px;background:var(--panel);border:1px solid var(--line)"><h3 style="margin:0 0 4px;font:700 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Sección por las dos zapatas · isobara del 10 %</h3><svg id="bul" viewBox="0 0 360 220" role="img" aria-label="Bulbos de presiones de las dos zapatas"></svg></div>
+      <div class="note extra">Si se solapan, no hay que cambiar la zapata: hay que comprobar que la σ<sub>adm</sub> del estudio geotécnico vale para ese ancho y esa profundidad, y que no hay estratos blandos dentro del bulbo conjunto. Los asientos se calculan aparte (DB SE-C, anejo F).</div>
+    </div>
+  </details>
+
   <div class="box" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px"><p style="margin:0;flex:1 1 240px;font-size:13.5px;color:var(--muted)">Ya sabes cuánto mide y cómo se arma la zapata de esquina. ¿Y cómo se construye? Repasa el proceso de ejecución paso a paso.</p><a href="proceso-medianera.html#esquina" style="font:600 14px var(--sans);color:var(--panel);background:var(--bad);border:1px solid var(--bad);border-radius:4px;padding:9px 16px;text-decoration:none">Proceso constructivo</a></div>
 
   <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con la Guía de aplicación del Código Estructural y el DB SE-C. Unidades: kN, m, cm, mm y N/mm². Errores o sugerencias: <a href="mailto:jaimevergara@ugr.es">jaimevergara@ugr.es</a>. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
@@ -264,7 +290,7 @@ function empty(){
   OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
   ['sug1','sug2','sug6'].forEach(id=>$(id).textContent='');
   $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce N<sub>k</sub>, σ<sub>adm</sub>, el lado del pilar y φ</span></div>';
-  $('sec').innerHTML='';$('pl').innerHTML='';
+  $('sec').innerHTML='';$('pl').innerHTML='';['fB1','fB2','fB3'].forEach(id=>$(id).innerHTML='<span class="gen">—</span>');$('bul').innerHTML='';
 }
 function calc(){
   const Nk=v('Nk'),sig=v('sig'),l=v('l'),phiP=v('phiP'),fyk=v('fyk');
@@ -272,10 +298,10 @@ function calc(){
   const inc=$('inc').checked,k=inc?1.4:1.0;
   const A=k*Nk/sig, aT=Math.sqrt(A), aSug=Math.ceil(aT/0.05-1e-9)*0.05;
   const aIn=parseFloat($('aDef').value), a=aIn>0?aIn:aSug, vu=a-l;
-  $('f11').innerHTML=`${G(`A = ${inc?'1,4·':''}N<sub>k</sub>/σ<sub>adm</sub>`)} = ${inc?'1,4·':''}${nf(Nk)}/${nf(sig,0)} = ${R(nf(A,3)+' m²')}`;
-  $('f12').innerHTML=`${G('a = √A')} = √${nf(A,3)} = ${R(nf(aT,3)+' m')}`;
+  $('f11').innerHTML=`${G(`A = ${inc?'1,4·':''}N<sub>k</sub>/σ<sub>adm</sub>`)} = ${inc?'1,4·':''}${nf(Nk)}/${nf(sig,0)} = ${R(nf(A,2)+' m²')}`;
+  $('f12').innerHTML=`${G('a = √A')} = √${nf(A,2)} = ${R(nf(aT,2)+' m')}`;
   $('sug1').textContent=`Sugerido: ${nf(aSug)} m`;
-  $('f13').innerHTML=`${G('v = a − l')} = ${nf(a)} − ${nf(l)} = ${R(nf(vu,3)+' m')}`;
+  $('f13').innerHTML=`${G('v = a − l')} = ${nf(a)} − ${nf(l)} = ${R(nf(vu,2)+' m')}`;
   $('t1').innerHTML=a<aT-1e-9?pill('bad','a menor que el teórico'):pill('ok',`a = ${nf(a)} m`);
   check('try1','c1',aT,0.01);
   const hmin=50,hanc=15*Math.pow(phiP/10,2)+10,hv=100*vu/2;
@@ -319,8 +345,83 @@ function calc(){
     <div><span class="lab">Armado, cada sentido</span><span class="big">${n} Ø${phi} c/${Math.floor(s+1e-9)} cm</span></div>
     <div><span class="lab">Tensión en el terreno</span><span class="big">${nf(s3,0)} kN/m²</span></div>`;
   draw(a,l,h,n,phi,vu);
+  bulbo(a,s3);
 }
 function dim(x1,y,x2,t){return `<g stroke="var(--muted)" stroke-width="1"><line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}"/><line x1="${x1}" y1="${y-4}" x2="${x1}" y2="${y+4}"/><line x1="${x2}" y1="${y-4}" x2="${x2}" y2="${y+4}"/></g><text x="${(x1+x2)/2}" y="${y-5}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--ink)">${t}</text>`;}
+/* Bulbo de presiones: reparto elástico bajo rectángulo cargado (Boussinesq, superposición de esquinas) */
+function Icorner(B,L,z){ // factor de influencia bajo la esquina de un rectángulo B×L a la profundidad z
+  if(B<=0||L<=0) return 0; if(z<=1e-9) return 0.25;
+  const m=B/z,n=L/z,m2=m*m,n2=n*n,r=Math.sqrt(m2+n2+1);
+  const t1=2*m*n*r/(m2+n2+m2*n2+1)*(m2+n2+2)/(m2+n2+1);
+  const t2=Math.atan2(2*m*n*r, m2+n2+1-m2*n2);
+  return (t1+t2)/(4*Math.PI);
+}
+function Irect(x,x1,x2,half,z){ // punto (x, 0, z); rectángulo [x1,x2]×[−half,half]
+  if(z<=1e-9) return (x>x1&&x<x2)?1:0;
+  const g=X=>Math.sign(X)*Icorner(Math.abs(X),half,z);
+  return 2*(g(x2-x)-g(x1-x));
+}
+function bulbo(a,q,ay,lab,labA){ // a: lado en la dirección de la vecina · ay: lado transversal
+  ay=ay||a; lab=lab||'a'; labA=labA||'a';
+  const sTxt=$('sB1').value, sIn=parseFloat(sTxt), a2In=parseFloat($('aB2').value), a2=a2In>0?a2In:a, h1=ay/2, h2=a2/2;
+  const Bmin=Math.min(a,ay);
+  let zc=0; for(let z=0.01;z<8*Math.max(a,ay);z+=0.01){ if(Irect(0,-a/2,a/2,h1,z)<0.10){zc=z;break;} }
+  $('fB1').innerHTML=`${G('Δσ ≥ 10 % de q')}, con q = ${nf(q,1)} kN/m² → hasta ${R(nf(zc)+' m')} bajo la base (≈ ${nf(zc/Bmin,1)}·${lab})`;
+  const tag=$('sB').querySelector('summary small');
+  if(sTxt===''||!(sIn>=0)||!(a2In>0)){
+    $('fB2').innerHTML='<span class="gen">Escribe la distancia libre s y el lado mayor de la zapata vecina</span>'; $('fB3').innerHTML='<span class="gen">—</span>';
+    tag.textContent='opcional · bulbo de presiones'; drawBulbo(a,a2,NaN,zc,null,h1,h2); return;
+  }
+  const s=sIn, X1=[-a/2,a/2], X2=[a/2+s,a/2+s+a2];
+  let zTop=NaN,zBot=NaN; const zMax=3*Math.max(a,a2,ay)+s, dz=zMax/200, dx=(X2[1]-X1[0])/120;
+  for(let x=X1[0];x<=X2[1]+1e-9;x+=dx){ for(let z=dz;z<=zMax;z+=dz){
+    if(Irect(x,X1[0],X1[1],h1,z)>=0.10 && Irect(x,X2[0],X2[1],h2,z)>=0.10){ if(!(z>=zTop))zTop=z; if(!(z<=zBot))zBot=z; } } }
+  const ov=isFinite(zTop);
+  if(ov){
+    const Beq=a+s+a2;
+    $('fB2').innerHTML=`${R('Sí')}, entre ${nf(zTop)} y ${nf(zBot)} m de profundidad `+pill('warn','bulbos solapados');
+    $('fB3').innerHTML=`${G(`B<sub>eq</sub> = ${labA} + s + a<sub>2</sub>`)} = ${nf(a)} + ${nf(s)} + ${nf(a2)} = ${R(nf(Beq)+' m')} · bulbo conjunto hasta ≈ 2·B<sub>eq</sub> = ${R(nf(2*Beq)+' m')}`;
+    tag.textContent='bulbos solapados';
+  } else {
+    $('fB2').innerHTML=`${R('No')} `+pill('ok','zapatas independientes');
+    $('fB3').innerHTML=`Cada zapata con su propio ancho, ${R(nf(a)+' m')}: la σ<sub>adm</sub> vale tal cual.`;
+    tag.textContent='bulbos independientes';
+  }
+  drawBulbo(a,a2,s,zc,ov?{zTop,zBot}:null,h1,h2);
+}
+function drawBulbo(a,a2,s,zc,ov,h1,h2){
+  h1=h1||a/2; h2=h2||a2/2;
+  const svg=$('bul'), hasS=isFinite(s), W=360, y0=30;
+  const span=(hasS?a+s+a2:a)+Math.max(0,2*h1-a)*0.6, zMax=Math.max(zc,hasS?2.1*Math.min(a2,2*h2):0)*1.08;
+  const sc=Math.min(320/(span*1.25), 190/zMax);
+  const xl=(W-span*sc)/2 + a/2*sc, X=x=>xl+x*sc, Y=z=>y0+z*sc;
+  const iso=(x1,x2,half)=>{ // contorno cerrado de la isobara del 10 %
+    const w=x2-x1, D=Math.max(w,2*half), top=[], bot=[];
+    for(let x=x1-0.6*D;x<=x2+0.6*D+1e-9;x+=D/100){
+      let zt=NaN,zb=NaN;
+      for(let z=0.002*w;z<3*D;z+=D/200){ const ok=Irect(x,x1,x2,half,z)>=0.10; if(ok){ if(isNaN(zt))zt=z; zb=z; } else if(!isNaN(zt))break; }
+      if(!isNaN(zt)){ top.push([x,(x>x1&&x<x2)?0:zt]); bot.push([x,zb]); }
+    }
+    if(!top.length) return '';
+    const P=[...bot,...top.reverse()];
+    return 'M'+P.map(p=>X(p[0]).toFixed(1)+' '+Y(p[1]).toFixed(1)).join(' L')+' Z';
+  };
+  const T=(x,y,t,c,an)=>`<text x="${x}" y="${y}" text-anchor="${an||'middle'}" font-family="IBM Plex Mono,monospace" font-size="10" fill="${c||'var(--muted)'}">${t}</text>`;
+  let g=`<rect x="0" y="${Y(0)}" width="${W}" height="${Y(zMax)-Y(0)+14}" fill="var(--soil,#e8dcc3)" opacity=".35"/>`;
+  g+=`<line x1="0" y1="${Y(0)}" x2="${W}" y2="${Y(0)}" stroke="var(--soil-edge,#a8977a)" stroke-width="1.5"/>`;
+  const p1=iso(-a/2,a/2,h1), p2=hasS?iso(a/2+s,a/2+s+a2,h2):'';
+  g+=`<path d="${p1}" fill="var(--accent)" fill-opacity=".16" stroke="var(--accent)" stroke-width="1.4"/>`;
+  if(hasS) g+=`<path d="${p2}" fill="var(--accent)" fill-opacity=".16" stroke="var(--accent)" stroke-width="1.4"/>`;
+  if(ov){ g+=`<defs><clipPath id="clipB1"><path d="${p1}"/></clipPath></defs><path d="${p2}" clip-path="url(#clipB1)" fill="var(--bad)" fill-opacity=".45"/>`;
+    g+=T(X(a/2+s/2),Y(ov.zBot)+14,'solape','var(--bad)'); }
+  const ft=(x1,x2)=>`<rect x="${X(x1)}" y="${Y(0)-10}" width="${(x2-x1)*sc}" height="10" fill="var(--concrete)" stroke="var(--concrete-edge)"/>`;
+  g+=ft(-a/2,a/2)+T(X(0),Y(0)-15,'esta zapata');
+  if(hasS){ g+=ft(a/2+s,a/2+s+a2)+T(X(a/2+s+a2/2),Y(0)-15,'vecina'); }
+  g+=`<line x1="${X(0)}" y1="${Y(0)}" x2="${X(0)}" y2="${Y(zc)}" stroke="var(--ink)" stroke-dasharray="3 3"/>`+T(X(0)-5,Y(zc)*0.5+Y(0)*0.5,nf(zc)+' m','var(--ink)','end');
+  if(hasS&&s>0) g+=T(X(a/2+s/2),s*sc>=44?Y(0)-3:Y(0)+13,'s = '+nf(s));
+  svg.setAttribute('viewBox',`0 0 ${W} ${Math.ceil(Y(zMax)+16)}`); svg.innerHTML=g;
+}
+
 function draw(a,l,h,n,phi,vu){
   const S=180,x0=80,y0=20,sc=S/a,ls=l*sc;
   let p=`<line x1="${x0}" y1="${y0-10}" x2="${x0}" y2="${y0+S}" stroke="var(--ink)" stroke-width="2.5"/><line x1="${x0}" y1="${y0+S}" x2="${x0+S+20}" y2="${y0+S}" stroke="var(--ink)" stroke-width="2.5"/>`;
@@ -341,7 +442,7 @@ function draw(a,l,h,n,phi,vu){
   $('sec').setAttribute('viewBox',`0 0 360 ${Math.ceil(top+Hh+30)}`);$('sec').innerHTML=g;
 }
 $('clear').addEventListener('click',()=>{
-  ['Nk','sig','l','phiP','aDef','hDef','nDef','try1','try2','try3','try4','try5','try6'].forEach(id=>{$(id).value='';});
+  ['sB1','aB2','Nk','sig','l','phiP','aDef','hDef','nDef','try1','try2','try3','try4','try5','try6'].forEach(id=>{$(id).value='';});
   $('fyk').value='500';$('fck').value='25';$('phi').value='16';$('inc').checked=true;$('useMin').checked=true;
   calc();$('Nk').focus();
 });

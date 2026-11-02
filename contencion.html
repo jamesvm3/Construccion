@@ -292,15 +292,15 @@ function calc(){
   $('t1').innerHTML=pill('info','E = '+nf(s.E,1)+' kN/m');
   check('try1','c1',s.E,0.02);
   // 2
-  $('f21').innerHTML=`${G('e ≈ H<sub>1</sub>/10')} = ${nf(H1/10,3)} m → ${R(nf(eS)+' m')}${H1/10<0.25?' (mínimo 25 cm)':''}`;
-  $('f22').innerHTML=`${G('B ≈ H<sub>1</sub>/3')} = ${R(nf(H1/3,3)+' m')}`;
+  $('f21').innerHTML=`${G('e ≈ H<sub>1</sub>/10')} = ${nf(H1/10,2)} m → ${R(nf(eS)+' m')}${H1/10<0.25?' (mínimo 25 cm)':''}`;
+  $('f22').innerHTML=`${G('B ≈ H<sub>1</sub>/3')} = ${R(nf(H1/3,2)+' m')}`;
   $('sug2').textContent=isFinite(BS)?`Sugerido: B = ${nf(BS)} m (el menor que cumple) · puntera ${nf(up5(BS/3))} m · e = ${nf(eS)} · canto ${nf(hzS)}`:'No se encuentra un ancho que cumpla: revisa los datos';
   $('f23').innerHTML=`${G('t = B − p − e')} = ${nf(B)} − ${nf(p)} − ${nf(e)} = ${R(nf(s.t)+' m')}`+(s.t<0?' '+pill('bad','negativo'):'');
   $('t2').innerHTML=pill('info',`B = ${nf(B)} m`);
   // 3
-  $('f31').innerHTML=`${G('P<sub>m</sub> = 25·e·H<sub>1</sub>')} = 25·${nf(e)}·${nf(H1)} = ${R(nf(s.Pm,1)+' kN/m')} · brazo ${nf(s.xm,3)} m`;
-  $('f32').innerHTML=`${G('P<sub>z</sub> = 25·B·canto')} = 25·${nf(B)}·${nf(hz)} = ${R(nf(s.Pz,1)+' kN/m')} · brazo ${nf(s.xz,3)} m`;
-  $('f33').innerHTML=`${G('P<sub>t</sub> = γ·H<sub>1</sub>·t')} = ${nf(gam,1)}·${nf(H1)}·${nf(s.t)} = ${R(nf(s.Pt,1)+' kN/m')} · brazo ${nf(s.xt,3)} m`;
+  $('f31').innerHTML=`${G('P<sub>m</sub> = 25·e·H<sub>1</sub>')} = 25·${nf(e)}·${nf(H1)} = ${R(nf(s.Pm,1)+' kN/m')} · brazo ${nf(s.xm,2)} m`;
+  $('f32').innerHTML=`${G('P<sub>z</sub> = 25·B·canto')} = 25·${nf(B)}·${nf(hz)} = ${R(nf(s.Pz,1)+' kN/m')} · brazo ${nf(s.xz,2)} m`;
+  $('f33').innerHTML=`${G('P<sub>t</sub> = γ·H<sub>1</sub>·t')} = ${nf(gam,1)}·${nf(H1)}·${nf(s.t)} = ${R(nf(s.Pt,1)+' kN/m')} · brazo ${nf(s.xt,2)} m`;
   check('try3','c3',s.Pt,0.02);
   // 4
   const okD=s.FSd>=1.5, okV=s.FSv>=1.8, okS=s.sm<=sig, okE=Math.abs(s.ex)<=B/6;

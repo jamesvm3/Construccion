@@ -125,6 +125,7 @@ footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid 
     <div class="field"><label for="N2">Axil característico del pilar 2, N<sub>k2</sub></label><input id="N2" type="number" step="any"><span class="u">kN</span></div>
     <label class="chk" style="padding-block:7px;border-bottom:1px dashed var(--line)"><input type="checkbox" id="inc" checked> <span>Aumentar los axiles un 20 % para el área</span></label>
     <div class="field"><label for="sig">Tensión admisible σ<sub>adm</sub></label><input id="sig" type="number" step="any"><span class="u">kN/m²</span></div>
+    <div class="hint" style="margin:6px 0 10px">σ<sub>adm</sub> del estudio geotécnico, para el ancho de zapata que calcules. Esta herramienta no comprueba asientos ni bulbo de presiones.</div>
     <div class="field"><label for="L">Distancia entre ejes de pilares L</label><input id="L" type="number" step="any"><span class="u">m</span></div>
     <div class="field"><label for="l1">Lado del pilar 1, l<sub>1</sub></label><input id="l1" type="number" step="any"><span class="u">m</span></div>
     <div class="field"><label for="l2">Lado del pilar 2, l<sub>2</sub></label><input id="l2" type="number" step="any"><span class="u">m</span></div>
@@ -228,8 +229,8 @@ footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid 
       <p class="why">Para simplificar, Arroyo dispone dos mallas iguales, una en cada cara, calculadas con el mayor de los tres momentos: A<sub>s</sub> = M<sub>d</sub>·10/(0,8·h·f<sub>yd</sub>), con h en m.</p>
       <div class="calc">
         <div class="row"><span class="k">f<sub>yd</sub></span><span class="f" id="f61"></span></div>
-        <div class="row"><span class="k">A<sub>s</sub> por metro y cara</span><span class="f" id="f62"></span></div>
-        <div class="row" id="rmin"><span class="k">A<sub>s,mín</sub> por metro y cara</span><span class="f" id="f63"></span></div>
+        <div class="row"><span class="k">A<sub>s</sub> por metro, en cada cara (dos mallas iguales)</span><span class="f" id="f62"></span></div>
+        <div class="row" id="rmin"><span class="k">A<sub>s,mín</sub> por metro, en cada cara</span><span class="f" id="f63"></span></div>
         <div class="row"><span class="k">A<sub>s</sub> a disponer</span><span class="f" id="f64"></span></div>
       </div>
       <div class="note extra">Mínima: 1,8 ‰ de la sección con B 500 S (2,0 ‰ con B 400 S) repartida entre las dos caras, es decir, 0,9 ‰ (1,0 ‰) por cara. Cada cara lleva la armadura completa, como dice Arroyo.</div>
@@ -292,23 +293,23 @@ function calc(){
   const N=N1+N2, inc=$('inc').checked, k=inc?1.2:1;
   // 1
   const A=k*N/sig, bT=Math.sqrt(A/2), aT=2*bT;
-  $('f11').innerHTML=`${G(`A = ${inc?'1,2·':''}(N<sub>k1</sub> + N<sub>k2</sub>)/σ<sub>adm</sub>`)} = ${inc?'1,2·':''}(${nf(N1)} + ${nf(N2)})/${nf(sig,0)} = ${R(nf(A,3)+' m²')}`;
-  $('f12').innerHTML=`${G('b = √(A/2) ; a = 2·b')} = √(${nf(A,3)}/2) = ${R(nf(bT,3)+' m')} ; a = ${R(nf(aT,3)+' m')}`;
+  $('f11').innerHTML=`${G(`A = ${inc?'1,2·':''}(N<sub>k1</sub> + N<sub>k2</sub>)/σ<sub>adm</sub>`)} = ${inc?'1,2·':''}(${nf(N1)} + ${nf(N2)})/${nf(sig,0)} = ${R(nf(A,2)+' m²')}`;
+  $('f12').innerHTML=`${G('b = √(A/2) ; a = 2·b')} = √(${nf(A,2)}/2) = ${R(nf(bT,2)+' m')} ; a = ${R(nf(aT,2)+' m')}`;
   $('t1').innerHTML=pill('info',nf(A,2)+' m²');
   check('try1','c1',A,0.01);
   // 2
   const x1=N2*L/N, x2=N1*L/N;
   const amin=2*Math.max(x1+l1/2+0.25,x2+l2/2+0.25);
-  $('f21').innerHTML=`${G('x<sub>1</sub> = N<sub>k2</sub>·L/(N<sub>k1</sub> + N<sub>k2</sub>)')} = ${nf(N2)}·${nf(L)}/${nf(N)} = ${R(nf(x1,3)+' m')} · ${G('x<sub>2</sub> = N<sub>k1</sub>·L/(N<sub>k1</sub> + N<sub>k2</sub>)')} = ${R(nf(x2,3)+' m')}`;
-  $('f22').innerHTML=`${G('a<sub>mín</sub> = 2·máx(x<sub>i</sub> + l<sub>i</sub>/2 + 0,25)')} = 2·máx(${nf(x1+l1/2+0.25,3)} ; ${nf(x2+l2/2+0.25,3)}) = ${R(nf(amin,3)+' m')}`;
+  $('f21').innerHTML=`${G('x<sub>1</sub> = N<sub>k2</sub>·L/(N<sub>k1</sub> + N<sub>k2</sub>)')} = ${nf(N2)}·${nf(L)}/${nf(N)} = ${R(nf(x1,2)+' m')} · ${G('x<sub>2</sub> = N<sub>k1</sub>·L/(N<sub>k1</sub> + N<sub>k2</sub>)')} = ${R(nf(x2,2)+' m')}`;
+  $('f22').innerHTML=`${G('a<sub>mín</sub> = 2·máx(x<sub>i</sub> + l<sub>i</sub>/2 + 0,25)')} = 2·máx(${nf(x1+l1/2+0.25,2)} ; ${nf(x2+l2/2+0.25,2)}) = ${R(nf(amin,2)+' m')}`;
   let aS=up5(Math.max(aT,amin)), bS=up5(A/aS);
   const aIn=parseFloat($('aDef').value), bIn=parseFloat($('bDef').value);
   const a=aIn>0?aIn:aS, b=bIn>0?bIn:bS;
   $('sug2').textContent=`Sugerido: a = ${nf(aS)} m · b = ${nf(bS)} m`+(amin>aT?' (manda el largo mínimo)':'');
   const V1=a/2-x1, V2=a/2-x2, Vmx=Math.max(V1,V2), Vmn=Math.min(V1,V2);
   const Vl1=(b-l1)/2, Vl2=(b-l2)/2, Vlat=Math.max(Vl1,Vl2);
-  $('f23').innerHTML=`${G('V<sub>1</sub> = a/2 − x<sub>1</sub>')} = ${nf(a)}/2 − ${nf(x1,3)} = ${R(nf(V1,3)+' m')} · ${G('V<sub>2</sub> = a/2 − x<sub>2</sub>')} = ${R(nf(V2,3)+' m')}`;
-  $('f24').innerHTML=`${G('(b − l)/2')} = (${nf(b)} − ${nf(Math.min(l1,l2))})/2 = ${R(nf(Vlat,3)+' m')}`;
+  $('f23').innerHTML=`${G('V<sub>1</sub> = a/2 − x<sub>1</sub>')} = ${nf(a)}/2 − ${nf(x1,2)} = ${R(nf(V1,2)+' m')} · ${G('V<sub>2</sub> = a/2 − x<sub>2</sub>')} = ${R(nf(V2,2)+' m')}`;
+  $('f24').innerHTML=`${G('(b − l)/2')} = (${nf(b)} − ${nf(Math.min(l1,l2))})/2 = ${R(nf(Vlat,2)+' m')}`;
   const okA=a*b>=A-1e-9, okG=a>=amin-1e-9, okR=a<=2*b+1e-9;
   $('t2').innerHTML=!okA?pill('bad','a·b < A'):(!okG?pill('bad','borde a menos de 25 cm'):(okR?pill('ok',`${nf(a)} × ${nf(b)} m`):pill('warn','a > 2b')));
   check('try2','c2',x1,0.01);
@@ -336,8 +337,8 @@ function calc(){
   const Mt=1.5*1.2*sig*b*b/8;
   const Md=Math.max(Mp,Mn,Mt);
   const tagM=x=>x===Md?' '+pill('info','manda'):'';
-  $('f51').innerHTML=`${G('1,5·σ<sub>adm</sub>·V<sub>máx</sub>²/2')} = 1,5·${nf(sig,0)}·${nf(Vmx,3)}²/2 = ${R(nf(Mp)+' kN·m/m')}${tagM(Mp)}`;
-  $('f52').innerHTML=`${G('1,5·σ<sub>adm</sub>·(L²/8 − V<sub>mín</sub>²/2)')} = 1,5·${nf(sig,0)}·(${nf(L)}²/8 − ${nf(Vmn,3)}²/2) = ${R(nf(Mn)+' kN·m/m')}${tagM(Mn)}`;
+  $('f51').innerHTML=`${G('1,5·σ<sub>adm</sub>·V<sub>máx</sub>²/2')} = 1,5·${nf(sig,0)}·${nf(Vmx,2)}²/2 = ${R(nf(Mp)+' kN·m/m')}${tagM(Mp)}`;
+  $('f52').innerHTML=`${G('1,5·σ<sub>adm</sub>·(L²/8 − V<sub>mín</sub>²/2)')} = 1,5·${nf(sig,0)}·(${nf(L)}²/8 − ${nf(Vmn,2)}²/2) = ${R(nf(Mn)+' kN·m/m')}${tagM(Mn)}`;
   $('f53').innerHTML=`${G('1,5·1,2·σ<sub>adm</sub>·b²/8')} = 1,5·1,2·${nf(sig,0)}·${nf(b)}²/8 = ${R(nf(Mt)+' kN·m/m')}${tagM(Mt)}`;
   $('f54').innerHTML=R(nf(Md)+' kN·m/m');
   $('t5').innerHTML=pill('info',nf(Md,1)+' kN·m/m');
@@ -350,7 +351,7 @@ function calc(){
   $('rmin').hidden=!useMin;
   $('f63').innerHTML=`${G('ρ·100·h')} = ${nf(rho*1000,1)}‰·100·${nf(h,0)} = ${R(nf(Asmin)+' cm²/m')}`;
   $('f64').innerHTML=R(nf(Asd)+' cm²/m')+' '+(useMin?(Asmin>As?pill('warn','manda la mínima'):pill('ok','manda el cálculo')):'');
-  $('t6').innerHTML=pill('info',nf(Asd)+' cm²/m y cara');
+  $('t6').innerHTML=pill('info',nf(Asd)+' cm²/m en cada cara');
   check('try6','c6',As,0.02);
   // 7
   const phi=v('phi'), Ab=Math.PI*Math.pow(phi/20,2);

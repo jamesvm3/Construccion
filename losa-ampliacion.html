@@ -265,6 +265,7 @@ footer ul{margin:6px 0 0;padding-left:18px}
     </div>
   </article>
 
+  <div style="margin-bottom:14px;padding:12px 14px;border:1px solid var(--warn);background:var(--warn-soft);border-radius:6px;font-size:13.5px;line-height:1.5"><b>Qué no comprueba esta herramienta.</b> El predimensionado usa la tensión admisible del terreno (σ<sub>adm</sub>) que tú introduces y no estudia asientos ni el bulbo de presiones. La σ<sub>adm</sub> debe proceder del estudio geotécnico y corresponder al ancho y a la profundidad de la cimentación calculada. Si hay estratos blandos bajo la zapata o zapatas próximas cuyos bulbos puedan solaparse, hay que comprobarlo aparte.</div>
   <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con la Guía de aplicación del Código Estructural y el DB SE-C. Tampoco sustituye al cálculo con un modelo de interacción suelo-estructura (DB SE-C, anejo E). No se comprueban:
     <ul>
       <li>asientos totales y diferenciales;</li>
@@ -415,7 +416,7 @@ function calc(){
         [[2,'2d (u<sub>1</sub>)'],[1.5,'1,5d'],[1,'d'],[0.5,'0,5d']].forEach(([f,lab])=>{
           const a=f*d,u=4*c+2*Math.PI*a,Ai=c*c+4*c*a+Math.PI*a*a,Vr=V-qn*Ai,ve=Vr/(u*d)/1000,res=vRdc*2*d/a,ok=ve<=res;
           if(f===2) vEd1=ve; allok=allok&&ok;
-          rows.push(`<tr><td>${lab}</td><td class="r">${nf(u,3)}</td><td class="r">${nf(Ai,3)}</td><td class="r">${nf(Vr,1)}</td><td class="r">${nf(ve,3)}</td><td class="r">${nf(res,3)}</td><td>${ok?pill('ok','cumple'):pill('bad','no cumple')}</td></tr>`);
+          rows.push(`<tr><td>${lab}</td><td class="r">${nf(u,2)}</td><td class="r">${nf(Ai,3)}</td><td class="r">${nf(Vr,1)}</td><td class="r">${nf(ve,3)}</td><td class="r">${nf(res,3)}</td><td>${ok?pill('ok','cumple'):pill('bad','no cumple')}</td></tr>`);
         });
         $('ptab').querySelector('tbody').innerHTML=rows.join('');
         punz=allok;

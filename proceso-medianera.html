@@ -188,7 +188,11 @@ var FAILS=[
 {k:"todas",s:"Años después se ven manchas de óxido en la base de la zapata y el hormigón se desconcha cerca de la armadura.",
  o:["La parrilla estaba apoyada en el terreno, sin separadores ni limpieza","El encofrado era de madera","El hormigón era HA-30","La viga tenía patillas"],a:0,
  cons:"Una armadura sin recubrimiento se corroe, aumenta de volumen y rompe el hormigón.",
- prev:"Pasos 2 y 4: hormigón de limpieza y parrilla sobre separadores adecuados."}
+ prev:"Pasos 2 y 4: hormigón de limpieza y parrilla sobre separadores adecuados."},
+{k:"todas",s:"Dos zapatas de un mismo edificio, muy próximas entre sí, asientan más que el resto, aunque la tensión en el terreno de cada una no supera la σadm.",
+ o:["Sus bulbos de presiones se solapan y el terreno trabaja como bajo una zapata más ancha", "El hormigón de limpieza era demasiado grueso", "Se usaron separadores de plástico rígido", "El curado fue demasiado largo"],a:0,
+ cons:"Asiento diferencial respecto a las demás zapatas: aparecen giros y esfuerzos no previstos en la estructura.",
+ prev:"En proyecto: comprobar si los bulbos se solapan y validar con el estudio geotécnico la σadm para el ancho del conjunto."}
 ];
 var EXAM=[
 {k:"todas",q:"¿Por qué una zapata de medianera o de esquina necesita viga centradora?",o:["Porque el pilar queda en el borde y la reacción del terreno en el centro, y la viga absorbe ese desequilibrio","Porque no lleva armadura","Para sustituir al hormigón de limpieza","Para evitar el curado"],a:0,e:"Sin ella, la zapata giraría por el momento del pilar excéntrico."},
@@ -204,7 +208,10 @@ var EXAM=[
 {k:"medianera",q:"En la zapata de medianera, ¿cómo se coloca el arranque del pilar respecto del centro de la zapata?",o:["Descentrado hacia el borde del linde","Exactamente en el centro","Fuera de la zapata","En la viga"],a:0,e:"Esa excentricidad es la que obliga a la viga centradora."},
 {k:"esquina",q:"¿Cuántas vigas centradoras lleva una zapata de esquina?",o:["Dos en ángulo recto hacia las zapatas contiguas, o una en diagonal","Ninguna","Cuatro","Siempre una"],a:0,e:"El desequilibrio se da en las dos direcciones."},
 {k:"esquina",q:"¿Dónde queda el arranque del pilar en una zapata de esquina?",o:["En el vértice, junto a los dos lindes","En el centro","Fuera de la parcela","En la viga"],a:0,e:"El desequilibrio se produce en las dos direcciones."},
-{k:"esquina",q:"¿Qué hay que proteger al excavar una esquina entre dos medianerías?",o:["Las dos medianerías, con tramos, entibación o las medidas del proyecto","Solo una","Ninguna","Solo la solera"],a:0,e:"Se pierde el apoyo lateral de dos edificios a la vez."}
+{k:"esquina",q:"¿Qué hay que proteger al excavar una esquina entre dos medianerías?",o:["Las dos medianerías, con tramos, entibación o las medidas del proyecto","Solo una","Ninguna","Solo la solera"],a:0,e:"Se pierde el apoyo lateral de dos edificios a la vez."},
+{k:"todas",q:"¿Qué es el bulbo de presiones de una zapata?",o:["La zona del terreno donde el incremento de presión vertical es al menos el 10 % de la presión de contacto", "El volumen de hormigón que trabaja a compresión bajo el pilar", "La zona de terreno que se excava alrededor de la zapata", "La capa de hormigón de limpieza"],a:0,e:"Así lo define el DB SE-C (E.4.2). Más allá del bulbo, el incremento de presión es pequeño y sus efectos suelen despreciarse."},
+{k:"todas",q:"En una zapata aislada, ¿hasta qué profundidad llega aproximadamente el bulbo de presiones?",o:["Hasta la cara inferior de la zapata", "Unas 2 veces el ancho de la zapata", "Siempre 1 m, sea cual sea la zapata", "Hasta el nivel freático"],a:1,e:"Según el DB SE-C (4.4.4), la zona de interés llega a unos 2B. Por eso una zapata más grande carga un volumen de terreno mayor."},
+{k:"todas",q:"Dos zapatas están tan próximas que sus bulbos se solapan. ¿Qué hay que hacer?",o:["Nada, cada zapata se comprueba por separado", "Comprobarlas, a efectos de asiento, como una cimentación del ancho total del conjunto", "Aumentar el canto de las dos zapatas", "Unirlas siempre con una viga centradora"],a:1,e:"DB SE-C (4.4.5 y E.4.2.8). El terreno trabaja como bajo una zapata más ancha: el bulbo llega más hondo y el asiento es mayor. Hay que comprobar con el estudio geotécnico que la σadm vale para ese ancho."}
 ];
 
 var $=function(s){return document.querySelector(s)};

@@ -240,6 +240,7 @@ footer ul{margin:6px 0 0;padding-left:18px}
 
   <div class="box" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px"><p style="margin:0;flex:1 1 240px;font-size:13.5px;color:var(--muted)">Ya sabes cuánto mide y cómo se arma. ¿Y cómo se construye? Repasa el proceso de ejecución paso a paso.</p><a href="proceso-losa.html" style="font:600 14px var(--sans);color:var(--panel);background:var(--bad);border:1px solid var(--bad);border-radius:4px;padding:9px 16px;text-decoration:none">Proceso constructivo</a></div>
 
+  <div style="margin-bottom:14px;padding:12px 14px;border:1px solid var(--warn);background:var(--warn-soft);border-radius:6px;font-size:13.5px;line-height:1.5"><b>Qué no comprueba esta herramienta.</b> El predimensionado usa la tensión admisible del terreno (σ<sub>adm</sub>) que tú introduces y no estudia asientos ni el bulbo de presiones. La σ<sub>adm</sub> debe proceder del estudio geotécnico y corresponder al ancho y a la profundidad de la cimentación calculada. Si hay estratos blandos bajo la zapata o zapatas próximas cuyos bulbos puedan solaparse, hay que comprobarlo aparte.</div>
   <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con la Guía de aplicación del Código Estructural y el DB SE-C. Tampoco sustituye al cálculo con un modelo de interacción suelo-estructura (DB SE-C, anejo E). Simplificaciones y lo que no se comprueba:
     <ul>
       <li>la rigidez de la estructura frente al terreno (K<sub>r</sub>, anejo E.2) la sustituye la lista del paso 0;</li>
@@ -336,7 +337,7 @@ function calc(){
   if(isFinite(qn)&&NkP>0&&c>0&&phi>0){
     const p=punz(h,NkP,c,rec,phi,qn,fck);
     if(p){
-      $('f26').innerHTML=`h = ${nf(h*100,0)} cm · ${G('d = h − r − Ø')} = ${nf(p.d*100,1)} cm · ${G('u<sub>1</sub> = 4·c + 4·π·d')} = ${nf(p.u,3)} m · ${G('A<sub>1</sub> = c² + 8·c·d + 4·π·d²')} = ${nf(p.A1,3)} m²<br>${G(fr('1,5·N<sub>k</sub> − q<sub>d,neta</sub>·A<sub>1</sub>','u<sub>1</sub>·d'))} = ${fr(`1,5·${nf(NkP,1)} − ${nf(qn)}·${nf(p.A1,3)}`,`${nf(p.u,3)}·${nf(p.d,3)}`)} = ${R(nf(p.ve,3)+' N/mm²')} ${p.ok?'≤':'>'} ${G('0,035·k<sup>3/2</sup>·√f<sub>ck</sub>')} = 0,035·${nf(p.k,3)}<sup>3/2</sup>·√${nf(fck,0)} = ${R(nf(p.vmin,3)+' N/mm²')}`+(p.ok?pill('ok','cumple'):pill('bad','no cumple'));
+      $('f26').innerHTML=`h = ${nf(h*100,0)} cm · ${G('d = h − r − Ø')} = ${nf(p.d*100,1)} cm · ${G('u<sub>1</sub> = 4·c + 4·π·d')} = ${nf(p.u,2)} m · ${G('A<sub>1</sub> = c² + 8·c·d + 4·π·d²')} = ${nf(p.A1,3)} m²<br>${G(fr('1,5·N<sub>k</sub> − q<sub>d,neta</sub>·A<sub>1</sub>','u<sub>1</sub>·d'))} = ${fr(`1,5·${nf(NkP,1)} − ${nf(qn)}·${nf(p.A1,3)}`,`${nf(p.u,2)}·${nf(p.d,3)}`)} = ${R(nf(p.ve,3)+' N/mm²')} ${p.ok?'≤':'>'} ${G('0,035·k<sup>3/2</sup>·√f<sub>ck</sub>')} = 0,035·${nf(p.k,3)}<sup>3/2</sup>·√${nf(fck,0)} = ${R(nf(p.vmin,3)+' N/mm²')}`+(p.ok?pill('ok','cumple'):pill('bad','no cumple'));
       check('try2b','c2b',p.ve,0.02);
     }
   }

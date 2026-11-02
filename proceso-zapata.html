@@ -159,7 +159,11 @@ var FAILS=[
 {s:"En un corte de la zapata, la parte inferior del hormigón aparece mezclada con barro y tierra.",
  o:["No se limpió el fondo ni se evitó la caída de tierras antes de hormigonar","Se usó vibrador","Los separadores eran de mortero","Se curó con agua"],a:0,
  cons:"El hormigón contaminado tiene menos resistencia y menos adherencia justo donde se apoya en el terreno y donde va la armadura principal.",
- prev:"Pasos 2, 3 y 6: fondo limpio, hormigón de limpieza y comprobación de que no hay agua ni restos antes de verter."}
+ prev:"Pasos 2, 3 y 6: fondo limpio, hormigón de limpieza y comprobación de que no hay agua ni restos antes de verter."},
+{s:"Dos zapatas de un mismo edificio, muy próximas entre sí, asientan más que el resto, aunque la tensión en el terreno de cada una no supera la σadm.",
+ o:["Sus bulbos de presiones se solapan y el terreno trabaja como bajo una zapata más ancha", "El hormigón de limpieza era demasiado grueso", "Se usaron separadores de plástico rígido", "El curado fue demasiado largo"],a:0,
+ cons:"Asiento diferencial respecto a las demás zapatas: aparecen giros y esfuerzos no previstos en la estructura.",
+ prev:"En proyecto: comprobar si los bulbos se solapan y validar con el estudio geotécnico la σadm para el ancho del conjunto."}
 ];
 
 var EXAM=[
@@ -174,7 +178,10 @@ var EXAM=[
 {q:"¿Qué defecto produce principalmente el vertido del hormigón desde gran altura?",o:["Retracción plástica","Segregación del hormigón","Corrosión por falta de limpieza","Asientos del terreno"],a:1,e:"Los áridos se separan de la pasta y aparecen coqueras."},
 {q:"El curado del hormigón consiste en:",o:["Esperar a que se seque rápidamente","Mantener la humedad y proteger del sol, viento y helada durante el endurecimiento","Vibrar de nuevo el hormigón","Aplicar carga cuanto antes"],a:1,e:"El agua es necesaria para la hidratación del cemento."},
 {q:"Antes de verter el hormigón de la zapata, el fondo debe:",o:["Estar encharcado para que no se pierda agua","Estar limpio, sin agua ni restos","Estar cubierto de barro","Estar helado"],a:1,e:"El barro o el agua en el fondo contaminan y debilitan el hormigón."},
-{q:"¿Qué se espera de un terreno encontrado en la excavación?",o:["Que coincida con el del estudio geotécnico, validado por la dirección facultativa","Que sea siempre arena","Que no se compruebe","Que sea más blando que el previsto"],a:0,e:"Si no coincide, hay que avisar a la dirección facultativa antes de continuar."}
+{q:"¿Qué se espera de un terreno encontrado en la excavación?",o:["Que coincida con el del estudio geotécnico, validado por la dirección facultativa","Que sea siempre arena","Que no se compruebe","Que sea más blando que el previsto"],a:0,e:"Si no coincide, hay que avisar a la dirección facultativa antes de continuar."},
+{q:"¿Qué es el bulbo de presiones de una zapata?",o:["La zona del terreno donde el incremento de presión vertical es al menos el 10 % de la presión de contacto", "El volumen de hormigón que trabaja a compresión bajo el pilar", "La zona de terreno que se excava alrededor de la zapata", "La capa de hormigón de limpieza"],a:0,e:"Así lo define el DB SE-C (E.4.2). Más allá del bulbo, el incremento de presión es pequeño y sus efectos suelen despreciarse."},
+{q:"En una zapata aislada, ¿hasta qué profundidad llega aproximadamente el bulbo de presiones?",o:["Hasta la cara inferior de la zapata", "Unas 2 veces el ancho de la zapata", "Siempre 1 m, sea cual sea la zapata", "Hasta el nivel freático"],a:1,e:"Según el DB SE-C (4.4.4), la zona de interés llega a unos 2B. Por eso una zapata más grande carga un volumen de terreno mayor."},
+{q:"Dos zapatas están tan próximas que sus bulbos se solapan. ¿Qué hay que hacer?",o:["Nada, cada zapata se comprueba por separado", "Comprobarlas, a efectos de asiento, como una cimentación del ancho total del conjunto", "Aumentar el canto de las dos zapatas", "Unirlas siempre con una viga centradora"],a:1,e:"DB SE-C (4.4.5 y E.4.2.8). El terreno trabaja como bajo una zapata más ancha: el bulbo llega más hondo y el asiento es mayor. Hay que comprobar con el estudio geotécnico que la σadm vale para ese ancho."}
 ];
 
 var $=function(s){return document.querySelector(s)};

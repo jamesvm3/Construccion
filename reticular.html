@@ -238,7 +238,7 @@ function calc(){
   if(!(q>0&&L>0&&c>0)){empty();return;}
   const hMute=L*100/24+3;
   const hS=up5(Math.max(L/25,0.30)), hIn=v('hDef'), h=hIn>0?hIn:hS;
-  $('f11').innerHTML=`${G('L/25 a L/20')} = ${R(nf(L/25,3)+' a '+nf(L/20,3)+' m')}`;
+  $('f11').innerHTML=`${G('L/25 a L/20')} = ${R(nf(L/25,2)+' a '+nf(L/20,2)+' m')}`;
   $('f12').innerHTML=`${G('h = L/24 + 3 cm')} = ${nf(L*100,0)}/24 + 3 = ${R(nf(hMute,1)+' cm')}`;
   $('sug1').textContent=`Sugerido: ${nf(hS)} m (L/25 redondeado, mínimo 30 cm)`;
   $('t1').innerHTML=(h>=L/25-1e-9)?pill('ok',`h = ${nf(h*100,0)} cm`):pill('warn','h < L/25');
@@ -274,7 +274,7 @@ function calc(){
   const vEd=Vr/(u1*d)/1000, ok1=vEd<=vmin;
   $('f51').innerHTML=`${G('V = 1,5·q·L²')} = 1,5·${nf(q)}·${nf(L)}² = ${R(nf(V,1)+' kN')} · d = h − 3 cm = ${nf(d,2)} m`;
   $('f52').innerHTML=`${G('β·V ≤ 4·c·d·0,3·f<sub>cd</sub>')} → ${nf(beta*V,1)} ≤ ${nf(V0lim,1)} kN `+(okC?pill('ok','cumple'):pill('bad','no cumple: más canto o capitel'));
-  $('f53').innerHTML=`u<sub>1</sub> = 4c + 4πd = ${nf(u1,3)} m · ${G('v = β·(V − 1,5·q·A<sub>1</sub>)/(u<sub>1</sub>·d)')} = ${R(nf(vEd,3)+' N/mm²')} ${ok1?'≤':'>'} v<sub>mín</sub> = ${nf(vmin,3)} `+(ok1?pill('ok','sin armadura'):pill('warn','necesita armadura de punzonamiento'));
+  $('f53').innerHTML=`u<sub>1</sub> = 4c + 4πd = ${nf(u1,2)} m · ${G('v = β·(V − 1,5·q·A<sub>1</sub>)/(u<sub>1</sub>·d)')} = ${R(nf(vEd,3)+' N/mm²')} ${ok1?'≤':'>'} v<sub>mín</sub> = ${nf(vmin,3)} `+(ok1?pill('ok','sin armadura'):pill('warn','necesita armadura de punzonamiento'));
   $('t5').innerHTML=okC&&ok1?pill('ok','Cumple'):(okC?pill('warn','Armar punzonamiento'):pill('bad','No cumple'));
   $('summary').innerHTML=`
     <div><span class="lab">Canto</span><span class="big">${nf(h*100,0)} cm</span></div>

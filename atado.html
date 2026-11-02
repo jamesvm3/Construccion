@@ -242,7 +242,7 @@ function calc(){
   // 1
   const Nk=Math.max(N1,N2), Nd=1.5*acg*Nk;
   $('f11').innerHTML=`${G('N<sub>k</sub> = máx(N<sub>k1</sub>, N<sub>k2</sub>)')} = máx(${nf(N1)}; ${nf(N2)}) = ${R(nf(Nk)+' kN')}`;
-  $('f12').innerHTML=`${G('N<sub>d</sub> = 1,5·g·N<sub>k</sub>')} = 1,5·${nf(acg,3)}·${nf(Nk)} = ${R(nf(Nd)+' kN')}`;
+  $('f12').innerHTML=`${G('N<sub>d</sub> = 1,5·g·N<sub>k</sub>')} = 1,5·${nf(acg,2)}·${nf(Nk)} = ${R(nf(Nd)+' kN')}`;
   $('t1').innerHTML=pill('info',nf(Nd,1)+' kN');
   // 2
   const fyd=fyk/1.15;
