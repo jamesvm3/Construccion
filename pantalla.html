@@ -1,0 +1,397 @@
+<!doctype html><html><head><meta charset=utf8>
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Muro pantalla C2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#eef0ee; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#cfd5d3;
+  --soft:#f5f7f6; --accent:#1f5f7a; --accent-soft:#e1edf2; --rebar:#b0392b;
+  --concrete:#d9dcd8; --concrete-edge:#8e9692;
+  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+    --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+    --concrete:#3a4446; --concrete-edge:#6e7b7d;
+    --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
+  --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
+  --concrete:#3a4446; --concrete-edge:#6e7b7d;
+  --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 60px}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--cond);font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance;letter-spacing:-.01em}
+.src{font-size:13px;color:var(--muted);max-width:44ch}
+.mode{display:flex;align-items:center;gap:10px;font-size:14px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:6px}
+.grid{display:grid;grid-template-columns:350px 1fr;gap:22px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;flex-direction:column;gap:14px}
+@media (max-width:860px){aside{position:static}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
+.box h2{font-family:var(--cond);font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--accent)}
+.field{display:grid;grid-template-columns:1fr 124px 46px;align-items:center;gap:8px;padding-block:5px;border-bottom:1px dashed var(--line)}
+.field:last-child{border-bottom:0}
+.field label{font-size:13.5px}
+.field .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
+input[type=number],select{width:100%;font-family:var(--mono);font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--soft);color:var(--ink);text-align:right}
+select{text-align:left}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+.helper{margin-top:10px;font-size:13px}
+.helper summary{cursor:pointer;color:var(--accent);font-weight:500}
+.helper .field{grid-template-columns:1fr 84px 46px}
+button{font-family:var(--sans);font-size:13px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:6px 12px;border-radius:4px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+.summary{background:var(--ink);color:var(--bg);border-radius:6px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:18px 32px;align-items:baseline}
+.summary .big{font-family:var(--cond);font-size:26px;font-weight:700;letter-spacing:.01em}
+.summary .lab{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;display:block}
+.drawing{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:620px){.drawing{grid-template-columns:1fr}}
+.drawing .box{padding:10px 12px}
+.drawing h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:500}
+svg{display:block;width:100%;height:auto}
+main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.step-h{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--soft)}
+.num{font-family:var(--mono);font-weight:600;font-size:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--accent);color:var(--accent);flex:none}
+.step-h h2{font-family:var(--cond);font-size:19px;margin:0;font-weight:700}
+.step-h .tag{margin-left:auto}
+.step-b{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.why{font-size:14px;color:var(--muted);max-width:70ch;margin:0}
+.calc{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 14px;align-items:baseline;padding:8px 10px;border-radius:4px;background:var(--soft)}
+@media (max-width:520px){.row{grid-template-columns:1fr}}
+.row .k{font-size:13.5px;font-weight:500}
+.f{font-family:var(--mono);font-size:13.5px;overflow-wrap:anywhere}
+.f .gen{color:var(--muted)}
+.f .res{color:var(--accent);font-weight:600}
+.f sub{font-size:.75em}
+.practice .res,.practice .sug,.practice .step-h .tag,.practice .summary,.practice .drawing svg,.practice .row .pill{filter:blur(7px);user-select:none}
+.try{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;border-top:1px dashed var(--line);padding-top:10px}
+.try input{width:110px}
+.pill{font-family:var(--mono);font-size:11.5px;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.info{background:var(--accent-soft);color:var(--accent)}
+.decide{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px;border:1.5px solid var(--accent);border-radius:4px;background:var(--accent-soft)}
+.decide label{font-weight:600;font-size:14px}
+.decide input,.decide select{width:110px}
+.decide .sug{font-size:13px;color:var(--muted)}
+.note{font-size:13px;border-left:3px solid var(--warn);padding:6px 10px;background:var(--warn-soft);color:var(--ink);border-radius:0 4px 4px 0}
+.note.extra{border-left-color:var(--accent);background:var(--accent-soft)}
+footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px}
+@media (prefers-reduced-motion:no-preference){.res,.pill{transition:filter .25s ease}}
+ </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="mute.css">
+<style>
+.opt-anc{display:contents}
+.vol .opt-anc{display:none}
+</style>
+</head><body>
+<div class="wrap">
+<a href="index.html#H" style="display:inline-flex;align-items:center;margin-bottom:14px;font:600 14px var(--sans);color:var(--panel);background:var(--ink);border:1px solid var(--ink);border-radius:6px;padding:6px 14px;text-decoration:none">← Menú de calculadoras</a>
+<header class="top mat-H">
+  <div>
+    <div class="mbadge">MP</div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Hormigón · Muros de contención</small>Muro pantalla</h1></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+    <label class="mode" for="practica"><input type="checkbox" id="practica"> Modo práctica: ocultar resultados</label>
+    <div class="hint" style="margin:0">Calcula tú, escribe tu resultado en cada paso y comprueba.</div>
+    <div class="src">Métodos de equilibrio límite del DB SE-C (anejo F.3.1): pantalla en voladizo y pantalla con un anclaje cerca de coronación («base libre»), con el empuje pasivo minorado por γ<sub>E</sub> = 0,6 (tabla 2.1).</div>
+  </div>
+</header>
+
+<div class="grid">
+<aside>
+  <div class="box">
+    <h2>Datos de partida</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"><button type="button" id="clear">Limpiar datos</button></div>
+    <div class="field"><label for="tipo">Tipo de pantalla</label><select id="tipo"><option value="anc" selected>Con un anclaje</option><option value="vol">En voladizo</option></select><span class="u"></span></div>
+    <div class="field"><label for="H">Profundidad de excavación H</label><input id="H" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="q">Sobrecarga en el trasdós q</label><input id="q" type="number" step="any"><span class="u">kN/m²</span></div>
+    <div class="field"><label for="gam">Peso específico del terreno γ</label><input id="gam" type="number" step="any"><span class="u">kN/m³</span></div>
+    <div class="field"><label for="phiT">Ángulo de rozamiento interno φ</label><input id="phiT" type="number" step="any"><span class="u">°</span></div>
+    <div class="field opt-anc"><label for="aA">Profundidad del anclaje desde coronación a</label><input id="aA" type="number" step="any"><span class="u">m</span></div>
+    <div class="field opt-anc"><label for="sA">Separación entre anclajes</label><input id="sA" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="fyk">Límite elástico acero f<sub>yk</sub></label><select id="fyk"><option value="400">400 (B400S)</option><option value="500" selected>500 (B500S)</option></select><span class="u">N/mm²</span></div>
+    <div class="field"><label for="fck">Hormigón f<sub>ck</sub></label><select id="fck"><option value="25">25 (HA-25)</option><option value="30" selected>30 (HA-30)</option></select><span class="u">N/mm²</span></div>
+    <p class="hint">Terreno homogéneo, sin cohesión y sin agua; terreno horizontal. Valores usuales: γ = 17 a 20 kN/m³ y φ = 25° a 35°. El anclaje suele ir a 1 m o 1,5 m de la coronación. Se calcula por metro de pantalla. «Limpiar datos» lo deja todo en blanco.</p>
+  </div>
+</aside>
+
+<main>
+  <section>
+    <div class="summary" id="summary"></div>
+    <div class="drawing">
+      <div class="box"><h3>Sección y empujes</h3><svg id="sec" viewBox="0 0 360 300" role="img" aria-label="Sección de la pantalla con los empujes activo y pasivo"></svg></div>
+      <div class="box"><h3>Momentos flectores</h3><svg id="mom" viewBox="0 0 360 300" role="img" aria-label="Ley de momentos flectores de la pantalla"></svg></div>
+    </div>
+  </section>
+
+  <article class="step" id="s1">
+    <div class="step-h"><span class="num">1</span><h2>Coeficientes de empuje</h2><span class="tag" id="t1"></span></div>
+    <div class="step-b">
+      <p class="why">En el trasdós el terreno empuja con su empuje activo, K<sub>a</sub> = (1 − sen φ)/(1 + sen φ). Por debajo del fondo de la excavación, el terreno del intradós resiste con el empuje pasivo, K<sub>p</sub> = (1 + sen φ)/(1 − sen φ). Movilizar todo el pasivo exigiría un movimiento excesivo de la pantalla, así que el DB SE-C solo cuenta una fracción: el pasivo se multiplica por γ<sub>E</sub> = 0,6. El empuje activo no puede tomarse menor que 0,25 veces la presión vertical. Se toma rozamiento nulo entre pantalla y terreno, del lado de la seguridad.</p>
+      <div class="calc">
+        <div class="row"><span class="k">K<sub>a</sub></span><span class="f" id="f11"></span></div>
+        <div class="row"><span class="k">K<sub>p</sub></span><span class="f" id="f12"></span></div>
+        <div class="row"><span class="k">Pasivo minorado</span><span class="f" id="f13"></span></div>
+      </div>
+      <div class="try"><span>Tu K<sub>a</sub>:</span><input type="number" step="any" id="try1" aria-label="Tu coeficiente de empuje activo"><span id="c1"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s2">
+    <div class="step-h"><span class="num">2</span><h2>Profundidad de empotramiento</h2><span class="tag" id="t2"></span></div>
+    <div class="step-b">
+      <p class="why" id="why2"></p>
+      <div class="calc">
+        <div class="row"><span class="k">Ecuación de equilibrio</span><span class="f" id="f21"></span></div>
+        <div class="row"><span class="k">t<sub>0</sub> estricto</span><span class="f" id="f22"></span></div>
+        <div class="row"><span class="k">Ficha y longitud total</span><span class="f" id="f23"></span></div>
+      </div>
+      <div class="note extra">La ecuación es de tercer grado en t<sub>0</sub>: a mano se resuelve por tanteo, probando valores hasta que los dos momentos se igualan. La calculadora la resuelve con precisión.</div>
+      <div class="try"><span>Tu t<sub>0</sub>:</span><input type="number" step="any" id="try2" aria-label="Tu profundidad estricta en metros"><span class="u">m</span><span id="c2"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s3">
+    <div class="step-h"><span class="num">3</span><h2>Fuerza del anclaje</h2><span class="tag" id="t3"></span></div>
+    <div class="step-b">
+      <p class="why">Con t<sub>0</sub> conocido, el equilibrio de fuerzas horizontales da la fuerza que tiene que hacer el anclaje: lo que empuja el terreno del trasdós menos lo que resiste el pasivo minorado. Se obtiene por metro de pantalla; cada anclaje recoge la de su separación.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Empuje activo total</span><span class="f" id="f31"></span></div>
+        <div class="row"><span class="k">Pasivo minorado</span><span class="f" id="f32"></span></div>
+        <div class="row"><span class="k">Fuerza del anclaje</span><span class="f" id="f33"></span></div>
+      </div>
+      <div class="try"><span>Tu F:</span><input type="number" step="any" id="try3" aria-label="Tu fuerza del anclaje en kN/m"><span class="u">kN/m</span><span id="c3"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s4">
+    <div class="step-h"><span class="num">4</span><h2>Momento flector máximo</h2><span class="tag" id="t4"></span></div>
+    <div class="step-b">
+      <p class="why">La pantalla trabaja como una viga vertical cargada por los empujes. El momento máximo está donde el cortante se anula: por debajo del fondo de la excavación en la pantalla en voladizo, y entre el anclaje y el fondo en la anclada. Se mayora con γ<sub>f</sub> = 1,5, como en el resto de muros del portal.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Cortante nulo</span><span class="f" id="f41"></span></div>
+        <div class="row"><span class="k">M<sub>k</sub> máximo</span><span class="f" id="f42"></span></div>
+        <div class="row"><span class="k">M<sub>d</sub></span><span class="f" id="f43"></span></div>
+      </div>
+      <div class="try"><span>Tu M<sub>d</sub>:</span><input type="number" step="any" id="try4" aria-label="Tu momento de cálculo en kN·m/m"><span class="u">kN·m/m</span><span id="c4"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s5">
+    <div class="step-h"><span class="num">5</span><h2>Espesor de la pantalla</h2><span class="tag" id="t5"></span></div>
+    <div class="step-b">
+      <p class="why">Las pantallas se excavan con cucharas de anchos fijos: 45, 60, 80 y 100 cm. Se elige el menor espesor para el que el momento reducido μ = M<sub>d</sub>/(f<sub>cd</sub>·b·d²) no pasa de 0,25, para no tener una sección con demasiada armadura. El canto útil descuenta 7 cm de recubrimiento, porque se hormigona contra el terreno.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Momento reducido</span><span class="f" id="f51"></span></div>
+      </div>
+      <div class="decide"><label for="eDef">Espesor e</label><select id="eDef"><option value="">auto</option><option value="0.45">45 cm</option><option value="0.6">60 cm</option><option value="0.8">80 cm</option><option value="1">100 cm</option></select><span class="sug" id="sug5"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s6">
+    <div class="step-h"><span class="num">6</span><h2>Armadura vertical</h2><span class="tag" id="t6"></span></div>
+    <div class="step-b">
+      <p class="why">La armadura principal es vertical y va en la cara traccionada: en el voladizo, la del trasdós; en la anclada, el momento máximo tracciona el intradós (la cara de la excavación). Se usa la expresión simplificada de los demás muros, A<sub>s</sub> = M<sub>d</sub>·10/(0,8·e·f<sub>yd</sub>), con e en m.</p>
+      <div class="calc">
+        <div class="row"><span class="k">A<sub>s</sub> necesaria</span><span class="f" id="f61"></span></div>
+        <div class="row"><span class="k">A<sub>s</sub> mínima por cara</span><span class="f" id="f62"></span></div>
+      </div>
+      <div class="decide"><label for="phiV">Ø vertical</label><select id="phiV"><option>16</option><option selected>20</option><option>25</option></select><span class="u">mm</span></div>
+      <div class="calc"><div class="row"><span class="k">Redondos por metro</span><span class="f" id="f63"></span></div></div>
+      <div class="note extra">La armadura se monta en jaulas que se bajan dentro del panel lleno de lodo: las barras deben dejar hueco para que el hormigón fluya (separación libre amplia). La otra cara lleva al menos la mínima.</div>
+      <div class="try"><span>Tu A<sub>s</sub>:</span><input type="number" step="any" id="try6" aria-label="Tu armadura en cm² por metro"><span class="u">cm²/m</span><span id="c6"></span></div>
+    </div>
+  </article>
+
+  <div class="box" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px"><p style="margin:0;flex:1 1 240px;font-size:13.5px;color:var(--muted)">Ya sabes cuánto se empotra y cómo se arma la pantalla. ¿Y cómo se construye? Repasa el proceso de ejecución paso a paso.</p><a href="proceso-pantalla.html" style="font:600 14px var(--sans);color:var(--panel);background:var(--bad);border:1px solid var(--bad);border-radius:4px;padding:9px 16px;text-decoration:none">Proceso constructivo</a></div>
+  <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimiento según el DB SE-C (anejo F.3.1, métodos de equilibrio límite), con la Guía de aplicación del Código Estructural. Terreno homogéneo sin cohesión, sin agua y sin edificios próximos; con nivel freático, varios anclajes o vecinos sensibles a los movimientos hacen falta los modelos de Winkler o de elementos finitos del propio anejo. Unidades: kN, m, cm, mm y N/mm². Errores o sugerencias: <a href="mailto:jaimevergara@ugr.es">jaimevergara@ugr.es</a>. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</main>
+</div>
+</div>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const nf=(x,d=2)=>isFinite(x)?x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const v=id=>parseFloat($(id).value);
+const R=s=>`<span class="res">${s}</span>`;
+const G=s=>`<span class="gen">${s}</span>`;
+const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+function check(tryId,outId,val,tol){
+  const t=parseFloat(String($(tryId).value).replace(',','.'));
+  if(!isFinite(t)||!isFinite(val)){$(outId).innerHTML='';return;}
+  const ok=Math.abs(t-val)<=Math.max(Math.abs(val)*tol,1e-9);
+  $(outId).innerHTML=ok?pill('ok','Correcto'):pill('bad','Revisa: no coincide');
+}
+const OUT=['f11','f12','f13','f21','f22','f23','f31','f32','f33','f41','f42','f43','f51','f61','f62','f63','t1','t2','t3','t4','t5','t6','c1','c2','c3','c4','c6'];
+function empty(){
+  OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
+  $('sug5').textContent='';
+  $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce H, q, γ y φ'+(tipo()==='anc'?' y la profundidad del anclaje':'')+'</span></div>';
+  $('sec').innerHTML='';$('mom').innerHTML='';
+}
+const tipo=()=>$('tipo').value;
+function solve(f,lo,hi){let flo=f(lo);for(let i=0;i<200;i++){const m=(lo+hi)/2,fm=f(m);if(flo*fm<=0)hi=m;else{lo=m;flo=fm;}}return (lo+hi)/2;}
+let LAST=null;
+
+function calc(){
+  document.querySelector('.wrap').classList.toggle('vol',tipo()==='vol');
+  const H=v('H'),q=v('q'),gam=v('gam'),phiD=v('phiT'),fyk=v('fyk'),fck=v('fck');
+  const anc=tipo()==='anc', a=v('aA'), sA=v('sA')>0?v('sA'):NaN;
+  if(!(H>0&&q>=0&&gam>0&&phiD>0&&phiD<50)||(anc&&!(a>=0&&a<H))){empty();return;}
+  const phi=phiD*Math.PI/180, KaR=(1-Math.sin(phi))/(1+Math.sin(phi)), Ka=Math.max(KaR,0.25), Kp=1/KaR, Kpm=0.6*Kp;
+  // 1
+  $('f11').innerHTML=`${G('K<sub>a</sub> = (1 − sen φ)/(1 + sen φ)')} = ${R(nf(KaR,3))}`+(KaR<0.25?` → mínimo 0,25 ${pill('info','σ<sub>h</sub> ≥ 0,25·σ′<sub>v</sub>')}`:'');
+  $('f12').innerHTML=`${G('K<sub>p</sub> = (1 + sen φ)/(1 − sen φ)')} = ${R(nf(Kp,3))}`;
+  $('f13').innerHTML=`${G('0,6·K<sub>p</sub>')} = 0,6·${nf(Kp,3)} = ${R(nf(Kpm,3))}`;
+  $('t1').innerHTML=pill('info',`K<sub>a</sub> ${nf(Ka,3)} · 0,6K<sub>p</sub> ${nf(Kpm,2)}`);
+  check('try1','c1',Ka,0.02);
+  // 2 — profundidad estricta t0
+  let t0,F=NaN,Ma,Mp;
+  if(!anc){
+    const f=t=>Ka*(gam*(H+t)**3/6+q*(H+t)**2/2)-Kpm*gam*t**3/6;
+    t0=solve(f,1e-4,20*H+20);
+    Ma=Ka*(gam*(H+t0)**3/6+q*(H+t0)**2/2); Mp=Kpm*gam*t0**3/6;
+    $('why2').innerHTML='En voladizo la pantalla gira alrededor de un punto P situado por debajo del fondo. Por encima de P actúan el empuje activo del trasdós, en toda la altura H + t<sub>0</sub>, y el pasivo minorado del intradós, en la profundidad t<sub>0</sub>. Anulando los momentos respecto a P se obtiene t<sub>0</sub>. Por debajo de P hace falta una longitud más para desarrollar la reacción que equilibra la pantalla: el DB SE-C toma 0,2·t<sub>0</sub> (F.62).';
+    $('f21').innerHTML=`${G('K<sub>a</sub>·[γ·(H+t<sub>0</sub>)³/6 + q·(H+t<sub>0</sub>)²/2] = 0,6·K<sub>p</sub>·γ·t<sub>0</sub>³/6')}`;
+  } else {
+    const f=t=>{const L=H+t;return Ka*(gam*(L**3/3-a*L**2/2)+q*(L**2/2-a*L))-Kpm*gam*((H-a)*t*t/2+t**3/3);};
+    t0=solve(f,1e-4,20*H+20);
+    const L=H+t0; Ma=Ka*(gam*(L**3/3-a*L**2/2)+q*(L**2/2-a*L)); Mp=Kpm*gam*((H-a)*t0*t0/2+t0**3/3);
+    F=Ka*(gam*L*L/2+q*L)-Kpm*gam*t0*t0/2;
+    $('why2').innerHTML='Con un anclaje cerca de la coronación, el método de «base libre» supone que toda la parte empotrada se mueve hacia la excavación. Hay dos incógnitas, la fuerza del anclaje F y la profundidad t<sub>0</sub>. Tomando momentos respecto al anclaje, F desaparece y queda una ecuación solo en t<sub>0</sub>: el momento del empuje activo debe igualar al del pasivo minorado. A la profundidad estricta se le suma un 20 % (DB SE-C, F.63).';
+    $('f21').innerHTML=`${G('M<sub>A</sub>(activo) = M<sub>A</sub>(pasivo minorado)')}, momentos respecto al anclaje (a = ${nf(a)} m)`;
+  }
+  const ficha=1.2*t0, Ltot=H+ficha;
+  $('f22').innerHTML=`${R(nf(t0)+' m')} · momentos: ${nf(Ma,1)} = ${nf(Mp,1)} kN·m/m`;
+  $('f23').innerHTML=`${G('ficha = 1,2·t<sub>0</sub>')} = ${R(nf(ficha)+' m')} · longitud total H + ficha = ${R(nf(Ltot)+' m')} (ficha/H = ${nf(ficha/H)})`;
+  $('t2').innerHTML=pill('info',`ficha ${nf(ficha)} m`);
+  check('try2','c2',t0,0.03);
+  // 3
+  const L0=H+t0, Pa=Ka*(gam*L0*L0/2+q*L0), Pp=Kpm*gam*t0*t0/2;
+  if(anc){
+    $('f31').innerHTML=`${G('K<sub>a</sub>·[γ·(H+t<sub>0</sub>)²/2 + q·(H+t<sub>0</sub>)]')} = ${R(nf(Pa,1)+' kN/m')}`;
+    $('f32').innerHTML=`${G('0,6·K<sub>p</sub>·γ·t<sub>0</sub>²/2')} = ${R(nf(Pp,1)+' kN/m')}`;
+    $('f33').innerHTML=`${G('F = activo − pasivo')} = ${R(nf(F,1)+' kN/m')}`+(isFinite(sA)?` · con anclajes cada ${nf(sA)} m: ${R(nf(F*sA,0)+' kN por anclaje')}`:'');
+    $('t3').innerHTML=pill('info',`F = ${nf(F,0)} kN/m`);
+    check('try3','c3',F,0.03);
+  } else {
+    ['f31','f32','f33'].forEach(id=>$(id).innerHTML=G('No aplica: la pantalla en voladizo no lleva anclaje'));
+    $('t3').innerHTML=pill('info','no aplica'); $('c3').innerHTML='';
+  }
+  // 4 — leyes de cortante y momento (z desde coronación, positivo hacia abajo; carga hacia la excavación positiva)
+  const N=600, zs=[], Ms=[]; let Vprev=0,M=0, zMax=0, Mmax=0;
+  const p=z=>Ka*(gam*z+q)-(z>H?Kpm*gam*(z-H):0);
+  const dz=L0/N;
+  let V=0; M=0;
+  for(let i=0;i<=N;i++){
+    const z=i*dz;
+    if(i>0){const pm=p(z-dz/2); M+=V*dz+pm*dz*dz/2; V+=pm*dz;}
+    if(anc&&z>=a&&z-dz<a&&i>0){V-=F; M-=F*(z-a);}
+    zs.push(z); Ms.push(M);
+    if(Math.abs(M)>Math.abs(Mmax)){Mmax=M;zMax=z;}
+  }
+  const Mk=Math.abs(Mmax), Md=1.5*Mk;
+  $('f41').innerHTML=`a ${R(nf(zMax)+' m')} de la coronación`+(zMax>H?' (por debajo del fondo)':' (por encima del fondo)');
+  $('f42').innerHTML=`${R(nf(Mk,1)+' kN·m/m')}`;
+  $('f43').innerHTML=`${G('1,5·M<sub>k</sub>')} = 1,5·${nf(Mk,1)} = ${R(nf(Md,1)+' kN·m/m')}`;
+  $('t4').innerHTML=pill('info',`M<sub>d</sub> ${nf(Md,0)} kN·m/m`);
+  check('try4','c4',Md,0.03);
+  // 5 — espesor
+  const fcd=fck/1.5*1000, ES=[0.45,0.6,0.8,1.0], mu=e=>Md/(fcd*1*(e-0.07)**2);
+  let eS=ES.find(e=>mu(e)<=0.25); const tooBig=!eS; if(!eS) eS=1.0;
+  const eIn=parseFloat($('eDef').value), e=eIn>0?eIn:eS, d=e-0.07, m5=mu(e);
+  $('f51').innerHTML=`${G('μ = M<sub>d</sub>/(f<sub>cd</sub>·b·d²)')} = ${nf(Md,1)}/(${nf(fcd/1000,1)}·10³·1·${nf(d)}²) = ${R(nf(m5,3))} `+(m5<=0.25?pill('ok','≤ 0,25'):pill('bad','> 0,25: más espesor'));
+  $('sug5').textContent=tooBig?'Ni con 100 cm baja de 0,25: añade otro nivel de anclaje o revisa los datos':`Sugerido: ${nf(eS*100,0)} cm (el menor que cumple)`;
+  $('t5').innerHTML=m5<=0.25?pill('ok',`e = ${nf(e*100,0)} cm`):pill('bad',`e = ${nf(e*100,0)} cm insuficiente`);
+  // 6 — armadura
+  const fyd=fyk/1.15, As=Md*10/(0.8*e*fyd), rv=fyk>=500?0.0009:0.0012, Asmin=rv*100*e*100/2, Asd=Math.max(As,Asmin);
+  const cara=anc?'intradós (cara de la excavación)':'trasdós (cara de las tierras)';
+  $('f61').innerHTML=`${G('M<sub>d</sub>·10/(0,8·e·f<sub>yd</sub>)')} = ${nf(Md,1)}·10/(0,8·${nf(e)}·${nf(fyd)}) = ${R(nf(As)+' cm²/m')} en el ${cara}`;
+  $('f62').innerHTML=`${G('½·ρ·100·e')} = ½·${nf(rv*1000,1)} ‰·100·${nf(e*100,0)} = ${nf(Asmin)} cm²/m`;
+  const phiV=v('phiV'), Ab=Math.PI*(phiV/20)**2, nb=Math.max(4,Math.ceil(Asd/Ab-1e-9)), sv=Math.floor(100/nb);
+  $('f63').innerHTML=`${G('A<sub>s</sub>/A<sub>Ø</sub>')} = ${nf(Asd)}/${nf(Ab,3)} = ${nf(Asd/Ab)} → ${R(nb+' Ø'+phiV+' /m (c/'+sv+' cm)')} `+(sv<10?pill('warn','muy juntas: sube el Ø o el espesor'):'');
+  $('t6').innerHTML=pill('info',`Ø${phiV} c/${sv}`);
+  check('try6','c6',As,0.03);
+  // resumen
+  $('summary').innerHTML=`
+    <div><span class="lab">Pantalla</span><span class="big">${anc?'Anclada':'En voladizo'} · e ${nf(e*100,0)} cm</span></div>
+    <div><span class="lab">Ficha · longitud total</span><span class="big">${nf(ficha)} · ${nf(Ltot)} m</span></div>
+    ${anc?`<div><span class="lab">Anclaje</span><span class="big">${nf(F,0)} kN/m</span></div>`:''}
+    <div><span class="lab">Armadura vertical</span><span class="big">Ø${phiV} c/${sv}</span></div>`;
+  draw({H,a,anc,t0,ficha,Ltot,Ka,Kpm,gam,q,F,zs,Ms,Mmax,zMax,e});
+}
+
+function draw(o){
+  const F_='font-family="IBM Plex Mono,monospace"';
+  const T=(x,y,t,c,an,s)=>`<text x="${x}" y="${y}" ${F_} font-size="${s||10}" fill="${c||'var(--muted)'}" text-anchor="${an||'start'}">${t}</text>`;
+  // ---- Sección y empujes
+  const top=34, sc=236/o.Ltot, X0=170, Y=z=>top+z*sc, ew=Math.max(7,o.e*sc);
+  let g='';
+  g+=`<rect x="${X0}" y="${Y(0)}" width="${360-X0-8}" height="${o.Ltot*sc+6}" fill="var(--soil,#e8dcc3)" opacity=".55"/>`;
+  g+=`<rect x="8" y="${Y(o.H)}" width="${X0-8}" height="${(o.Ltot-o.H)*sc+6}" fill="var(--soil,#e8dcc3)" opacity=".55"/>`;
+  if(o.q>0){g+=`<line x1="${X0+ew/2+6}" y1="${Y(0)-10}" x2="350" y2="${Y(0)-10}" stroke="var(--muted)" stroke-dasharray="4 3"/>`+T(X0+ew/2+8,Y(0)-14,'q');}
+  // empuje activo (trasdós) hacia la izquierda dibujado a la derecha
+  const pa=z=>o.Ka*(o.gam*z+o.q), pp=y=>o.Kpm*o.gam*y, pmax=Math.max(pa(o.H+o.t0),pp(o.t0)), ks=110/pmax;
+  g+=`<polygon points="${X0+ew/2},${Y(0)} ${X0+ew/2+pa(0)*ks},${Y(0)} ${X0+ew/2+pa(o.H+o.t0)*ks},${Y(o.H+o.t0)} ${X0+ew/2},${Y(o.H+o.t0)}" fill="var(--accent)" fill-opacity=".18" stroke="var(--accent)"/>`;
+  g+=T(X0+ew/2+pa(o.H*0.5)*ks+4,Y(o.H*0.5),'activo','var(--accent)');
+  g+=`<polygon points="${X0-ew/2},${Y(o.H)} ${X0-ew/2-pp(o.t0)*ks},${Y(o.H+o.t0)} ${X0-ew/2},${Y(o.H+o.t0)}" fill="var(--ok)" fill-opacity=".2" stroke="var(--ok)"/>`;
+  g+=T(X0-ew/2-5,Y(o.H+o.t0*0.62),'pasivo × 0,6','var(--ok)','end');
+  g+=`<rect x="${X0-ew/2}" y="${Y(0)}" width="${ew}" height="${o.Ltot*sc}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/>`;
+  if(o.anc){const ya=Y(o.a);g+=`<line x1="${X0+ew/2}" y1="${ya}" x2="${X0+ew/2+70}" y2="${ya+30}" stroke="var(--ink)" stroke-width="1.8"/><ellipse cx="${X0+ew/2+78}" cy="${ya+33}" rx="10" ry="4" transform="rotate(23 ${X0+ew/2+78} ${ya+33})" fill="var(--concrete)" stroke="var(--concrete-edge)"/>`+T(X0+ew/2+92,ya+46,'F','var(--ink)');}
+  // cotas
+  const dim=(x,z1,z2,t)=>`<g stroke="var(--muted)"><line x1="${x}" y1="${Y(z1)}" x2="${x}" y2="${Y(z2)}"/><line x1="${x-4}" y1="${Y(z1)}" x2="${x+4}" y2="${Y(z1)}"/><line x1="${x-4}" y1="${Y(z2)}" x2="${x+4}" y2="${Y(z2)}"/></g>`+T(x-6,(Y(z1)+Y(z2))/2+4,t,'var(--muted)','end');
+  g+=dim(52,0,o.H,'H')+dim(52,o.H,o.Ltot,'ficha');
+  g+=`<line x1="8" y1="${Y(o.H)}" x2="${X0-ew/2}" y2="${Y(o.H)}" stroke="var(--soil-edge,#a8977a)" stroke-width="1.5"/>`;
+  g+=T(X0-ew/2-6,Y(o.H)-6,'fondo','var(--muted)','end');
+  g+=`<line x1="${X0-ew/2-6}" y1="${Y(o.H+o.t0)}" x2="${X0+ew/2+6}" y2="${Y(o.H+o.t0)}" stroke="var(--ink)" stroke-dasharray="3 2"/>`+T(X0+ew/2+8,Y(o.H+o.t0)+4,'t₀','var(--ink)');
+  $('sec').setAttribute('viewBox',`0 0 360 ${Math.ceil(Y(o.Ltot)+16)}`); $('sec').innerHTML=g;
+  // ---- Momentos
+  const Mabs=Math.max(...o.Ms.map(Math.abs))||1, mx=120/Mabs, Xm=180, Ym=z=>top+z*(236/(o.H+o.t0));
+  let m=`<line x1="${Xm}" y1="${Ym(0)}" x2="${Xm}" y2="${Ym(o.H+o.t0)}" stroke="var(--ink)" stroke-width="2"/>`;
+  m+=`<line x1="40" y1="${Ym(o.H)}" x2="320" y2="${Ym(o.H)}" stroke="var(--soil-edge,#a8977a)" stroke-dasharray="5 4"/>`+T(44,Ym(o.H)-4,'fondo','var(--muted)','start');
+  const pts=o.zs.map((z,i)=>`${(Xm-o.Ms[i]*mx).toFixed(1)},${Ym(z).toFixed(1)}`).join(' ');
+  m+=`<polygon points="${Xm},${Ym(0)} ${pts} ${Xm},${Ym(o.H+o.t0)}" fill="var(--accent)" fill-opacity=".16" stroke="var(--accent)" stroke-width="1.6"/>`;
+  const xM=Xm-o.Mmax*mx;
+  m+=`<circle cx="${xM}" cy="${Ym(o.zMax)}" r="3.5" fill="var(--rebar)"/>`+T(xM+8,Ym(o.zMax)+4,`Mk = ${nf(Math.abs(o.Mmax),1)}`,'var(--rebar)','start',11);
+  if(o.anc) m+=`<line x1="${Xm}" y1="${Ym(o.a)}" x2="${Xm+40}" y2="${Ym(o.a)}" stroke="var(--ink)" stroke-width="1.5"/><polygon points="${Xm+2},${Ym(o.a)} ${Xm+9},${Ym(o.a)-4} ${Xm+9},${Ym(o.a)+4}" fill="var(--ink)"/>`+T(Xm+44,Ym(o.a)+4,'anclaje','var(--ink)');
+  m+=T(Xm,Ym(o.H+o.t0)+16,'hasta t₀ · kN·m/m','var(--muted)','middle');
+  $('mom').setAttribute('viewBox',`0 0 360 ${Math.ceil(Ym(o.H+o.t0)+24)}`); $('mom').innerHTML=m;
+}
+
+$('clear').addEventListener('click',()=>{
+  ['H','q','gam','phiT','aA','sA','try1','try2','try3','try4','try6'].forEach(id=>{$(id).value='';});
+  $('eDef').value='';$('fyk').value='500';$('fck').value='30';$('phiV').value='20';$('tipo').value='anc';
+  calc();$('H').focus();
+});
+function practice(){document.querySelector('.wrap').classList.toggle('practice',$('practica').checked);}
+$('practica').addEventListener('change',practice);
+document.querySelectorAll('input,select').forEach(el=>{if(el.id!=='practica')el.addEventListener('input',calc);});
+calc();
+})();
+</script>
+
+<script src="pdf.js"></script>
+</body></html>
