@@ -1,8 +1,9 @@
 /* Guardar el ejercicio en PDF.
    Se carga al final de cada calculadora. Añade un botón antes del pie, captura la página
    bloque a bloque (cabecera, datos, resumen, dibujos y cada paso) con html2canvas, la monta en
-   A4 con jsPDF y la ofrece al alumno con la capacidad «downloads» del portal; si no está
-   disponible, usa una descarga normal del navegador. */
+   A4 con jsPDF y la ofrece al alumno con la capacidad «downloads» del portal. Dentro de Claude nunca
+   descarga directamente (el marco no lo permite y se perderían los datos); fuera de Claude
+   (versión web) usa la descarga normal del navegador. */
 (function () {
   'use strict';
   const LIBS = [
@@ -32,15 +33,48 @@
   bar.innerHTML = '<p>Guarda tu predimensionado con los datos, todos los pasos y los dibujos en un PDF para consultarlo o entregarlo.</p>' +
     '<button type="button" id="pdfbtn">Guardar el ejercicio en PDF</button><p class="msg" id="pdfmsg" role="status"></p>';
   footer.parentNode.insertBefore(bar, footer);
+  /* Conserva los datos escritos durante la sesión de esta pestaña: si la página se recarga,
+     se recuperan. Se borran al cerrar la pestaña y con «Limpiar datos». */
+  const KEY = 'predim:' + location.pathname;
+  const fields = () => Array.from(document.querySelectorAll('input[id],select[id]')).filter(el => el.id !== 'practica' && el.type !== 'file');
+  function store() {
+    try { const o = {}; fields().forEach(el => { o[el.id] = el.type === 'checkbox' ? (el.checked ? '1' : '0') : el.value; }); sessionStorage.setItem(KEY, JSON.stringify(o)); } catch (e) { /* sin almacenamiento */ }
+  }
+  (function restore() {
+    let o = null; try { o = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) { o = null; }
+    if (!o) return;
+    let any = false;
+    fields().forEach(el => { if (!(el.id in o)) return; if (el.type === 'checkbox') el.checked = o[el.id] === '1'; else el.value = o[el.id]; any = true; });
+    if (any) { const el = fields().find(x => x.value !== '') || fields()[0]; if (el) el.dispatchEvent(new Event('input', { bubbles: true })); fields().forEach(x => x.dispatchEvent(new Event('change', { bubbles: true }))); }
+  })();
+  document.addEventListener('input', store, true);
+  document.addEventListener('change', store, true);
+  const clr = document.getElementById('clear');
+  if (clr) clr.addEventListener('click', () => { setTimeout(() => { try { sessionStorage.removeItem(KEY); } catch (e) {} }, 0); });
+
   const btn = bar.querySelector('#pdfbtn'), msg = bar.querySelector('#pdfmsg');
   const say = (t, bad) => { msg.textContent = t; msg.className = 'msg' + (bad ? ' bad' : ''); };
 
-  let downloads = null;
-  try {
-    if (window.claude && typeof window.claude.use === 'function') {
-      window.claude.use('downloads').then(d => { downloads = d; }).catch(() => {});
+  /* Dirección de la versión web del portal (GitHub Pages). Si se rellena, se ofrece cuando
+     la descarga no está permitida dentro de Claude (alumnos fuera de la organización). */
+  const WEB_URL = '';
+  let inFrame = false; try { inFrame = window.top !== window.self; } catch (e) { inFrame = true; }
+  const IN_CLAUDE = inFrame || !!window.claude;
+  let dlPromise = null;
+  function getDownloads() {
+    if (!dlPromise) {
+      dlPromise = (window.claude && typeof window.claude.use === 'function')
+        ? Promise.resolve(window.claude.use('downloads')).catch(() => null)
+        : Promise.resolve(null);
     }
-  } catch (e) { /* sin capacidad: descarga del navegador */ }
+    return dlPromise;
+  }
+  getDownloads();
+  function noDownload() {
+    const link = WEB_URL ? ' Para guardarlo en PDF, abre <a href="' + WEB_URL + location.pathname.replace(/^.*\//, '') + '" target="_blank" rel="noopener">la versión web del portal</a> y repite el cálculo allí.' : ' Para guardarlo, usa la versión web del portal o haz una captura de pantalla.';
+    msg.innerHTML = 'Desde esta vista no se puede descargar el PDF: las descargas solo están permitidas a los miembros de la organización. Tus datos siguen aquí.' + link;
+    msg.className = 'msg bad';
+  }
 
   function load(src) {
     return new Promise((ok, ko) => {
@@ -136,19 +170,23 @@
     let out;
     try { out = await makePdf(); }
     catch (e) { btn.disabled = false; say('No se ha podido generar el PDF. Comprueba la conexión y vuelve a intentarlo.', true); return; }
+    const downloads = await getDownloads();
     try {
       if (downloads) {
         await downloads.save({ filename: out.name, data: out.blob });
         say('PDF guardado: ' + out.name);
-      } else {
+      } else if (!IN_CLAUDE) {
         browserSave(out.blob, out.name);
         say('PDF generado: ' + out.name);
+      } else {
+        noDownload();
       }
     } catch (e) {
       const c = e && e.code;
       if (c === 'declined') say('Guardado cancelado.');
       else if (c === 'rate_limited') say('Ya hay una descarga pendiente de confirmar.', true);
-      else { try { browserSave(out.blob, out.name); say('PDF generado: ' + out.name); } catch (e2) { say('No se ha podido guardar el PDF en este navegador.', true); } }
+      else if (!IN_CLAUDE) { try { browserSave(out.blob, out.name); say('PDF generado: ' + out.name); } catch (e2) { say('No se ha podido guardar el PDF en este navegador.', true); } }
+      else noDownload();
     }
     btn.disabled = false;
   });
