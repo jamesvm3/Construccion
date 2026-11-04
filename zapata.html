@@ -206,7 +206,7 @@ details.extra-step .in2 input{width:90px}
         <div class="row"><span class="k">Tensión en el terreno</span><span class="f" id="f62"></span></div>
         <div class="row"><span class="k">Peso frente al axil</span><span class="f" id="f63"></span></div>
       </div>
-      <div class="note extra">El peso propio cuenta para el terreno, pero no para el armado: baja directamente al suelo y no flexiona la zapata. Por eso los pasos 4 a 7 no lo usan. Si hay tierras o solera sobre la zapata, su peso se sumaría aquí.</div>
+      <div class="note extra">El peso propio cuenta para el terreno, pero no para el armado: baja directamente al suelo y no flexiona la zapata. Por eso los pasos 4 a 6 no lo usan. Si hay tierras o solera sobre la zapata, su peso se sumaría aquí.</div>
       <div class="try"><span>Tu tensión en el terreno:</span><input type="number" step="any" id="try6" aria-label="Tu tensión en kN/m²"><span class="u">kN/m²</span><span id="c6"></span></div>
     </div>
   </article>
@@ -237,8 +237,55 @@ details.extra-step .in2 input{width:90px}
     </div>
   </article>
 
-  <article class="step" id="s9">
-    <div class="step-h"><span class="num">6</span><h2>Comparación: bielas y tirantes</h2><span class="tag" id="t9"></span></div>
+  <article class="step" id="s5">
+    <div class="step-h"><span class="num">6</span><h2>Número de redondos</h2><span class="tag" id="t5"></span></div>
+    <div class="step-b">
+      <p class="why">Se elige un diámetro, se calcula cuántas barras cubren A<sub>s</sub> y se redondea hacia arriba. La misma armadura se dispone en las dos direcciones, en la cara inferior y con patilla en los extremos.</p>
+      <div class="decide"><label for="phi">Diámetro Ø</label><select id="phi"><option>12</option><option>16</option><option>20</option><option>25</option></select><span class="u">mm</span></div>
+      <div class="calc">
+        <div class="row"><span class="k">Área de un redondo</span><span class="f" id="f51"></span></div>
+        <div class="row"><span class="k">Nº de redondos</span><span class="f" id="f52"></span></div>
+      </div>
+      <div class="decide"><label for="nDef">Nº definitivo</label><input id="nDef" type="number" step="1" min="2" placeholder="auto"><span class="sug" id="sug5"></span></div>
+      <div class="calc">
+        <div class="row"><span class="k">A<sub>s,real</sub> dispuesta</span><span class="f" id="f54"></span></div>
+      </div>
+      <div class="note extra">En cimientos el diámetro mínimo es Ø12 (Guía CE 9.6).</div>
+      <div class="try"><span>Tu nº de redondos:</span><input type="number" step="1" id="try5" aria-label="Tu número de redondos"><span id="c5"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s7">
+    <div class="step-h"><span class="num">7</span><h2>Separación entre barras</h2><span class="tag" id="t7"></span></div>
+    <div class="step-b">
+      <p class="why">Al lado de la zapata se le restan los dos recubrimientos laterales (r = 5 cm) y el ancho que ocupan las barras puestas una al lado de otra (nº · Ø). Lo que queda se reparte entre los huecos, que son una barra menos. Entre 10 y 30 cm la separación es razonable para hormigonar y controlar la fisuración.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Separación</span><span class="f" id="f71"></span></div>
+      </div>
+      <div class="note extra">Ø es el <b>diámetro</b> de la barra (en cm), no su área: nº · Ø es el ancho que ocupan las barras.</div>
+      <div class="try"><span>Tu separación:</span><input type="number" step="any" id="try7" aria-label="Tu separación en centímetros"><span class="u">cm</span><span id="c7"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s8">
+    <div class="step-h"><span class="num">8</span><h2>Longitud de anclaje (posición I)</h2><span class="tag" id="t8"></span></div>
+    <div class="step-b">
+      <p class="why">Las barras de la zapata tienen que anclarse en los extremos. Primero se calcula la longitud básica en posición I (barras abajo, buena adherencia): la mayor de m·Ø² y f<sub>yk</sub>/20·Ø, con Ø en mm. Después la longitud neta, que se reduce con la forma del anclaje (β) y con el acero que sobra respecto al necesario (A<sub>s</sub>/A<sub>s,real</sub>). En una zapata rígida, si las barras se mantienen en toda la longitud, el anclaje es correcto cuando l<sub>b,neta</sub> ≤ a/4 (Guía CE 9.6.1); si no, hay que poner patilla o bajar el diámetro.</p>
+      <div class="decide"><label for="beta">Terminación</label><select id="beta"><option value="0.7" selected>Patilla o gancho (β = 0,7)</option><option value="1">Prolongación recta (β = 1)</option></select></div>
+      <div class="calc">
+        <div class="row"><span class="k">Coeficiente m</span><span class="f" id="f81"></span></div>
+        <div class="row"><span class="k">l<sub>bI</sub> básica</span><span class="f" id="f82"></span></div>
+        <div class="row"><span class="k">l<sub>b,neta</sub></span><span class="f" id="f83"></span></div>
+        <div class="row"><span class="k">Mínimos</span><span class="f" id="f84"></span></div>
+        <div class="row"><span class="k">Zapata rígida</span><span class="f" id="f85"></span></div>
+      </div>
+      <div class="note extra">m según la tabla 66.5.2.a de la EHE-08: HA-25 → 1,2 (B 400 S) y 1,5 (B 500 S); HA-30 → 1,0 y 1,3. La longitud neta no puede bajar de 10Ø, 15 cm ni l<sub>b</sub>/3.</div>
+      <div class="try"><span>Tu l<sub>b,neta</sub>:</span><input type="number" step="any" id="try8" aria-label="Tu longitud de anclaje neta en centímetros"><span class="u">cm</span><span id="c8"></span></div>
+    </div>
+  </article>
+
+  <details class="extra-step" id="sBi">
+    <summary>Comprobación complementaria · método de bielas y tirantes <small id="t9">opcional · zapatas rígidas</small></summary>
     <div class="step-b">
       <p class="why">En una zapata rígida la carga del pilar no «flecta» la zapata: baja por dos bielas comprimidas inclinadas hasta el centro de cada mitad, y la armadura inferior hace de tirante que las ata. Cada mitad recibe R<sub>d</sub> = N<sub>d</sub>/2, aplicada a a/4 del eje; la biela sale del pilar a a′/4 del eje y el brazo entre tirante y biela es 0,85·d. Del equilibrio, T<sub>d</sub>·0,85·d = (N<sub>d</sub>/2)·(a − a′)/4, es decir, T<sub>d</sub> = N<sub>d</sub>·(a − a′)/(6,8·d). Aquí se usa la carga real del pilar, N<sub>d</sub> = 1,5·N<sub>k</sub> (sin el 20 % ni el peso propio), y el acero del tirante se limita a 400 N/mm² para controlar la fisuración.</p>
       <div class="scheme-w"><svg class="scheme" width="340" height="136" viewBox="0 0 300 120" role="img" aria-label="Esquema de bielas y tirantes: dos bielas desde el pilar hasta a/4 de cada mitad y el tirante en la cara inferior">
@@ -260,57 +307,10 @@ details.extra-step .in2 input{width:90px}
         <div class="row"><span class="k">A<sub>s</sub> por bielas</span><span class="f" id="f93"></span></div>
         <div class="row"><span class="k">Frente al paso 5</span><span class="f" id="f94"></span></div>
       </div>
-      <div class="note">Este paso es de comparación: el armado de los pasos siguientes sigue usando el A<sub>s</sub> del paso 5, que queda del lado de la seguridad porque usa σ<sub>adm</sub> en lugar de la tensión real, mide desde el eje del pilar y no descuenta a′/4. Los dos caminos dan la misma fuerza en el centro de la zapata cuando se usan las mismas cargas y brazos.</div>
+      <div class="note">Esta comprobación no cambia el armado: los pasos 6 a 8 siguen usando el A<sub>s</sub> del paso 5, que queda del lado de la seguridad porque usa σ<sub>adm</sub> en lugar de la tensión real, mide desde el eje del pilar y no descuenta a′/4. Los dos caminos dan la misma fuerza en el centro de la zapata cuando se usan las mismas cargas y brazos.</div>
       <div class="try"><span>Tu A<sub>s</sub> por bielas:</span><input type="number" step="any" id="try9" aria-label="Tu armadura por bielas en cm²"><span class="u">cm²</span><span id="c9"></span></div>
     </div>
-  </article>
-
-  <article class="step" id="s5">
-    <div class="step-h"><span class="num">7</span><h2>Número de redondos</h2><span class="tag" id="t5"></span></div>
-    <div class="step-b">
-      <p class="why">Se elige un diámetro, se calcula cuántas barras cubren A<sub>s</sub> y se redondea hacia arriba. La misma armadura se dispone en las dos direcciones, en la cara inferior y con patilla en los extremos.</p>
-      <div class="decide"><label for="phi">Diámetro Ø</label><select id="phi"><option>12</option><option>16</option><option>20</option><option>25</option></select><span class="u">mm</span></div>
-      <div class="calc">
-        <div class="row"><span class="k">Área de un redondo</span><span class="f" id="f51"></span></div>
-        <div class="row"><span class="k">Nº de redondos</span><span class="f" id="f52"></span></div>
-      </div>
-      <div class="decide"><label for="nDef">Nº definitivo</label><input id="nDef" type="number" step="1" min="2" placeholder="auto"><span class="sug" id="sug5"></span></div>
-      <div class="calc">
-        <div class="row"><span class="k">A<sub>s,real</sub> dispuesta</span><span class="f" id="f54"></span></div>
-      </div>
-      <div class="note extra">En cimientos el diámetro mínimo es Ø12 (Guía CE 9.6).</div>
-      <div class="try"><span>Tu nº de redondos:</span><input type="number" step="1" id="try5" aria-label="Tu número de redondos"><span id="c5"></span></div>
-    </div>
-  </article>
-
-  <article class="step" id="s7">
-    <div class="step-h"><span class="num">8</span><h2>Separación entre barras</h2><span class="tag" id="t7"></span></div>
-    <div class="step-b">
-      <p class="why">Al lado de la zapata se le restan los dos recubrimientos laterales (r = 5 cm) y el ancho que ocupan las barras puestas una al lado de otra (nº · Ø). Lo que queda se reparte entre los huecos, que son una barra menos. Entre 10 y 30 cm la separación es razonable para hormigonar y controlar la fisuración.</p>
-      <div class="calc">
-        <div class="row"><span class="k">Separación</span><span class="f" id="f71"></span></div>
-      </div>
-      <div class="note extra">Ø es el <b>diámetro</b> de la barra (en cm), no su área: nº · Ø es el ancho que ocupan las barras.</div>
-      <div class="try"><span>Tu separación:</span><input type="number" step="any" id="try7" aria-label="Tu separación en centímetros"><span class="u">cm</span><span id="c7"></span></div>
-    </div>
-  </article>
-
-  <article class="step" id="s8">
-    <div class="step-h"><span class="num">9</span><h2>Longitud de anclaje (posición I)</h2><span class="tag" id="t8"></span></div>
-    <div class="step-b">
-      <p class="why">Las barras de la zapata tienen que anclarse en los extremos. Primero se calcula la longitud básica en posición I (barras abajo, buena adherencia): la mayor de m·Ø² y f<sub>yk</sub>/20·Ø, con Ø en mm. Después la longitud neta, que se reduce con la forma del anclaje (β) y con el acero que sobra respecto al necesario (A<sub>s</sub>/A<sub>s,real</sub>). En una zapata rígida, si las barras se mantienen en toda la longitud, el anclaje es correcto cuando l<sub>b,neta</sub> ≤ a/4 (Guía CE 9.6.1); si no, hay que poner patilla o bajar el diámetro.</p>
-      <div class="decide"><label for="beta">Terminación</label><select id="beta"><option value="0.7" selected>Patilla o gancho (β = 0,7)</option><option value="1">Prolongación recta (β = 1)</option></select></div>
-      <div class="calc">
-        <div class="row"><span class="k">Coeficiente m</span><span class="f" id="f81"></span></div>
-        <div class="row"><span class="k">l<sub>bI</sub> básica</span><span class="f" id="f82"></span></div>
-        <div class="row"><span class="k">l<sub>b,neta</sub></span><span class="f" id="f83"></span></div>
-        <div class="row"><span class="k">Mínimos</span><span class="f" id="f84"></span></div>
-        <div class="row"><span class="k">Zapata rígida</span><span class="f" id="f85"></span></div>
-      </div>
-      <div class="note extra">m según la tabla 66.5.2.a de la EHE-08: HA-25 → 1,2 (B 400 S) y 1,5 (B 500 S); HA-30 → 1,0 y 1,3. La longitud neta no puede bajar de 10Ø, 15 cm ni l<sub>b</sub>/3.</div>
-      <div class="try"><span>Tu l<sub>b,neta</sub>:</span><input type="number" step="any" id="try8" aria-label="Tu longitud de anclaje neta en centímetros"><span class="u">cm</span><span id="c8"></span></div>
-    </div>
-  </article>
+  </details>
 
   <details class="extra-step" id="sB">
     <summary>Comprobación complementaria · zapatas próximas <small>opcional · bulbo de presiones</small></summary>
@@ -355,6 +355,7 @@ function check(tryId,outId,val,tol){
 const OUT=['f91','f92','f93','f94','t9','c9','f85','f54','f71','f81','f82','f83','f84','t7','t8','c7','c8','f11','f12','f13','f21','f22','f23','f61','f62','f63','f31','f40','f41','f42','f43','f51','f52','f53','t1','t2','t6','t4','t5','c1','c2','c3','c4','c5','c6'];
 function empty(){
   OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
+  $('t9').textContent='opcional · zapatas rígidas';
   ['sug1','sug2','sug5'].forEach(id=>$(id).textContent='');
   $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce N<sub>k</sub>, σ<sub>adm</sub>, el lado del pilar y φ</span></div>';
   $('sec').innerHTML='';$('pl').innerHTML='';['fB1','fB2','fB3'].forEach(id=>$(id).innerHTML='<span class="gen">—</span>');$('bul').innerHTML='';
@@ -422,7 +423,8 @@ function calc(){
   $('f92').innerHTML=`${G('T<sub>d</sub> = 1,5·N<sub>k</sub>·(a − a′)/(6,8·d)')} = 1,5·${nf(Nk)}·(${nf(a)} − ${nf(l)})/(6,8·${nf(dU/100)}) = ${R(nf(Td,1)+' kN')}`;
   $('f93').innerHTML=`${G('A<sub>s</sub> = T<sub>d</sub>/f<sub>yd</sub>·10, con f<sub>yd</sub> ≤ 400')} = ${nf(Td,1)}/${nf(fydB,0)}·10 = ${R(nf(AsB)+' cm²')}`;
   $('f94').innerHTML=`${G('bielas / equilibrio')} = ${nf(AsB)} / ${nf(As)} cm² → ${R((dif<0?'':'+')+nf(dif,0)+' %')}`;
-  $('t9').innerHTML=rigid?pill('info',`bielas: ${nf(AsB)} cm²`):pill('warn','Flexible: no aplica');
+  $('t9').textContent=rigid?`bielas: ${nf(AsB)} cm² frente a ${nf(As)} cm²`:'zapata flexible: no aplica';
+  if(!rigid){['f91','f92','f93','f94'].forEach(id=>$(id).innerHTML=G('No aplica: la zapata es flexible (v > 2h) y se calcula a flexión'));$('c9').innerHTML='';}
 
   // Paso 5
   const phi=v('phi');
@@ -470,7 +472,7 @@ function calc(){
     <div><span class="lab">Tensión en el terreno</span><span class="big">${nf(sReal,0)} kN/m²</span></div>`;
 
   last={aT,h,Md,As,s};
-  check('try1','c1',aT,0.01); check('try2','c2',h,0.001); check('try3','c3',Md,0.02); check('try4','c4',As,0.02); check('try5','c5',n,0.001); check('try7','c7',s,0.03); check('try8','c8',lbn/10,0.03); check('try6','c6',sReal,0.02); check('try9','c9',AsB,0.02);
+  check('try1','c1',aT,0.01); check('try2','c2',h,0.001); check('try3','c3',Md,0.02); check('try4','c4',As,0.02); check('try5','c5',n,0.001); check('try7','c7',s,0.03); check('try8','c8',lbn/10,0.03); check('try6','c6',sReal,0.02); if(rigid)check('try9','c9',AsB,0.02);
   draw(a,l,h,n,phi,vu);
   bulbo(a,sReal);
 }
