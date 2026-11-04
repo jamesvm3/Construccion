@@ -21,6 +21,7 @@
     '.pdfbar button:disabled{opacity:.5;cursor:wait}' +
     '.pdfbar .msg{flex-basis:100%;font-size:13px;margin:0}' +
     '.pdfbar .msg.bad{color:var(--bad)}' +
+    '.pdfbar .webbtn,.pdfbar .sharebtn{display:inline-block;margin-top:10px;font:600 14px var(--sans);color:var(--panel);background:var(--ink);border:1px solid var(--ink);border-radius:4px;padding:9px 16px;text-decoration:none;cursor:pointer}' +
     /* Modo captura: una columna de ancho fijo, sin elementos de interfaz */
     '.pdfcap{max-width:820px!important;width:820px!important}' +
     '.pdfcap .grid{grid-template-columns:1fr!important}' +
@@ -41,7 +42,10 @@
     try { const o = {}; fields().forEach(el => { o[el.id] = el.type === 'checkbox' ? (el.checked ? '1' : '0') : el.value; }); sessionStorage.setItem(KEY, JSON.stringify(o)); } catch (e) { /* sin almacenamiento */ }
   }
   (function restore() {
-    let o = null; try { o = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) { o = null; }
+    let o = null;
+    const m = /^#d=(.*)$/.exec(location.hash || '');
+    if (m) { try { o = JSON.parse(decodeURIComponent(m[1])); } catch (e) { o = null; } try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} }
+    if (!o) { try { o = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) { o = null; } }
     if (!o) return;
     let any = false;
     fields().forEach(el => { if (!(el.id in o)) return; if (el.type === 'checkbox') el.checked = o[el.id] === '1'; else el.value = o[el.id]; any = true; });
@@ -57,7 +61,7 @@
 
   /* Dirección de la versión web del portal (GitHub Pages). Si se rellena, se ofrece cuando
      la descarga no está permitida dentro de Claude (alumnos fuera de la organización). */
-  const WEB_URL = '';
+  const WEB_URL = 'https://jamesvm3.github.io/Construccion/';
   let inFrame = false; try { inFrame = window.top !== window.self; } catch (e) { inFrame = true; }
   const IN_CLAUDE = inFrame || !!window.claude;
   let dlPromise = null;
@@ -70,10 +74,15 @@
     return dlPromise;
   }
   getDownloads();
+  function webLink() {
+    const o = {}; fields().forEach(el => { const v = el.type === 'checkbox' ? (el.checked ? '1' : '0') : el.value; if (v !== '') o[el.id] = v; });
+    const page = (location.pathname.replace(/^.*\//, '') || 'index.html');
+    return WEB_URL + page + '#d=' + encodeURIComponent(JSON.stringify(o));
+  }
   function noDownload() {
-    const link = WEB_URL ? ' Para guardarlo en PDF, abre <a href="' + WEB_URL + location.pathname.replace(/^.*\//, '') + '" target="_blank" rel="noopener">la versión web del portal</a> y repite el cálculo allí.' : ' Para guardarlo, usa la versión web del portal o haz una captura de pantalla.';
-    msg.innerHTML = 'Desde esta vista no se puede descargar el PDF: las descargas solo están permitidas a los miembros de la organización. Tus datos siguen aquí.' + link;
-    msg.className = 'msg bad';
+    msg.className = 'msg';
+    msg.innerHTML = 'Desde aquí no se puede guardar el archivo (Claude solo permite descargas a los miembros de la organización). Ábrelo en la versión web: se abre con tus datos ya escritos y allí pulsas de nuevo «Guardar el ejercicio en PDF».' +
+      '<br><a class="webbtn" href="' + webLink() + '" target="_blank" rel="noopener">Abrir este ejercicio en la versión web</a>';
   }
 
   function load(src) {
@@ -176,8 +185,20 @@
         await downloads.save({ filename: out.name, data: out.blob });
         say('PDF guardado: ' + out.name);
       } else if (!IN_CLAUDE) {
-        browserSave(out.blob, out.name);
-        say('PDF generado: ' + out.name);
+        let file = null; try { file = new File([out.blob], out.name, { type: 'application/pdf' }); } catch (e) { file = null; }
+        const mobile = window.matchMedia && window.matchMedia('(pointer:coarse)').matches;
+        if (mobile && file && navigator.canShare && navigator.canShare({ files: [file] })) {
+          msg.className = 'msg';
+          msg.innerHTML = 'PDF listo: ' + out.name + '<br><button type="button" class="sharebtn" id="pdfshare">Enviar o guardar el PDF</button> <button type="button" class="sharebtn" id="pdfdl" style="background:transparent;color:var(--ink)">Descargar</button>';
+          document.getElementById('pdfshare').addEventListener('click', async () => {
+            try { await navigator.share({ files: [file], title: out.name }); }
+            catch (e2) { if (!e2 || e2.name !== 'AbortError') { browserSave(out.blob, out.name); } }
+          });
+          document.getElementById('pdfdl').addEventListener('click', () => browserSave(out.blob, out.name));
+        } else {
+          browserSave(out.blob, out.name);
+          say('PDF generado: ' + out.name);
+        }
       } else {
         noDownload();
       }
