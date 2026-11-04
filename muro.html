@@ -279,15 +279,18 @@ footer ul{margin:6px 0 0;padding-left:18px}
   <article class="step" id="s7">
     <div class="step-h"><span class="num">7</span><h2>Armadura de la zapata</h2><span class="tag" id="t7"></span></div>
     <div class="step-b">
-      <p class="why">La zapata se calcula como una zapata aislada, por metro: el terreno empuja hacia arriba con σ<sub>adm</sub> y cada lado vuela a/2 desde el eje del muro, así que el momento en la sección del muro es M<sub>d</sub> = 1,5·σ<sub>adm</sub>·a²/8 (el 1,5 mayora). Con ese momento, A<sub>s</sub> = 10·M<sub>d</sub> / (0,8·h·f<sub>yd</sub>), con h en m, que da cm² por metro. En la dirección del muro se coloca además una armadura inferior del 2 ‰ del área A<sub>c</sub> = h·a. Si la A<sub>s</sub> calculada sale muy pequeña (zapata de poco vuelo), manda la armadura mínima.</p>
+      <p class="why">La zapata se calcula como una zapata aislada, por metro: el terreno empuja hacia arriba con σ<sub>adm</sub> y cada lado vuela a/2 desde el eje del muro, así que el momento en la sección del muro es M<sub>d</sub> = 1,5·σ<sub>adm</sub>·a²/8 (el 1,5 mayora). Con ese momento, A<sub>s</sub> = 10·M<sub>d</sub> / (0,8·h·f<sub>yd</sub>), con h en m, que da cm² por metro. En la dirección del muro se coloca además una armadura inferior del 2 ‰ del área A<sub>c</sub> = h·a. Si la A<sub>s</sub> calculada sale muy pequeña (zapata de poco vuelo), manda la armadura mínima: 1,8 ‰ de la sección con B 500 S (2,0 ‰ con B 400 S), y como solo se arma la cara inferior se toma la mitad, 0,9 ‰ (1,0 ‰), igual que en la zapata centrada.</p>
       <div class="calc">
         <div class="row"><span class="k">Momento de cálculo</span><span class="f" id="f70"></span></div>
-        <div class="row"><span class="k">A<sub>s</sub> transversal</span><span class="f" id="f71"></span></div>
+        <div class="row"><span class="k">A<sub>s</sub> transversal por cálculo</span><span class="f" id="f71"></span></div>
+        <div class="row"><span class="k">A<sub>s,mín</sub> transversal</span><span class="f" id="f75"></span></div>
+        <div class="row"><span class="k">A<sub>s</sub> transversal a disponer</span><span class="f" id="f76"></span></div>
         <div class="row"><span class="k">Área de hormigón A<sub>c</sub></span><span class="f" id="f72"></span></div>
         <div class="row"><span class="k">Armadura longitudinal 2 ‰</span><span class="f" id="f73"></span></div>
       </div>
       <div class="decide"><label for="phiZ">Diámetro Ø</label><select id="phiZ"><option>12</option><option>16</option><option>20</option></select><span class="u">mm</span><span class="sug" id="sug7"></span></div>
       <div class="calc">
+        <div class="row"><span class="k">Redondos transversales (por metro)</span><span class="f" id="f77"></span></div>
         <div class="row"><span class="k">Redondos longitudinales</span><span class="f" id="f74"></span></div>
       </div>
       <div class="try"><span>Tu M<sub>d</sub>:</span><input type="number" step="any" id="try7" aria-label="Tu momento en la zapata en kN por metro"><span class="u">kN·m/m</span><span id="c7"></span><span style="margin-left:8px">Tu A<sub>s,long</sub>:</span><input type="number" step="any" id="try7b" aria-label="Tu armadura longitudinal en cm cuadrados"><span class="u">cm²</span><span id="c7b"></span></div>
@@ -327,7 +330,7 @@ function check(tryId,outId,val,tol){
   const ok=Math.abs(t-val)<=Math.max(Math.abs(val)*tol,1e-9);
   $(outId).innerHTML=ok?pill('ok','Correcto'):pill('bad','Revisa: no coincide');
 }
-const IDS=['f01','f02','f03','f04','f11','f21','f22','f23','f31','f32','f40','f41','f42','f43','f44','f45','f46','f50','f51','f52','f53','f60','f61','f70','f71','f72','f73','f74'];
+const IDS=['f01','f02','f03','f04','f11','f21','f22','f23','f31','f32','f40','f41','f42','f43','f44','f45','f46','f50','f51','f52','f53','f60','f61','f70','f71','f72','f73','f74','f75','f76','f77'];
 const TAGS=['t0','t1','t2','t3','t4','t5','t6','t7'];
 const CHK=['c0','c1','c2','c3','c3b','c4','c4b','c5','c5b','c6','c7','c7b'];
 function blank(){
@@ -472,7 +475,7 @@ function calc(){
   } else if(!(haveH&&e>0)&&Nk>0&&sig>0){ $('f60').innerHTML=`${dash} <span class="gen">(necesita H y el espesor del paso 1)</span>`; }
 
   /* Paso 7: armadura de la zapata */
-  let nZ=NaN,phiZ=v('phiZ'),AsL=NaN;
+  let nZ=NaN,phiZ=v('phiZ'),AsL=NaN,nZT=NaN;
   if(isFinite(a)&&isFinite(hz)&&sig>0){
     const fyd=fyk/1.15;
     const Md=1.5*sig*a*a/8;
@@ -482,12 +485,17 @@ function calc(){
     const Ab=Math.PI*Math.pow(phiZ/20,2);
     nZ=Math.max(2,Math.ceil(AsL/Ab-1e-9));
     $('f70').innerHTML=`${G('M<sub>d</sub> = 1,5·σ<sub>adm</sub>·')}${G(fr('a²','8'))} = 1,5·${nf(sig,0)}·${fr(`${nf(a)}²`,'8')} = ${R(nf(Md)+' kN·m/m')}`;
-    $('f71').innerHTML=`${G('A<sub>s</sub> = ')}${G(fr('10·M<sub>d</sub>','0,8·h·f<sub>yd</sub>'))} = ${fr(`10·${nf(Md)}`,`0,8·${nf(hz)}·${nf(fyd)}`)} = ${R(nf(AsT)+' cm²/m')}`+(AsT<1?' '+pill('warn','muy pequeña: manda la mínima'):'');
+    const rhoZ=fyk>=500?0.0009:0.0010, AsTmin=rhoZ*100*hz*100, AsTd=Math.max(AsT,AsTmin);
+    nZT=Math.max(2,Math.ceil(AsTd/Ab-1e-9));
+    $('f71').innerHTML=`${G('A<sub>s</sub> = ')}${G(fr('10·M<sub>d</sub>','0,8·h·f<sub>yd</sub>'))} = ${fr(`10·${nf(Md)}`,`0,8·${nf(hz)}·${nf(fyd)}`)} = ${R(nf(AsT)+' cm²/m')}`;
+    $('f75').innerHTML=`${G('ρ·100·h')} = ${fyk>=500?'0,9':'1,0'}‰·100·${nf(hz*100,0)} = ${R(nf(AsTmin)+' cm²/m')} <span class="gen">(h en cm, solo cara inferior)</span>`;
+    $('f76').innerHTML=`${R(nf(AsTd)+' cm²/m')} `+(AsT>=AsTmin?pill('ok','manda el cálculo'):pill('warn','manda la mínima'));
+    $('f77').innerHTML=`${G('n = ')}${G(fr('A<sub>s</sub>','A<sub>Ø</sub>'))} = ${fr(nf(AsTd),nf(Ab,3))} = ${nf(AsTd/Ab)} → ${R(nZT+' Ø'+phiZ+' por metro')} ${pill('info','c/'+nf(Math.floor(100/nZT),0))} <span class="gen">(con patilla en los extremos)</span>`;
     $('f72').innerHTML=`${G('A<sub>c</sub> = h·a')} = ${nf(hz)}·${nf(a)} = ${nf(hz*a,2)} m² = ${R(nf(Ac,0)+' cm²')}`;
     $('f73').innerHTML=`${G('A<sub>s,long</sub> = 0,002·A<sub>c</sub>')} = 0,002·${nf(Ac,0)} = ${R(nf(AsL)+' cm²')} <span class="gen">(inferior, en la dirección del muro)</span>`;
     $('f74').innerHTML=`${G('n = ')}${G(fr('A<sub>s,long</sub>','A<sub>Ø</sub>'))} = ${fr(nf(AsL),nf(Ab,3))} = ${nf(AsL/Ab)} → ${R(nZ+' Ø'+phiZ)} <span class="gen">(${nf(nZ*Ab)} cm²)</span>`;
     $('sug7').textContent=`Ø12 es el diámetro mínimo en cimientos`;
-    $('t7').innerHTML=pill('info',`${nZ} Ø${phiZ} long.`);
+    $('t7').innerHTML=pill('info',`Ø${phiZ} c/${nf(Math.floor(100/nZT),0)} transv. · ${nZ} Ø${phiZ} long.`);
     check('try7','c7',Md,0.02); check('try7b','c7b',AsL,0.02);
   }
 
@@ -496,9 +504,10 @@ function calc(){
   if(!(haveH||isFinite(P)||isFinite(a))){emptyAll();return;}
   $('summary').innerHTML=`
     <div><span class="lab">Muro</span><span class="big">${isFinite(e)?`e = ${nf(e,0)} cm`:'—'}${haveH?` · H = ${nf(H)} m`:''}</span></div>
-    <div><span class="lab">Vertical, intradós y trasdós</span><span class="big">${isFinite(nVsel)?`${nVsel} Ø${phiV}/m (c/${nf(Math.floor(100/nVsel),0)})`:'—'}</span></div>
+    <div><span class="lab">Vertical, intradós y trasdós</span><span class="big">${isFinite(nVsel)?`${nVsel} Ø${phiV} por metro de muro (c/${nf(Math.floor(100/nVsel),0)})`:'—'}</span></div>
     <div><span class="lab">Horizontal, por cara</span><span class="big">${isFinite(nHsel)?`${nHsel/2} Ø${phiH}`:'—'}</span></div>
     <div><span class="lab">Zapata corrida</span><span class="big">${isFinite(a)?`a = ${nf(a)} m · h = ${nf(hz)} m`:'—'}</span></div>
+    <div><span class="lab">Zapata, transversal</span><span class="big">${isFinite(nZT)?`${nZT} Ø${phiZ} por metro (c/${nf(Math.floor(100/nZT),0)})`:'—'}</span></div>
     <div><span class="lab">Zapata, longitudinal</span><span class="big">${isFinite(nZ)?`${nZ} Ø${phiZ}`:'—'}</span></div>`;
   drawSection(H,e,a,hz,nVsel,phiV,nHsel,sH,$('same').checked,nZ,phiZ);
   drawModel(H,P,Mp,Mn);
@@ -540,7 +549,7 @@ function drawSection(H,e,a,hz,nV,phiV,nH,sH,same,nZ,phiZ){
   g+=T(xw-108,top-18,'forjado',{c:'var(--muted)',s:10});
   g+=T(xw-108,yz-12,'solera',{c:'var(--muted)',s:10});
   g+=T(xw+ep+10,top+hp/2,'terreno',{c:'var(--soil-ink)',s:10});
-  if(nV>=2) g+=T(xw+ep+10,top+hp/2+16,`${nV} Ø${phiV}/m${same?'':' (intradós)'}`,{c:'var(--rebar)',s:10});
+  if(nV>=2) g+=T(xw+ep+10,top+hp/2+16,`${nV} Ø${phiV} por metro${same?'':' (intradós)'}`,{c:'var(--rebar)',s:10});
   if(nH>=2) g+=T(xw+ep+10,top+hp/2+30,`${nH/2} Ø${$('phiH').value} por cara`,{c:'var(--rebar)',s:10});
   sec.setAttribute('viewBox',`0 0 360 ${yz+zh+46}`);
   sec.innerHTML=g;
