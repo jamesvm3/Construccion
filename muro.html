@@ -509,7 +509,7 @@ function calc(){
     <div><span class="lab">Zapata corrida</span><span class="big">${isFinite(a)?`a = ${nf(a)} m · h = ${nf(hz)} m`:'—'}</span></div>
     <div><span class="lab">Zapata, transversal</span><span class="big">${isFinite(nZT)?`${nZT} Ø${phiZ} por metro (c/${nf(Math.floor(100/nZT),0)})`:'—'}</span></div>
     <div><span class="lab">Zapata, longitudinal</span><span class="big">${isFinite(nZ)?`${nZ} Ø${phiZ}`:'—'}</span></div>`;
-  drawSection(H,e,a,hz,nVsel,phiV,nHsel,sH,$('same').checked,nZ,phiZ);
+  drawSection(H,e,a,hz,nVsel,phiV,nHsel,sH,$('same').checked,nZ,phiZ,nZT);
   drawModel(H,P,Mp,Mn);
 }
 
@@ -517,7 +517,7 @@ const T=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-family="IBM Plex Mono,monosp
 function hdim(x1,x2,y,t){return `<g stroke="var(--muted)" stroke-width="1"><line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}"/><line x1="${x1}" y1="${y-4}" x2="${x1}" y2="${y+4}"/><line x1="${x2}" y1="${y-4}" x2="${x2}" y2="${y+4}"/></g>`+T((x1+x2)/2,y+14,t,{a:'middle'});}
 function vdim(x,y1,y2,t){return `<g stroke="var(--muted)" stroke-width="1"><line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}"/><line x1="${x-4}" y1="${y1}" x2="${x+4}" y2="${y1}"/><line x1="${x-4}" y1="${y2}" x2="${x+4}" y2="${y2}"/></g>`+T(x-6,(y1+y2)/2,t,{a:'middle'}).replace('<text','<text transform="rotate(-90 '+(x-6)+' '+((y1+y2)/2)+')"');}
 
-function drawSection(H,e,a,hz,nV,phiV,nH,sH,same,nZ,phiZ){
+function drawSection(H,e,a,hz,nV,phiV,nH,sH,same,nZ,phiZ,nZT){
   const sec=$('sec'); if(!(H>0&&e>0)){sec.innerHTML='';return;}
   const hasA=isFinite(a)&&a>0&&isFinite(hz);
   const top=40, hp=150, sc=hp/H;            /* px por m en vertical */
@@ -539,19 +539,21 @@ function drawSection(H,e,a,hz,nV,phiV,nH,sH,same,nZ,phiZ){
     for(let i=0;i<half;i++){const y=half===1?(y0+y1)/2:y0+(y1-y0)*i/(half-1);
       g+=`<circle cx="${xi-3.4}" cy="${y}" r="2.1" fill="var(--rebar)"/><circle cx="${xt+3.4}" cy="${y}" r="2.1" fill="var(--rebar)"/>`;}}
   if(hasA&&nZ>=2){
-    g+=`<line x1="${cx-Bp/2+4}" y1="${yz+zh-4}" x2="${cx+Bp/2-4}" y2="${yz+zh-4}" stroke="var(--rebar)" stroke-width="2"/>`;
-    const m=Math.min(nZ,8);
-    for(let i=0;i<m;i++){const x=cx-Bp/2+10+(Bp-20)*(m===1?0.5:i/(m-1)); g+=`<circle cx="${x}" cy="${yz+zh-10}" r="2.2" fill="var(--rebar)"/>`;}
+    const pz=Math.min(12,zh*0.45);
+    g+=`<path d="M${cx-Bp/2+4} ${yz+zh-4-pz}V${yz+zh-4}H${cx+Bp/2-4}V${yz+zh-4-pz}" fill="none" stroke="var(--rebar)" stroke-width="2"/>`;
+    const m=nZ, rr=m>12?1.7:2.2;
+    for(let i=0;i<m;i++){const x=cx-Bp/2+8+(Bp-16)*(m===1?0.5:i/(m-1)); g+=`<circle cx="${x}" cy="${yz+zh-6.5-rr}" r="${rr}" fill="var(--rebar)"/>`;}
   }
   g+=vdim(xw-122,top,yz,`H = ${nf(H)} m`);
   g+=hdim(xw,xw+ep,top-34,`e = ${nf(e,0)} cm`);
-  if(hasA){ g+=hdim(cx-Bp/2,cx+Bp/2,yz+zh+14,`a = ${nf(a)} m`); g+=T(cx+Bp/2+8,yz+zh/2+4,`h = ${nf(hz)} m`,{c:'var(--muted)',s:10}); }
+  if(hasA){ g+=hdim(cx-Bp/2,cx+Bp/2,yz+zh+14,`a = ${nf(a)} m`); g+=T(cx+Bp/2+8,yz+zh/2-4,`h = ${nf(hz)} m`,{c:'var(--muted)',s:10});
+    if(nZ>=2&&isFinite(nZT)){ g+=T(cx-Bp/2,yz+zh+46,`zapata: ${nZT} Ø${phiZ} por metro transversales (línea)`,{c:'var(--rebar)',s:10}); g+=T(cx-Bp/2,yz+zh+60,`y ${nZ} Ø${phiZ} longitudinales (puntos)`,{c:'var(--rebar)',s:10}); } }
   g+=T(xw-108,top-18,'forjado',{c:'var(--muted)',s:10});
   g+=T(xw-108,yz-12,'solera',{c:'var(--muted)',s:10});
   g+=T(xw+ep+10,top+hp/2,'terreno',{c:'var(--soil-ink)',s:10});
   if(nV>=2) g+=T(xw+ep+10,top+hp/2+16,`${nV} Ø${phiV} por metro${same?'':' (intradós)'}`,{c:'var(--rebar)',s:10});
   if(nH>=2) g+=T(xw+ep+10,top+hp/2+30,`${nH/2} Ø${$('phiH').value} por cara`,{c:'var(--rebar)',s:10});
-  sec.setAttribute('viewBox',`0 0 360 ${yz+zh+46}`);
+  sec.setAttribute('viewBox',`0 0 360 ${yz+zh+(hasA&&nZ>=2?68:46)}`);
   sec.innerHTML=g;
 }
 
