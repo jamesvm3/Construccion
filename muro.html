@@ -262,6 +262,7 @@ footer ul{margin:6px 0 0;padding-left:18px}
     </div>
   </article>
 
+  <div style="margin:0 0 14px;padding:12px 14px;border:1px solid var(--warn);background:var(--warn-soft);border-radius:6px;font-size:13.5px;line-height:1.5"><b>¿Cimentas con losa?</b> Entonces no hay zapata corrida bajo el muro: usa los pasos 0 a 5 y salta los pasos 6 y 7. Calcula después la losa con su calculadora e introduce el muro perimetral como carga lineal (peso propio del muro, e·H·25, más la carga del forjado que apoya en él). El empuje de tierras y la armadura del muro se resuelven aquí, no en la losa.</div>
   <article class="step" id="s6">
     <div class="step-h"><span class="num">6</span><h2>Zapata corrida: ancho y canto</h2><span class="tag" id="t6"></span></div>
     <div class="step-b">
@@ -547,12 +548,12 @@ function drawSection(H,e,a,hz,nV,phiV,nH,sH,same,nZ,phiZ,nZT){
   g+=vdim(xw-122,top,yz,`H = ${nf(H)} m`);
   g+=hdim(xw,xw+ep,top-34,`e = ${nf(e,0)} cm`);
   if(hasA){ g+=hdim(cx-Bp/2,cx+Bp/2,yz+zh+14,`a = ${nf(a)} m`); g+=T(cx+Bp/2+8,yz+zh/2-4,`h = ${nf(hz)} m`,{c:'var(--muted)',s:10});
-    if(nZ>=2&&isFinite(nZT)){ g+=T(cx-Bp/2,yz+zh+46,`zapata: ${nZT} Ø${phiZ} por metro transversales (línea)`,{c:'var(--rebar)',s:10}); g+=T(cx-Bp/2,yz+zh+60,`y ${nZ} Ø${phiZ} longitudinales (puntos)`,{c:'var(--rebar)',s:10}); } }
+    if(nZ>=2&&isFinite(nZT)){ g+=T(Math.min(cx-Bp/2,20),yz+zh+46,`zapata: ${nZT} Ø${phiZ} por metro transversales (línea)`,{c:'var(--rebar)',s:10}); g+=T(Math.min(cx-Bp/2,20),yz+zh+60,`y ${nZ} Ø${phiZ} longitudinales (puntos)`,{c:'var(--rebar)',s:10}); } }
   g+=T(xw-108,top-18,'forjado',{c:'var(--muted)',s:10});
   g+=T(xw-108,yz-12,'solera',{c:'var(--muted)',s:10});
   g+=T(xw+ep+10,top+hp/2,'terreno',{c:'var(--soil-ink)',s:10});
-  if(nV>=2) g+=T(xw+ep+10,top+hp/2+16,`${nV} Ø${phiV} por metro${same?'':' (intradós)'}`,{c:'var(--rebar)',s:10});
-  if(nH>=2) g+=T(xw+ep+10,top+hp/2+30,`${nH/2} Ø${$('phiH').value} por cara`,{c:'var(--rebar)',s:10});
+  if(nV>=2) g+=T(xw+ep+10,top+hp/2+16,`${nV} Ø${phiV}/m ${same?'en cada cara (vertical)':'en intradós (vertical)'}`,{c:'var(--rebar)',s:10});
+  if(nH>=2) g+=T(xw+ep+10,top+hp/2+30,`${nH/2} Ø${$('phiH').value} por cara (horizontal)`,{c:'var(--rebar)',s:10});
   sec.setAttribute('viewBox',`0 0 360 ${yz+zh+(hasA&&nZ>=2?68:46)}`);
   sec.innerHTML=g;
 }

@@ -115,7 +115,8 @@ footer ul{margin:6px 0 0;padding-left:18px}
 .decide input{width:104px}
 .decide .sug{font-size:13px;color:var(--muted)}
 .chk{display:flex;align-items:center;gap:8px;font-size:14px}
- </style>
+input.bad-in{border-color:var(--bad)!important;background:var(--bad-soft)!important;color:var(--bad)}
+</style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
 <link rel="stylesheet" href="mute.css">
 <div class="wrap">
@@ -142,6 +143,7 @@ footer ul{margin:6px 0 0;padding-left:18px}
     <div class="field"><label for="x0">Esquina de la losa, x<sub>0</sub></label><input id="x0" type="number" step="any" placeholder="0"><span class="u">m</span></div>
     <div class="field"><label for="y0">Esquina de la losa, y<sub>0</sub></label><input id="y0" type="number" step="any" placeholder="0"><span class="u">m</span></div>
     <div class="field"><label for="lmax">Luz mayor entre pilares l</label><input id="lmax" type="number" step="any" min="0"><span class="u">m</span></div>
+    <p class="hint" style="margin:6px 0 0">Solo losas rectangulares. Si tu losa tiene forma de L o de U, divídela en rectángulos con junta y calcula cada uno aparte.</p>
     <h3 class="g">Terreno</h3>
     <div class="field"><label for="sig">Tensión admisible σ<sub>adm</sub></label><input id="sig" type="number" step="any" min="0"><span class="u">kN/m²</span></div>
     <div class="field"><label for="k30">Balasto K<sub>30</sub></label><input id="k30" type="number" step="any" min="0"><span class="u">kp/cm³</span></div>
@@ -165,7 +167,7 @@ footer ul{margin:6px 0 0;padding-left:18px}
   <section>
     <div class="summary" id="summary"></div>
     <div class="drawing">
-      <div class="box"><h3>Planta de cargas</h3><svg id="plan" viewBox="0 0 360 300" role="img" aria-label="Planta de la losa con las cargas, su centro y la resultante"></svg><p class="cap">Círculos proporcionales a N<sub>k</sub>. Cruz: centro de la losa. Punto rojo: resultante.</p></div>
+      <div class="box"><h3>Planta de cargas</h3><svg id="plan" viewBox="0 0 360 300" role="img" aria-label="Planta de la losa con las cargas, su centro y la resultante"></svg><p class="cap">Círculos proporcionales a N<sub>k</sub>. Borde grueso: muro. Cruz: centro de la losa. Punto rojo: resultante.</p></div>
       <div class="box"><h3>Sección de la losa</h3><svg id="sec" viewBox="0 0 360 300" role="img" aria-label="Sección con canto y armaduras"></svg><p class="cap">Base en las dos caras; refuerzo abajo bajo los pilares y arriba en el centro de los vanos.</p></div>
     </div>
   </section>
@@ -185,9 +187,21 @@ footer ul{margin:6px 0 0;padding-left:18px}
   <article class="step" id="s1">
     <div class="step-h"><span class="num">1</span><h2>Presión sobre el terreno</h2><span class="tag" id="t1"></span></div>
     <div class="step-b">
-      <p class="why">Escribe cada carga característica que baja a la losa con su posición en planta: pilares, y también lo que llega por los muros (forjado apoyado en el muro y peso del propio muro), que se puede meter como una carga en el centro de gravedad del muro. La carga total, con el peso de la losa, repartida en su área no puede superar σ<sub>adm</sub>. El peso de la losa se calcula con el canto adoptado en el paso 2 (40 cm si aún no hay datos). La resultante debe caer cerca del centro: si se separa más de un sexto del lado, ensancha la losa por ese lado. Con la excentricidad de la resultante se obtiene la presión máxima en la esquina más cargada.</p>
+      <p class="why">Escribe cada pilar con su carga característica y su posición en planta: el esquema de debajo se dibuja a la vez, con los ejes de pilares. Después, si la losa tiene muro perimetral, rellena sus datos y la calculadora añade su peso. La carga total, con el peso de la losa, repartida en su área no puede superar σ<sub>adm</sub>. El peso de la losa se calcula con el canto adoptado en el paso 2 (40 cm si aún no hay datos). La resultante debe caer cerca del centro: si se separa más de un sexto del lado, ensancha la losa por ese lado. Con la excentricidad de la resultante se obtiene la presión máxima en la esquina más cargada.</p>
       <div class="tbl"><table class="loads" id="loads"><thead><tr><th>Carga</th><th>N<sub>k</sub> (kN)</th><th>x (m)</th><th>y (m)</th><th></th></tr></thead><tbody></tbody></table></div>
       <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center"><button type="button" id="addRow" class="ghost">Añadir carga</button><span class="hint" style="margin:0">Las filas vacías no cuentan.</span></div>
+      <div id="rowWarn"></div>
+      <div class="box" style="padding:10px 12px"><h3 style="font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:500">Esquema de la losa</h3><svg id="plan1" style="max-width:520px;margin:0 auto" viewBox="0 0 360 300" role="img" aria-label="Esquema de la losa con los pilares, los ejes y el muro perimetral"></svg><p class="cap">Ejes por las coordenadas de los pilares, con sus distancias. Borde grueso: muro. Cruz: centro de la losa. Punto rojo: resultante.</p><div id="outWarn"></div></div>
+      <div class="decide" style="flex-direction:column;align-items:stretch;gap:8px">
+        <label style="font-weight:600">¿La losa tiene muro perimetral? Introduce sus datos</label>
+        <div class="field" style="border:0"><label for="muE">Espesor del muro, e</label><input type="number" step="any" id="muE"><span class="u">m</span></div>
+        <div class="field" style="border:0"><label for="muH">Altura del muro, H</label><input type="number" step="any" id="muH"><span class="u">m</span></div>
+        <div class="field" style="border:0"><label for="muQ">Carga del forjado que apoya en el muro</label><input type="number" step="any" id="muQ"><span class="u">kN/m</span></div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;font-size:14px"><span>Muro en el lado:</span>
+          <label class="chk"><input type="checkbox" id="muN" checked style="width:auto"> norte</label><label class="chk"><input type="checkbox" id="muS" checked style="width:auto"> sur</label><label class="chk"><input type="checkbox" id="muEe" checked style="width:auto"> este</label><label class="chk"><input type="checkbox" id="muW" checked style="width:auto"> oeste</label></div>
+        <span class="hint" style="margin:0">Norte = lado superior del esquema (y mayor); este = lado derecho (x mayor). Desmarca el lado sin muro (por ejemplo, la entrada a un garaje). La carga del forjado es el N<sub>k</sub> del paso 0 de la calculadora del muro; déjala vacía si el forjado no apoya en el muro. Si no hay muro, deja el bloque vacío.</span>
+      </div>
+      <div id="muOut"></div>
       <div class="calc">
         <div class="row"><span class="k">Carga total</span><span class="f" id="f11"></span></div>
         <div class="row"><span class="k">Peso de la losa</span><span class="f" id="f12"></span></div>
@@ -234,6 +248,12 @@ footer ul{margin:6px 0 0;padding-left:18px}
         <div class="row"><span class="k">Armadura necesaria</span><span class="f" id="f34"></span></div>
         <div class="row"><span class="k">Refuerzo</span><span class="f" id="f35"></span></div>
       </div>
+      <div class="calc"><div class="row"><span class="k">Dónde va el refuerzo</span><span class="f" id="f36"></span></div></div>
+      <div class="drawing" style="margin-top:0">
+        <div class="box"><h3>Planta · cara inferior</h3><svg id="armI" viewBox="0 0 360 300" role="img" aria-label="Planta de la armadura inferior: base en dos direcciones y refuerzo en las bandas de pilares"></svg></div>
+        <div class="box"><h3>Planta · cara superior</h3><svg id="armS" viewBox="0 0 360 300" role="img" aria-label="Planta de la armadura superior: base en dos direcciones y refuerzo en el centro de los vanos"></svg></div>
+      </div>
+      <p class="cap" style="margin-top:-4px">Esquema: la base se dibuja más espaciada que la real. La banda de pilares mide la mitad de la distancia, entre ejes, al pilar más próximo, y va centrada en el eje: un cuarto de esa distancia a cada lado. Lleva el refuerzo inferior. Lo que queda entre dos bandas es la franja central, con el refuerzo superior. El ancho de banda solo sitúa el refuerzo: la cantidad sale del cálculo de arriba.</p>
       <div class="try"><span>Tu A<sub>s,base</sub>:</span><input type="number" step="any" id="try3" aria-label="Tu armadura base en cm2 por metro"><span class="u">cm²/m</span><span id="c3"></span><span style="margin-left:8px">Tu A<sub>s</sub>:</span><input type="number" step="any" id="try3b" aria-label="Tu armadura necesaria en cm2 por metro"><span class="u">cm²/m</span><span id="c3b"></span></div>
     </div>
   </article>
@@ -241,6 +261,7 @@ footer ul{margin:6px 0 0;padding-left:18px}
   <div class="box" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px"><p style="margin:0;flex:1 1 240px;font-size:13.5px;color:var(--muted)">Ya sabes cuánto mide y cómo se arma. ¿Y cómo se construye? Repasa el proceso de ejecución paso a paso.</p><a href="proceso-losa.html" style="font:600 14px var(--sans);color:var(--panel);background:var(--bad);border:1px solid var(--bad);border-radius:4px;padding:9px 16px;text-decoration:none">Proceso constructivo</a></div>
 
   <div style="margin-bottom:14px;padding:12px 14px;border:1px solid var(--warn);background:var(--warn-soft);border-radius:6px;font-size:13.5px;line-height:1.5"><b>Qué no comprueba esta herramienta.</b> El predimensionado usa la tensión admisible del terreno (σ<sub>adm</sub>) que tú introduces y no estudia asientos ni el bulbo de presiones. La σ<sub>adm</sub> debe proceder del estudio geotécnico y corresponder al ancho y a la profundidad de la cimentación calculada. Si hay estratos blandos bajo la zapata o zapatas próximas cuyos bulbos puedan solaparse, hay que comprobarlo aparte.</div>
+  <div style="margin-bottom:14px;padding:12px 14px;border:1px solid var(--warn);background:var(--warn-soft);border-radius:6px;font-size:13.5px;line-height:1.5"><b>Muros de sótano.</b> De los muros solo entra en esta herramienta la carga vertical (peso propio y forjado). No incluye el empuje de tierras ni el momento que transmiten al borde de la losa: el espesor y la armadura del muro se calculan en la calculadora del muro de sótano.</div>
   <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con la Guía de aplicación del Código Estructural y el DB SE-C. Tampoco sustituye al cálculo con un modelo de interacción suelo-estructura (DB SE-C, anejo E). Simplificaciones y lo que no se comprueba:
     <ul>
       <li>la rigidez de la estructura frente al terreno (K<sub>r</sub>, anejo E.2) la sustituye la lista del paso 0;</li>
@@ -280,16 +301,24 @@ function addRow(){
   tr.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));
   $('loads').querySelector('tbody').appendChild(tr);
 }
+function wallLoads(Lx,Ly,x0,y0){
+  const e=v('muE'),Hm=v('muH'),qf=vd('muQ',0);
+  if(!(e>0&&Hm>0&&Lx>0&&Ly>0)) return [];
+  const q=25*e*Hm+qf, out=[];
+  const S=[['muN','Muro norte',Lx-e,x0+Lx/2,y0+Ly-e/2],['muS','Muro sur',Lx-e,x0+Lx/2,y0+e/2],['muEe','Muro este',Ly-e,x0+Lx-e/2,y0+Ly/2],['muW','Muro oeste',Ly-e,x0+e/2,y0+Ly/2]];
+  S.forEach(([id,n,len,x,y])=>{if($(id).checked) out.push({n,N:q*len,x,y,len,q,auto:true,side:id});});
+  return out;
+}
 function loads(){
   const out=[];
   $('loads').querySelectorAll('tbody tr').forEach(tr=>{
     const ins=tr.querySelectorAll('input');
     const N=num(ins[1].value),x=num(ins[2].value),y=num(ins[3].value);
-    if(isFinite(N)&&N>0) out.push({n:ins[0].value||ins[0].placeholder,N,x,y});
+    if(isFinite(N)&&N>0) out.push({n:ins[0].value||ins[0].placeholder,N,x,y,ix:ins[2],iy:ins[3]});
   });
   return out;
 }
-const IDS=['f11','f12','f13','f14','f15','f21','f22','f23','f24','f25','f26','f27','f31','f32','f33','f34','f35'];
+const IDS=['f11','f12','f13','f14','f15','f21','f22','f23','f24','f25','f26','f27','f31','f32','f33','f34','f35','f36'];
 const TAGS=['t0','t1','t2','t3'];
 const CHK=['c1a','c1','c2','c2b','c3','c3b'];
 function blank(){IDS.forEach(id=>$(id).innerHTML=dash);TAGS.concat(CHK).forEach(id=>$(id).innerHTML='');$('sug2').textContent='';}
@@ -306,7 +335,29 @@ function calc(){
   blank();
   const Lx=v('Lx'),Ly=v('Ly'),x0=vd('x0',0),y0=vd('y0',0),lmax=v('lmax');
   const sig=v('sig'),k30=v('k30'),soil=$('soil').value,fck=vd('fck',25),fyk=v('fyk'),rec=vd('rec',5),phi=v('phiB'),NkP=v('NkP'),c=v('cP')/100;
-  const fyd=fyk/1.15, L=loads(), N=L.reduce((a,b)=>a+b.N,0), haveL=Lx>0&&Ly>0, A=haveL?Lx*Ly:NaN;
+  const LP=loads(), LW=wallLoads(Lx,Ly,x0,y0), L=LP.concat(LW);
+  /* coordenadas fuera de la losa: se marcan en rojo y no se calcula hasta corregirlas */
+  $('loads').querySelectorAll('input.bad-in').forEach(el=>el.classList.remove('bad-in'));
+  const badL=[];
+  if(Lx>0&&Ly>0) LP.forEach(l=>{const bx=isFinite(l.x)&&(l.x<x0-1e-6||l.x>x0+Lx+1e-6), by=isFinite(l.y)&&(l.y<y0-1e-6||l.y>y0+Ly+1e-6);
+    if(bx)l.ix.classList.add('bad-in'); if(by)l.iy.classList.add('bad-in'); if(bx||by)badL.push(`${l.n} (${bx?`x = ${nf(l.x)}`:''}${bx&&by?', ':''}${by?`y = ${nf(l.y)}`:''})`);});
+  $('rowWarn').innerHTML=badL.length?`<div class="note" style="border-left-color:var(--bad);background:var(--bad-soft)"><b>Coordenada fuera de la losa:</b> ${badL.join('; ')}. La losa va de x = ${nf(x0)} a ${nf(x0+Lx)} y de y = ${nf(y0)} a ${nf(y0+Ly)} (mismo origen que los pilares). Corrige el valor en rojo: hasta entonces no se calcula. Si la losa no es rectangular, divídela en rectángulos.</div>`:'';
+  if(badL.length){
+    $('summary').innerHTML='<div><span class="lab">Revisa los datos</span><span class="big">Hay coordenadas fuera de la losa (en rojo en la tabla del paso 1)</span></div>';
+    drawPlan(L,Lx,Ly,x0,y0,NaN,NaN); drawSec(NaN,NaN,NaN,false); drawArm([],NaN,NaN,0,0,NaN,NaN,null); $('muOut').innerHTML='';
+    return;
+  }
+  const fyd=fyk/1.15, N=L.reduce((a,b)=>a+b.N,0), haveL=Lx>0&&Ly>0, A=haveL?Lx*Ly:NaN;
+  /* salida del bloque del muro */
+  {const e=v('muE'),Hm=v('muH'),qf=vd('muQ',0); let o='';
+   if(LW.length){const q=LW[0].q;
+     o+=`<div class="calc"><div class="row"><span class="k">Carga del muro por metro</span><span class="f">${G('q = 25·e·H + N<sub>k,forjado</sub>')} = 25·${nf(e)}·${nf(Hm)} + ${nf(qf,1)} = ${R(nf(q,1)+' kN/m')}</span></div>`;
+     o+=`<div class="row"><span class="k">Cargas añadidas</span><span class="f">`+LW.map(w=>`${w.n}: ${nf(q,1)}·${nf(w.len)} = ${R(nf(w.N,1)+' kN')} en (${nf(w.x)}; ${nf(w.y)})`).join('<br>')+` <span class="gen">(longitudes por el eje del muro: L − e y B − e)</span></span></div></div>`;
+     if(LW.length<4) o+=`<div class="note">Hay un lado sin muro. El forjado que apoyaría en él descansa ahora en vigas o pilares (por ejemplo, el dintel de la entrada): añade esas cargas como filas en la tabla.</div>`;
+   } else if(haveL&&LP.length&&!LP.some(l=>/muro/i.test(l.n))&&!(e>0||Hm>0)){
+     o+=`<div class="note extra">¿Tu losa no tiene muro perimetral? Si lo tiene, rellena sus datos: su peso cuenta en la presión y en la armadura.</div>`;
+   } else if((e>0)!==(Hm>0)) o+=`<div class="note">Para añadir el muro faltan el espesor o la altura.</div>`;
+   $('muOut').innerHTML=o;}
   const chk=['k1','k2','k3','k4'].map(id=>$(id).checked);
   $('t0').innerHTML=chk.every(Boolean)?pill('ok','se puede usar'):pill('warn',`${chk.filter(Boolean).length} de 4 condiciones`);
 
@@ -347,7 +398,7 @@ function calc(){
   /* Paso 1 */
   let xR=NaN,yR=NaN,sigma=NaN;
   if(L.length){
-    $('f11').innerHTML=`${G('ΣN<sub>k</sub> = ')}${L.map(l=>nf(l.N,0)).join(' + ')} = ${R(nf(N,1)+' kN')}`;
+    $('f11').innerHTML=`${G('ΣN<sub>k</sub> = ')}${L.map(l=>nf(l.N,Math.abs(l.N-Math.round(l.N))>1e-6?1:0)).join(' + ')} = ${R(nf(N,1)+' kN')}`;
     check('try1a','c1a',N,0.01);
   }
   if(haveL){
@@ -404,21 +455,122 @@ function calc(){
   }
   drawPlan(L,Lx,Ly,x0,y0,xR,yR);
   drawSec(h,phi,sAd,ref>0);
+  {const Pp=LP.filter(l=>isFinite(l.x)&&isFinite(l.y)), uq=a=>[...new Set(a.map(v=>Math.round(v*100)/100))].sort((p,q)=>p-q);
+   const ax=uq(Pp.map(l=>l.x)), ay=uq(Pp.map(l=>l.y)), gx=[],gy=[];
+   for(let i=1;i<ax.length;i++)gx.push(ax[i]-ax[i-1]); for(let i=1;i<ay.length;i++)gy.push(ay[i]-ay[i-1]);
+   const g=gx.concat(gy);
+   if(g.length&&isFinite(ref)){const lm=Math.min(...g), b=lm/2, fx=uq(gx.map(v=>v-b)), fy=uq(gy.map(v=>v-b));
+     const fc=[fx.length?`${fx.map(v=>nf(v)).join(' / ')} m en x`:'',fy.length?`${fy.map(v=>nf(v)).join(' / ')} m en y`:''].filter(Boolean).join(' · ');
+     $('f36').innerHTML=`${G('banda de pilares = ')}${G(fr('l<sub>menor</sub>','2'))} = ${fr(nf(lm),'2')} = ${R(nf(b)+' m')} <span class="gen">(${nf(b/2,3)} m a cada lado del eje)</span>`+(ref>0?` → refuerzo inferior`:'')+`<br>${G('franja central = luz − banda')} = ${fc}`+(ref>0?` → refuerzo superior`:'')+(ref>0?'':` <span class="gen">(no hace falta refuerzo: solo base)</span>`);
+   } else if(isFinite(ref)) $('f36').innerHTML=`${dash} <span class="gen">(escribe las coordenadas de los pilares)</span>`;}
+  drawArm(L,Lx,Ly,x0,y0,phi,sAd,ref>0?pr:null);
 }
 const T=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-family="IBM Plex Mono,monospace" font-size="${o.s||11}" fill="${o.c||'var(--ink)'}" ${o.a?`text-anchor="${o.a}"`:''}>${t}</text>`;
+function drawArm(L,Lx,Ly,x0,y0,phi,sAd,pr){
+  const tg={I:$('armI'),S:$('armS')};
+  if(!(Lx>0&&Ly>0&&isFinite(sAd))){tg.I.innerHTML='';tg.S.innerHTML='';return;}
+  const W=360,H=300,m=40,sc=Math.min((W-2*m)/Lx,(H-2*m)/Ly), ox=(W-Lx*sc)/2, oy=(H+Ly*sc)/2-4;
+  const X=x=>ox+(x-x0)*sc, Y=y=>oy-(y-y0)*sc, xL=ox, xR=ox+Lx*sc, yT=oy-Ly*sc, yB=oy;
+  const P=L.filter(l=>!l.auto&&isFinite(l.x)&&isFinite(l.y));
+  const uniq=a=>[...new Set(a.map(v=>Math.round(v*100)/100))].sort((p,q)=>p-q);
+  const ax=uniq(P.map(l=>l.x)), ay=uniq(P.map(l=>l.y));
+  /* ancho de banda: la mitad de la luz menor entre ejes */
+  const gaps=[];for(let i=1;i<ax.length;i++)gaps.push(ax[i]-ax[i-1]);for(let i=1;i<ay.length;i++)gaps.push(ay[i]-ay[i-1]);
+  const bw=gaps.length?Math.min(...gaps)/2:0;
+  const clipX=(a,b)=>[Math.max(xL,a),Math.min(xR,b)], clipY=(a,b)=>[Math.max(yT,a),Math.min(yB,b)];
+  function base(){ /* cuadrícula esquemática de la base */
+    const sp=sAd/100*sc, k=Math.max(1,Math.ceil(7/sp)), st=sp*k, r=0.05*sc; let o='';
+    for(let x=xL+r;x<=xR-r+0.01;x+=st) o+=`<line x1="${x}" y1="${yT+r}" x2="${x}" y2="${yB-r}" stroke="var(--rebar)" stroke-width=".45" opacity=".3"/>`;
+    for(let y=yT+r;y<=yB-r+0.01;y+=st) o+=`<line x1="${xL+r}" y1="${y}" x2="${xR-r}" y2="${y}" stroke="var(--rebar)" stroke-width=".45" opacity=".3"/>`;
+    return o;
+  }
+  function frame(){ let o=`<rect x="${xL}" y="${yT}" width="${xR-xL}" height="${yB-yT}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/>`;
+    return o; }
+  function axes(){ let o='';
+    ax.forEach(x=>o+=`<line x1="${X(x)}" y1="${yT-8}" x2="${X(x)}" y2="${yB+8}" stroke="var(--accent)" stroke-width=".7" stroke-dasharray="6 3 1.5 3"/>`);
+    ay.forEach(y=>o+=`<line x1="${xL-8}" y1="${Y(y)}" x2="${xR+8}" y2="${Y(y)}" stroke="var(--accent)" stroke-width=".7" stroke-dasharray="6 3 1.5 3"/>`);
+    P.forEach(l=>o+=`<rect x="${X(l.x)-3}" y="${Y(l.y)-3}" width="6" height="6" fill="var(--ink)"/>`);
+    return o; }
+  function strips(bars){ /* bars: lista de [orientación, a, b] bandas a dibujar con refuerzo */
+    let o='';
+    bars.forEach(([d,a,b])=>{
+      if(d==='h'){const [y1,y2]=clipY(Math.min(Y(a),Y(b)),Math.max(Y(a),Y(b))); if(y2-y1<1)return;
+        o+=`<rect x="${xL}" y="${y1}" width="${xR-xL}" height="${y2-y1}" fill="var(--rebar)" fill-opacity=".07" stroke="var(--rebar)" stroke-width=".6" stroke-dasharray="3 2"/>`;
+        const n=Math.max(2,Math.round((y2-y1)/11)); for(let i=0;i<n;i++){const y=y1+(y2-y1)*(i+.5)/n;o+=`<line x1="${xL+4}" y1="${y}" x2="${xR-4}" y2="${y}" stroke="var(--rebar)" stroke-width="1.3"/>`;}}
+      else {const [x1,x2]=clipX(Math.min(X(a),X(b)),Math.max(X(a),X(b))); if(x2-x1<1)return;
+        o+=`<rect x="${x1}" y="${yT}" width="${x2-x1}" height="${yB-yT}" fill="var(--rebar)" fill-opacity=".07" stroke="var(--rebar)" stroke-width=".6" stroke-dasharray="3 2"/>`;
+        const n=Math.max(2,Math.round((x2-x1)/11)); for(let i=0;i<n;i++){const x=x1+(x2-x1)*(i+.5)/n;o+=`<line x1="${x}" y1="${yT+4}" x2="${x}" y2="${yB-4}" stroke="var(--rebar)" stroke-width="1.3"/>`;}}
+    });
+    return o; }
+  const lab=pr?`base Ø${phi} c/${sAd} + refuerzo Ø${pr} c/${sAd}`:`base Ø${phi} c/${sAd} · sin refuerzo`;
+  /* inferior: refuerzo en las bandas de pilares (centradas en los ejes) */
+  let oI=frame()+base(), oS=frame()+base();
+  if(pr&&bw>0){
+    oI+=strips(ay.map(y=>['h',y-bw/2,y+bw/2]).concat(ax.map(x=>['v',x-bw/2,x+bw/2])));
+    const cy=[];for(let i=1;i<ay.length;i++)cy.push(['h',ay[i-1]+bw/2,ay[i]-bw/2]);
+    const cx=[];for(let i=1;i<ax.length;i++)cx.push(['v',ax[i-1]+bw/2,ax[i]-bw/2]);
+    oS+=strips(cy.concat(cx));
+  }
+  oI+=axes(); oS+=axes();
+  /* cotas del ancho de las bandas */
+  const hc=(a,b,y,t)=>`<g stroke="var(--ink)" stroke-width=".8"><line x1="${a}" y1="${y}" x2="${b}" y2="${y}"/><line x1="${a}" y1="${y-3}" x2="${a}" y2="${y+3}"/><line x1="${b}" y1="${y-3}" x2="${b}" y2="${y+3}"/></g>`+T((a+b)/2,y-4,t,{a:'middle',s:9.5,c:'var(--rebar)'});
+  const vc=(a,b,x,t)=>`<g stroke="var(--ink)" stroke-width=".8"><line x1="${x}" y1="${a}" x2="${x}" y2="${b}"/><line x1="${x-3}" y1="${a}" x2="${x+3}" y2="${a}"/><line x1="${x-3}" y1="${b}" x2="${x+3}" y2="${b}"/></g>`+T(x+5,(a+b)/2+3,t,{s:9.5,c:'var(--rebar)'});
+  if(pr&&bw>0){
+    const cxI=ax.length>2?ax[1]:ax[0], cyI=ay.length>2?ay[1]:ay[0];
+    if(ax.length) oI+=hc(Math.max(xL,X(cxI-bw/2)),Math.min(xR,X(cxI+bw/2)),yT-16,nf(bw));
+    if(ay.length) oI+=vc(Math.max(yT,Y(cyI+bw/2)),Math.min(yB,Y(cyI-bw/2)),xR+14,nf(bw));
+    if(ax.length>1) oS+=hc(X(ax[0]+bw/2),X(ax[1]-bw/2),yT-16,nf(ax[1]-ax[0]-bw));
+    if(ay.length>1) oS+=vc(Y(ay[1]-bw/2),Y(ay[0]+bw/2),xR+14,nf(ay[1]-ay[0]-bw));
+  }
+  oI+=T(W/2,yB+22,pr?`refuerzo abajo: bandas de pilares`:`solo base en las dos direcciones`,{a:'middle',s:10,c:'var(--rebar)'})+T(W/2,yB+36,lab,{a:'middle',s:9.5,c:'var(--muted)'});
+  oS+=T(W/2,yB+22,pr?`refuerzo arriba: centro de los vanos`:`solo base en las dos direcciones`,{a:'middle',s:10,c:'var(--rebar)'})+T(W/2,yB+36,lab,{a:'middle',s:9.5,c:'var(--muted)'});
+  if(pr&&!(bw>0)){const t=T(W/2,yT-10,'escribe las coordenadas de los pilares para situar el refuerzo',{a:'middle',s:9,c:'var(--warn)'});oI+=t;oS+=t;}
+  tg.I.innerHTML=oI; tg.S.innerHTML=oS;
+}
+
 function drawPlan(L,Lx,Ly,x0,y0,xR,yR){
-  const g=$('plan'); if(!(Lx>0&&Ly>0)){g.innerHTML='';return;}
-  const W=360,H=300,m=34,sc=Math.min((W-2*m)/Lx,(H-2*m)/Ly), ox=(W-Lx*sc)/2, oy=(H+Ly*sc)/2;
+  const targets=[$('plan'),$('plan1')];
+  if(!(Lx>0&&Ly>0)){targets.forEach(g=>g.innerHTML='');$('outWarn').innerHTML='';return;}
+  const W=360,H=300,m=40,sc=Math.min((W-2*m)/Lx,(H-2*m)/Ly), ox=(W-Lx*sc)/2, oy=(H+Ly*sc)/2+6;
   const X=x=>ox+(x-x0)*sc, Y=y=>oy-(y-y0)*sc;
   let s=`<rect x="${ox}" y="${oy-Ly*sc}" width="${Lx*sc}" height="${Ly*sc}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.4"/>`;
-  const Nm=Math.max(...L.map(l=>l.N),1);
-  L.forEach(l=>{if(isFinite(l.x)&&isFinite(l.y)){const r=4+12*Math.sqrt(l.N/Nm);s+=`<circle cx="${X(l.x)}" cy="${Y(l.y)}" r="${r}" fill="var(--accent)" fill-opacity=".25" stroke="var(--accent)"/>`+T(X(l.x)+r+2,Y(l.y)-r,l.n,{s:9.5,c:'var(--muted)'});}});
+  /* muro perimetral */
+  const W4=L.filter(l=>l.auto);
+  if(W4.length){const t=Math.max(3,v('muE')*sc), x1=ox, x2=ox+Lx*sc, y1=oy-Ly*sc, y2=oy;
+    const R4={muN:[x1,y1,x2-x1,t],muS:[x1,y2-t,x2-x1,t],muW:[x1,y1,t,y2-y1],muEe:[x2-t,y1,t,y2-y1]};
+    W4.forEach(w=>{const r=R4[w.side];s+=`<rect x="${r[0]}" y="${r[1]}" width="${r[2]}" height="${r[3]}" fill="var(--concrete-edge)"/>`;});}
+  /* ejes por las coordenadas de los pilares (cargas escritas en la tabla) */
+  const P=L.filter(l=>!l.auto&&isFinite(l.x)&&isFinite(l.y));
+  const fuera=P.filter(l=>l.x<x0-1e-6||l.x>x0+Lx+1e-6||l.y<y0-1e-6||l.y>y0+Ly+1e-6).map(l=>l.n);
+  $('outWarn').innerHTML='';
+  const uniq=a=>[...new Set(a.map(v=>Math.round(v*100)/100))].sort((p,q)=>p-q);
+  const ax=uniq(P.map(l=>l.x)), ay=uniq(P.map(l=>l.y));
+  ax.forEach(x=>{s+=`<line x1="${X(x)}" y1="${oy-Ly*sc-12}" x2="${X(x)}" y2="${oy+8}" stroke="var(--accent)" stroke-width=".8" stroke-dasharray="7 3 1.5 3"/>`;});
+  ay.forEach(y=>{s+=`<line x1="${ox-8}" y1="${Y(y)}" x2="${ox+Lx*sc+12}" y2="${Y(y)}" stroke="var(--accent)" stroke-width=".8" stroke-dasharray="7 3 1.5 3"/>`;});
+  const ty=oy-Ly*sc-18, tx=ox+Lx*sc+18;
+  for(let i=1;i<ax.length;i++){const a=X(ax[i-1]),b=X(ax[i]);s+=`<g stroke="var(--muted)" stroke-width=".8"><line x1="${a}" y1="${ty}" x2="${b}" y2="${ty}"/><line x1="${a}" y1="${ty-3}" x2="${a}" y2="${ty+3}"/><line x1="${b}" y1="${ty-3}" x2="${b}" y2="${ty+3}"/></g>`+T((a+b)/2,ty-4,nf(ax[i]-ax[i-1]),{a:'middle',s:9,c:'var(--ink)'});}
+  for(let i=1;i<ay.length;i++){const a=Y(ay[i-1]),b=Y(ay[i]);s+=`<g stroke="var(--muted)" stroke-width=".8"><line x1="${tx}" y1="${a}" x2="${tx}" y2="${b}"/><line x1="${tx-3}" y1="${a}" x2="${tx+3}" y2="${a}"/><line x1="${tx-3}" y1="${b}" x2="${tx+3}" y2="${b}"/></g>`+T(tx+4,(a+b)/2+3,nf(ay[i]-ay[i-1]),{s:9,c:'var(--ink)'});}
+  /* pilares: cuadrado y círculo proporcional; cargas en el mismo punto comparten rótulo */
+  const Nm=Math.max(...P.map(l=>l.N),1);
+  const grp=new Map();
+  P.forEach(l=>{const k=Math.round(l.x*100)+','+Math.round(l.y*100);if(!grp.has(k))grp.set(k,[]);grp.get(k).push(l);});
+  grp.forEach(arr=>{
+    arr.sort((a,b)=>b.N-a.N);
+    const px=X(arr[0].x),py=Y(arr[0].y); let rmax=0;
+    arr.forEach(l=>{const r=4+10*Math.sqrt(l.N/Nm);rmax=Math.max(rmax,r);s+=`<circle cx="${px}" cy="${py}" r="${r}" fill="var(--accent)" fill-opacity=".18" stroke="var(--accent)" stroke-width=".8"/>`;});
+    s+=`<rect x="${px-3.5}" y="${py-3.5}" width="7" height="7" fill="var(--ink)"/>`;
+    const mid=px>=W*0.36&&px<=W*0.64, a=px>W*0.64?'end':'start', top=py<H*0.32, n=arr.length;
+    const lx=mid?px+rmax*0.75+2:(a==='end'?px-3:px+3);
+    const y1=mid?(top?py+rmax*0.75+10:py-rmax*0.75-2-(n-1)*10.5):(top?py+rmax+10:py-rmax-3-(n-1)*10.5);
+    s+=`<text x="${lx}" y="${y1}" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="var(--muted)" text-anchor="${a}">`+arr.map((l,i)=>`<tspan x="${lx}" dy="${i?10.5:0}">${l.n}</tspan>`).join('')+`</text>`;
+  });
   const cx=X(x0+Lx/2),cy=Y(y0+Ly/2);
   s+=`<g stroke="var(--ink)" stroke-width="1.4"><line x1="${cx-8}" y1="${cy}" x2="${cx+8}" y2="${cy}"/><line x1="${cx}" y1="${cy-8}" x2="${cx}" y2="${cy+8}"/></g>`;
   if(isFinite(xR)&&isFinite(yR)) s+=`<circle cx="${X(xR)}" cy="${Y(yR)}" r="4.5" fill="var(--rebar)"/>`+T(X(xR)+7,Y(yR)+12,'R',{c:'var(--rebar)'});
   s+=T(W/2,oy+20,`L = ${nf(Lx)} m`,{a:'middle',c:'var(--muted)'});
-  s+=T(ox-8,H/2,`B = ${nf(Ly)} m`,{a:'middle',c:'var(--muted)'}).replace('<text','<text transform="rotate(-90 '+(ox-8)+' '+(H/2)+')"');
-  g.innerHTML=s;
+  s+=T(ox-22,oy-Ly*sc/2,`B = ${nf(Ly)} m`,{a:'middle',c:'var(--muted)'}).replace('<text','<text transform="rotate(-90 '+(ox-22)+' '+(oy-Ly*sc/2)+')"');
+  s+=T(W/2,oy-Ly*sc-30,'N',{a:'middle',s:9,c:'var(--muted)'});
+  targets.forEach(g=>g.innerHTML=s);
 }
 function drawSec(h,phi,s,refz){
   const g=$('sec'); if(!(h>0)){g.innerHTML='';return;}
@@ -437,6 +589,7 @@ $('addRow').addEventListener('click',()=>{addRow();calc();});
 $('clear').addEventListener('click',()=>{
   ['Lx','Ly','x0','y0','lmax','sig','k30','fck','rec','NkP','cP','hDef','try1a','try1','try2','try2b','try3','try3b'].forEach(id=>{const e=$(id);if(e)e.value='';});
   ['k1','k2','k3','k4'].forEach(id=>$(id).checked=false);
+  ['muE','muH','muQ'].forEach(id=>$(id).value='');['muN','muS','muEe','muW'].forEach(id=>$(id).checked=true);
   $('fyk').value='500';$('phiB').value='16';$('soil').value='c';
   $('loads').querySelector('tbody').innerHTML='';rid=0;for(let i=0;i<4;i++)addRow();
   calc();$('Lx').focus();
