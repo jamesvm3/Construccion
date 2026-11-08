@@ -549,3 +549,9 @@ body[data-page=proceso] .tabs{background:transparent;padding:0;gap:8px;width:100
 body[data-page=proceso] .tab{background:var(--panel);color:var(--accent-t);border:1px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.12),0 2px 6px rgba(0,0,0,.06);font-weight:600;padding:10px 16px;border-radius:12px;flex:1 1 auto;text-align:center;transition:transform .25s var(--ease),background .25s var(--ease);-webkit-tap-highlight-color:transparent}
 body[data-page=proceso] .tab:active{transform:scale(.96)}
 body[data-page=proceso] .tab[aria-selected="true"]{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(0,122,255,.35)}
+
+/* interruptores con ancho en línea (p. ej. muro perimetral de la losa): lista iOS con interruptores */
+body[data-page=tool] label.chk input[type=checkbox]{width:48px!important;height:29px!important;flex:none}
+body[data-page=tool] div[style*="gap:6px 16px"]{display:block!important;background:var(--panel);border-radius:14px;padding:2px 14px;margin-top:8px}
+body[data-page=tool] div[style*="gap:6px 16px"]>span:first-child{display:block;font-weight:600;font-size:14px;padding:10px 0 2px}
+body[data-page=tool] div[style*="gap:6px 16px"] label.chk{text-transform:capitalize}
