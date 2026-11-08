@@ -1,110 +1,16 @@
-<!doctype html><html><head><meta charset=utf8>
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
 <script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
-<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
 <title>Zapata combinada C2</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
-<style>
-:root{
-  --bg:#eef0ee; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#cfd5d3;
-  --soft:#f5f7f6; --accent:#1f5f7a; --accent-soft:#e1edf2; --rebar:#b0392b;
-  --concrete:#d9dcd8; --concrete-edge:#8e9692;
-  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
-  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
-  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    color-scheme:dark;
-    --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
-    --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
-    --concrete:#3a4446; --concrete-edge:#6e7b7d;
-    --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
-  }
-}
-:root[data-theme="dark"]{
-  color-scheme:dark;
-  --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
-  --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
-  --concrete:#3a4446; --concrete-edge:#6e7b7d;
-  --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
-}
-*{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0}
-.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 60px}
-header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
-.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-h1{font-family:var(--cond);font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance;letter-spacing:-.01em}
-.src{font-size:13px;color:var(--muted);max-width:44ch}
-.mode{display:flex;align-items:center;gap:10px;font-size:14px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:6px}
-.grid{display:grid;grid-template-columns:350px 1fr;gap:22px;align-items:start}
-@media (max-width:860px){.grid{grid-template-columns:1fr}}
-aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;flex-direction:column;gap:14px}
-@media (max-width:860px){aside{position:static}}
-.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
-.box h2{font-family:var(--cond);font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--accent)}
-.field{display:grid;grid-template-columns:1fr 124px 46px;align-items:center;gap:8px;padding-block:5px;border-bottom:1px dashed var(--line)}
-.field:last-child{border-bottom:0}
-.field label{font-size:13.5px}
-.field .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
-input[type=number],select{width:100%;font-family:var(--mono);font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--soft);color:var(--ink);text-align:right}
-select{text-align:left}
-input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
-.hint{font-size:12px;color:var(--muted);margin-top:8px}
-.helper{margin-top:10px;font-size:13px}
-.helper summary{cursor:pointer;color:var(--accent);font-weight:500}
-.helper .field{grid-template-columns:1fr 84px 46px}
-button{font-family:var(--sans);font-size:13px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:6px 12px;border-radius:4px;cursor:pointer}
-button.ghost{background:transparent;color:var(--accent)}
-.summary{background:var(--ink);color:var(--bg);border-radius:6px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:18px 32px;align-items:baseline}
-.summary .big{font-family:var(--cond);font-size:26px;font-weight:700;letter-spacing:.01em}
-.summary .lab{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;display:block}
-.drawing{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
-@media (max-width:620px){.drawing{grid-template-columns:1fr}}
-.drawing .box{padding:10px 12px}
-.drawing h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:500}
-svg{display:block;width:100%;height:auto}
-main{display:flex;flex-direction:column;gap:16px;min-width:0}
-.step{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
-.step-h{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--soft)}
-.num{font-family:var(--mono);font-weight:600;font-size:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--accent);color:var(--accent);flex:none}
-.step-h h2{font-family:var(--cond);font-size:19px;margin:0;font-weight:700}
-.step-h .tag{margin-left:auto}
-.step-b{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
-.why{font-size:14px;color:var(--muted);max-width:70ch;margin:0}
-.calc{display:flex;flex-direction:column;gap:8px}
-.row{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 14px;align-items:baseline;padding:8px 10px;border-radius:4px;background:var(--soft)}
-@media (max-width:520px){.row{grid-template-columns:1fr}}
-.row .k{font-size:13.5px;font-weight:500}
-.f{font-family:var(--mono);font-size:13.5px;overflow-wrap:anywhere}
-.f .gen{color:var(--muted)}
-.f .res{color:var(--accent);font-weight:600}
-.f sub{font-size:.75em}
-.practice .res,.practice .sug,.practice .step-h .tag,.practice .summary,.practice .drawing svg,.practice .row .pill{filter:blur(7px);user-select:none}
-.try{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;border-top:1px dashed var(--line);padding-top:10px}
-.try input{width:110px}
-.pill{font-family:var(--mono);font-size:11.5px;padding:3px 8px;border-radius:20px;white-space:nowrap}
-.pill.ok{background:var(--ok-soft);color:var(--ok)}
-.pill.warn{background:var(--warn-soft);color:var(--warn)}
-.pill.bad{background:var(--bad-soft);color:var(--bad)}
-.pill.info{background:var(--accent-soft);color:var(--accent)}
-.decide{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px;border:1.5px solid var(--accent);border-radius:4px;background:var(--accent-soft)}
-.decide label{font-weight:600;font-size:14px}
-.decide input,.decide select{width:110px}
-.decide .sug{font-size:13px;color:var(--muted)}
-.note{font-size:13px;border-left:3px solid var(--warn);padding:6px 10px;background:var(--warn-soft);color:var(--ink);border-radius:0 4px 4px 0}
-.note.extra{border-left-color:var(--accent);background:var(--accent-soft)}
-footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
-.chk{display:flex;align-items:center;gap:8px;font-size:13px}
-@media (prefers-reduced-motion:no-preference){.res,.pill{transition:filter .25s ease}}
- </style>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
-<link rel="stylesheet" href="mute.css">
-
+<link rel="stylesheet" href="apple.css">
+</head><body data-page="tool" data-tool="combinada" data-mat="H">
+<div class="shell">
+  <nav class="sidebar glass" id="sidebar" aria-label="Herramientas"></nav>
+  <div class="content">
+    <header class="navbar glass" id="navbar"></header>
 <div class="wrap">
-<a href="index.html#H" style="display:inline-flex;align-items:center;margin-bottom:14px;font:600 14px var(--sans);color:var(--panel);background:var(--ink);border:1px solid var(--ink);border-radius:6px;padding:6px 14px 6px 11px;text-decoration:none">← Menú de calculadoras</a>
 <header class="top mat-H">
   <div>
     <div class="mbadge">ZCb</div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Hormigón · Cimentaciones superficiales</small>Zapata combinada</h1></div>
@@ -123,7 +29,7 @@ footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid 
     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"><button type="button" id="clear">Limpiar datos</button></div>
     <div class="field"><label for="N1">Axil característico del pilar 1, N<sub>k1</sub></label><input id="N1" type="number" step="any"><span class="u">kN</span></div>
     <div class="field"><label for="N2">Axil característico del pilar 2, N<sub>k2</sub></label><input id="N2" type="number" step="any"><span class="u">kN</span></div>
-    <label class="chk" style="padding-block:7px;border-bottom:1px dashed var(--line)"><input type="checkbox" id="inc" checked> <span>Aumentar los axiles un 20 % para el área</span></label>
+    <label class="chk" style="padding-block:7px;border-bottom:1px dashed var(--line)"><input type="checkbox" id="inc" checked><span> <span>Aumentar los axiles un 20 % para el área</span></span></label>
     <div class="field"><label for="sig">Tensión admisible σ<sub>adm</sub></label><input id="sig" type="number" step="any"><span class="u">kN/m²</span></div>
     <div class="hint" style="margin:6px 0 10px">σ<sub>adm</sub> del estudio geotécnico, para el ancho de zapata que calcules. Esta herramienta no comprueba asientos ni bulbo de presiones.</div>
     <div class="field"><label for="L">Distancia entre ejes de pilares L</label><input id="L" type="number" step="any"><span class="u">m</span></div>
@@ -137,7 +43,7 @@ footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid 
   </div>
   <div class="box">
     <h2>Comprobaciones extra</h2>
-    <label class="chk"><input type="checkbox" id="useMin" checked> Aplicar armadura mínima</label>
+    <label class="chk"><input type="checkbox" id="useMin" checked><span> Aplicar armadura mínima</span></label>
     <p class="hint">«No olvidar comprobar la armadura mínima» (ficha HC.2).</p>
   </div>
 </aside>
@@ -253,18 +159,25 @@ footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid 
         <div class="row"><span class="k">Separación longitudinales</span><span class="f" id="f74"></span></div>
         <div class="row"><span class="k">Separación transversales</span><span class="f" id="f75"></span></div>
       </div>
-      <div class="note extra">Se recomienda terminar las barras en patilla. Las dos mallas se cierran en los bordes.</div>
+      <div class="arm"><div class="box"><h3>Planta · malla inferior (la superior es igual)</h3><svg id="armI" viewBox="0 0 480 200" role="img" aria-label="Planta de la malla inferior"></svg></div><div class="box"><h3>Sección A-A · las dos mallas</h3><svg id="armS" viewBox="0 0 640 220" role="img" aria-label="Sección transversal con la malla superior y la inferior"></svg></div></div>
+      <div class="note extra">Se recomienda terminar las barras en patilla, con una prolongación recta de al menos 5Ø tras el doblado (Guía del Código Estructural, fig. 8.2.4.a). Las dos mallas se cierran en los bordes.</div>
       <div class="try"><span>Tu nº de longitudinales:</span><input type="number" step="1" id="try7" aria-label="Tu número de barras longitudinales"><span id="c7"></span></div>
     </div>
   </article>
 
-  <div class="box" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px"><p style="margin:0;flex:1 1 240px;font-size:13.5px;color:var(--muted)">Ya sabes cuánto mide y cómo se arma la zapata combinada. ¿Y cómo se construye? Repasa el proceso de ejecución paso a paso.</p><a href="proceso-combinada.html" style="font:600 14px var(--sans);color:var(--panel);background:var(--bad);border:1px solid var(--bad);border-radius:4px;padding:9px 16px;text-decoration:none">Proceso constructivo</a></div>
+  <div class="box cta"><p>Ya sabes cuánto mide y cómo se arma la zapata combinada. ¿Y cómo se construye? Repasa el proceso de ejecución paso a paso.</p><a class="btn" href="proceso-combinada.html">Proceso constructivo</a></div>
 
   <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con la Guía de aplicación del Código Estructural y el DB SE-C. Unidades: kN, m, cm, mm y N/mm². Errores o sugerencias: <a href="mailto:jaimevergara@ugr.es">jaimevergara@ugr.es</a>. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
 </main>
 </div>
 </div>
 
+
+  </div>
+</div>
+<nav class="tabbar glass" id="tabbar" aria-label="Grupos de herramientas"></nav>
+<div class="scrim" id="scrim"></div>
+<div class="sheet glass" id="sheet" role="dialog" aria-label="Herramientas"></div>
 <script>
 (function(){
 const $=id=>document.getElementById(id);
@@ -284,7 +197,7 @@ function empty(){
   OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
   ['sug2','sug3'].forEach(id=>$(id).textContent='');
   $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce los dos axiles, σ<sub>adm</sub>, L, los pilares y sus φ</span></div>';
-  $('sec').innerHTML='';$('pl').innerHTML='';
+  $('sec').innerHTML='';$('pl').innerHTML='';['armI','armS'].forEach(i=>$(i).innerHTML='');
 }
 const up5=x=>Math.ceil(x/0.05-1e-9)*0.05;
 function calc(){
@@ -373,8 +286,53 @@ function calc(){
     <div><span class="lab">Cada malla (sup. e inf.)</span><span class="big">${nL} Ø${phi} c/${Math.floor(sL+1e-9)} · ${nT} Ø${phi} c/${Math.floor(sT+1e-9)}</span></div>
     <div><span class="lab">Tensión en el terreno</span><span class="big">${nf(s4,0)} kN/m²</span></div>`;
   draw(a,b,h,L,x1,l1,l2,V1);
+  drawArm(a,b,h,L,V1,l1,l2,nL,nT,phi,sL,sT);
 }
 function dim(x1,y,x2,t,s){return `<g stroke="var(--muted)" stroke-width="1"><line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}"/><line x1="${x1}" y1="${y-4}" x2="${x1}" y2="${y+4}"/><line x1="${x2}" y1="${y-4}" x2="${x2}" y2="${y+4}"/></g><text x="${(x1+x2)/2}" y="${y-5}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="${s||11}" fill="var(--ink)">${t}</text>`;}
+function drawArm(a,b,h,L,V1,l1,l2,nL,nT,phi,sL,sT){
+  const F='font-family="IBM Plex Mono,monospace"';
+  const T=(x,y,t,o)=>`<text x="${x}" y="${y}" ${F} font-size="11" ${o||'fill="var(--ink)"'}>${t}</text>`;
+  const RB='var(--rebar)', lab1=`${nL} Ø${phi} c/${Math.floor(sL+1e-9)}`, lab2=`${nT} Ø${phi} c/${Math.floor(sT+1e-9)}`;
+  // ---- Plantas de las dos mallas ----
+  function plan(id,sup){
+    const W=440,x0=20,sc=W/a,B=Math.max(60,b*sc),y0=24,r=0.05*sc;
+    let p=`<rect x="${x0}" y="${y0}" width="${W}" height="${B}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/>`;
+    const yL=i=>y0+r+(B-2*r)*i/(nL-1), xT=j=>x0+r+(W-2*r)*j/(nT-1);
+    let tr='',lo='';
+    for(let j=0;j<nT;j++) tr+=`<line x1="${xT(j)}" y1="${y0+r}" x2="${xT(j)}" y2="${y0+B-r}" stroke="${RB}" stroke-width="1.1" opacity=".55"/>`;
+    for(let i=0;i<nL;i++) lo+=`<line x1="${x0+r}" y1="${yL(i)}" x2="${x0+W-r}" y2="${yL(i)}" stroke="${RB}" stroke-width="2"/>`;
+    p+=sup?lo+tr:tr+lo;
+    const P1=x0+V1*sc,P2=P1+L*sc;
+    [[P1,l1,'P1'],[P2,l2,'P2']].forEach(([c,l,n])=>{p+=`<rect x="${c-l*sc/2}" y="${y0+B/2-l*sc/2}" width="${l*sc}" height="${l*sc}" fill="var(--panel)" fill-opacity=".7" stroke="var(--ink)" stroke-width="1.2" stroke-dasharray="3 2"/>`+T(c,y0+B/2+4,n,'text-anchor="middle" font-size="10" fill="var(--ink)"');});
+    const xc=P2;
+    p+=`<line x1="${xc}" y1="${y0-12}" x2="${xc}" y2="${y0+B+12}" stroke="var(--ink)" stroke-width="1" stroke-dasharray="7 3 1 3"/>`+T(xc+4,y0-4,'A','font-weight="700" fill="var(--ink)"')+T(xc+4,y0+B+14,'A','font-weight="700" fill="var(--ink)"');
+    p+=T(x0+4,y0-8,`longitudinales (paralelas a a): ${lab1}`,'font-weight="600" fill="var(--rebar)"');
+    p+=T(x0+4,y0+B+16,`transversales (paralelas a b): ${lab2}`,'font-weight="600" fill="var(--rebar)" opacity=".85"');
+    p+=dim(x0,y0+B+40,x0+W,`a = ${nf(a)} m`);
+    const el=document.getElementById(id); el.setAttribute('viewBox',`0 0 480 ${Math.ceil(y0+B+48)}`); el.innerHTML=p;
+  }
+  plan('armI',false);
+  // ---- Sección A-A (transversal) ----
+  const s2=Math.min(300/b,150/(h/100)), Bw=b*s2, Hh=h/100*s2, xs=60, top=50, rr=0.05*s2, d=Math.max(9,phi/1000*s2);
+  let g=`<rect x="${xs}" y="${top}" width="${Bw}" height="${Hh}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/>`;
+  const lc=l2*s2; g+=`<rect x="${xs+Bw/2-lc/2}" y="${top-36}" width="${lc}" height="36" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/>`+T(xs+Bw/2,top-40,'P2','text-anchor="middle" font-size="10" fill="var(--muted)"');
+  // transversal por fuera (línea con patilla), longitudinales cortadas por dentro (sobre ella abajo, bajo ella arriba)
+  const pat=Math.max(30,5*phi/1000*s2), yb=top+Hh-rr, yt=top+rr, xa=xs+rr, xb=xs+Bw-rr;
+  g+=`<path d="M${xa} ${yb-pat} L${xa} ${yb} L${xb} ${yb} L${xb} ${yb-pat}" fill="none" stroke="${RB}" stroke-width="2.4" stroke-linejoin="round"/>`;
+  g+=`<path d="M${xa} ${yt+pat} L${xa} ${yt} L${xb} ${yt} L${xb} ${yt+pat}" fill="none" stroke="${RB}" stroke-width="2.4" stroke-linejoin="round"/>`;
+  for(let i=0;i<nL;i++){const x=xa+d/2+1.2+(Bw-2*rr-d-2.4)*i/(nL-1); g+=`<circle cx="${x}" cy="${yb-1.2-d/2}" r="${d/2}" fill="${RB}" stroke="var(--panel)" stroke-width=".8"/><circle cx="${x}" cy="${yt+1.2+d/2}" r="${d/2}" fill="${RB}" stroke="var(--panel)" stroke-width=".8"/>`;}
+  // cota de la patilla (malla inferior, por fuera a la izquierda)
+  const xq=xs-6;
+  g+=`<g stroke="var(--muted)" stroke-width="1"><line x1="${xq}" y1="${yb-pat}" x2="${xq}" y2="${yb}"/><line x1="${xq-4}" y1="${yb-pat}" x2="${xq+4}" y2="${yb-pat}"/><line x1="${xq-4}" y1="${yb}" x2="${xq+4}" y2="${yb}"/><line x1="${xq-4}" y1="${yb-pat}" x2="${xa}" y2="${yb-pat}" stroke-dasharray="2 2"/></g>`;
+  g+=T(xa+8,yb-pat+4,`patilla ≥ 5Ø = ${nf(5*phi/10,0)} cm`,'font-size="10.5" fill="var(--ink)"');
+  const xr=xs+Bw+12;
+  g+=T(xr,yt+4,`malla superior: ${lab2}`,'font-size="10.5" fill="var(--ink)"')+T(xr,yt+18,`con patilla + ${lab1}`,'font-size="10.5" fill="var(--muted)"');
+  g+=T(xr,yb-10,`malla inferior: ${lab2}`,'font-size="10.5" fill="var(--ink)"')+T(xr,yb+4,`con patilla + ${lab1}`,'font-size="10.5" fill="var(--muted)"');
+  g+=`<g stroke="var(--muted)"><line x1="${xs-30}" y1="${top}" x2="${xs-30}" y2="${top+Hh}"/><line x1="${xs-34}" y1="${top}" x2="${xs-26}" y2="${top}"/><line x1="${xs-34}" y1="${top+Hh}" x2="${xs-26}" y2="${top+Hh}"/></g>`+`<text transform="translate(${xs-34} ${top+Hh/2}) rotate(-90)" text-anchor="middle" ${F} font-size="11" fill="var(--ink)">h = ${nf(h,0)} cm</text>`;
+  g+=dim(xs,top+Hh+20,xs+Bw,`b = ${nf(b)} m`);
+  g+=T(xs,top+Hh+40,'recubrimiento r = 5 cm','font-size="10" fill="var(--muted)"');
+  document.getElementById('armS').setAttribute('viewBox',`0 0 640 ${Math.ceil(top+Hh+48)}`);document.getElementById('armS').innerHTML=g;
+}
 function draw(a,b,h,L,x1,l1,l2,V1){
   const W=300,x0=30,sc=W/a,B=b*sc,y0=26;
   const P1=x0+V1*sc, P2=P1+L*sc, cg=x0+W/2;
@@ -408,4 +366,7 @@ calc();
 </script>
 
 <script src="pdf.js"></script>
+
+<script src="app.js"></script>
+<script src="apple-nav.js"></script>
 </body></html>

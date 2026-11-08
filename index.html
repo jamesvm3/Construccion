@@ -1,146 +1,21 @@
-<!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
 <title>Predimensionado</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
-<style>body{margin:0}[hidden]{display:none!important}</style>
-<style>
-/* Layout: cabecera + rejilla de fichas agrupadas por tema; el propietario ve además una barra de configuración. */
-:root{
-  --bg:#eef0ee; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#cfd5d3;
-  --soft:#f5f7f6; --accent:#1f5f7a; --accent-soft:#e1edf2; --warn:#a86608; --warn-soft:#fbefd9;
-  --ok:#2f7a45; --ok-soft:#e3f1e7; --bad:#b0392b; --bad-soft:#f8e3e0;
-  --concrete:#d9dcd8; --concrete-edge:#8e9692; --soil:#e8dcc3; --soil-edge:#b9a77d;
-  --steel:#c3ccd4; --steel-edge:#5d6b77; --wood:#e6cc9f; --wood-edge:#a07a48;
-  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
-  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    color-scheme:dark;
-    --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
-    --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --warn:#e3a849; --warn-soft:#3a2d15;
-    --ok:#6cc488; --ok-soft:#1c3325; --bad:#e5705f; --bad-soft:#3d1f1b;
-    --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#3b3626; --soil-edge:#7a6a46; --steel:#46525c; --steel-edge:#8a99a6; --wood:#4d3b25; --wood-edge:#9b7a50;
-  }
-}
-:root[data-theme="dark"]{
-  color-scheme:dark;
-  --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
-  --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --warn:#e3a849; --warn-soft:#3a2d15;
-  --ok:#6cc488; --ok-soft:#1c3325; --bad:#e5705f; --bad-soft:#3d1f1b;
-  --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#3b3626; --soil-edge:#7a6a46; --steel:#46525c; --steel-edge:#8a99a6; --wood:#4d3b25; --wood-edge:#9b7a50;
-}
-*{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.wrap{max-width:980px;margin:0 auto;padding-block:28px 60px}
-header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 20px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:26px}
-header>div{min-width:0}
-.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-h1{font-family:var(--cond);font-weight:700;font-size:clamp(30px,5vw,44px);line-height:1.05;margin:4px 0 8px;text-wrap:balance;letter-spacing:-.01em}
-.lead{margin:0;color:var(--muted);max-width:62ch;font-size:14.5px}
-button{font-family:var(--sans);font-size:13px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:7px 14px;border-radius:4px;cursor:pointer}
-button.ghost{background:transparent;color:var(--accent)}
-button:disabled{opacity:.45;cursor:not-allowed}
-button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.adminbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;background:var(--warn-soft);border:1px solid var(--warn);border-radius:6px;padding:12px 14px;margin-bottom:22px}
-.adminbar p{margin:0;font-size:13.5px;flex:1 1 260px;min-width:0}
-.adminbar .btns{display:flex;gap:8px;flex-wrap:wrap}
-.status{flex-basis:100%;font-size:13px;margin:0}
-.status.bad{color:var(--bad)}
-section{margin-bottom:28px}
-h2{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
-.card{display:flex;flex-direction:column;gap:10px;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px;color:inherit;text-decoration:none}
-a.card:hover{border-color:var(--accent)}
-a.card:focus-visible{outline-offset:3px}
-.card h3{font-family:var(--cond);font-size:19px;line-height:1.15;margin:0;font-weight:700;text-align:center;text-wrap:balance}
-.ico{background:var(--soft);border-radius:4px;padding:8px}
-.ico svg{display:block;width:100%;height:auto}
-.ic-c{fill:var(--concrete);stroke:var(--concrete-edge);stroke-width:1.2}
-.ic-s{fill:var(--soil);stroke:var(--soil-edge);stroke-width:1.2}
-.ic-a{fill:var(--steel);stroke:var(--steel-edge);stroke-width:1.2}
-.ic-m{fill:var(--wood);stroke:var(--wood-edge);stroke-width:1.2}
-.mats{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:28px}
-.mat{display:flex;flex-direction:column;gap:10px;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px;color:inherit;text-decoration:none}
-a.mat:hover{border-color:var(--accent)}
-a.mat:hover .ico{background:var(--accent-soft)}
-.mat h3{font-family:var(--cond);font-size:24px;line-height:1.1;margin:0;font-weight:700;text-align:center}
-.mat h3 .l{font-family:var(--mono);font-size:15px;color:var(--accent);margin-left:6px}
-.mat .n{font-family:var(--mono);font-size:12.5px;color:var(--muted);text-align:center}
-.mat.soon{background:transparent;border-style:dashed}
-.mat.soon .ico,.mat.soon h3{opacity:.55}
-.crumb{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin:-8px 0 22px}
-.crumb{align-items:center!important}
-.crumb a{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:14px;font-weight:600;color:var(--panel);background:var(--accent);border:1px solid var(--accent);border-radius:20px;padding:6px 14px 6px 11px;text-decoration:none}
-.crumb a:hover{filter:brightness(1.12)}
-.crumb b{font-family:var(--cond);font-size:22px}
-.crumb b span{font-family:var(--mono);font-size:14px;color:var(--accent);margin-left:4px}
-a.card:hover .ico{background:var(--accent-soft)}
-.cardwrap{display:flex;flex-direction:column;gap:6px;min-width:0}
-.cardwrap>a.card{flex:1}
-.cardwrap>.go,.card .go.pr{font-family:var(--sans);font-size:12.5px;color:var(--ink);font-weight:600;text-decoration:none;text-align:center;border:1px solid var(--ink);border-radius:4px;padding:5px 10px}
-.cardwrap>.go:hover,.card .go.pr:hover{background:var(--ink);color:#fff}
-.card .go{font-family:var(--mono);font-size:12.5px;color:var(--accent);font-weight:500;text-decoration:none;text-align:center}
-.card.off{background:transparent;border-style:dashed}
-.card.off h3,.card.off .ico{opacity:.55}
-.toggle{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:500;padding-bottom:8px;border-bottom:1px solid var(--line);cursor:pointer}
-.toggle input{width:20px;height:20px;accent-color:var(--accent);flex:none;margin:0}
-.badge{font-family:var(--mono);font-size:11px;border-radius:20px;padding:2px 8px;margin-left:auto;white-space:nowrap}
-.badge.on{background:var(--ok-soft);color:var(--ok)}
-.badge.off{background:var(--bad-soft);color:var(--bad)}
-.empty{background:var(--panel);border:1px dashed var(--line);border-radius:6px;padding:22px;color:var(--muted);font-size:14.5px}
-footer{margin-top:10px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
-
-/* Estética inspirada en las fichas de «Cálculo rápido de estructuras» (S. Mute): franjas de color por material, códigos en recuadro y barras negras. */
-:root{--band-h:#dedede;--band-a:#b9cde5;--band-m:#e9cdb6;--beige:#efede4;--bar:#111;
-  --sans:"Open Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--cond:"Open Sans",system-ui,sans-serif;--mono:"Open Sans",system-ui,sans-serif}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--band-h:#3a3f42;--band-a:#2c3d52;--band-m:#4a3a2c;--beige:#2a2a24;--bar:#000}}
-:root[data-theme="dark"]{--band-h:#3a3f42;--band-a:#2c3d52;--band-m:#4a3a2c;--beige:#2a2a24;--bar:#000}
-body{background:var(--panel)}
-.wrap{padding-top:0}
-header{display:block;border:0;margin:0 calc(50% - 50vw) 22px;padding:26px calc(50vw - 50% + 0px) 20px;background:var(--band-cur,var(--band-h))}
-header>div{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-.badge-big{flex:none;width:86px;height:86px;border:5px solid var(--ink);border-radius:16px;background:var(--accent-mute,#6d9bd1);display:grid;place-items:center;font:800 38px/1 var(--sans);color:var(--ink);letter-spacing:-.02em}
-.htxt{min-width:0}
-.eyebrow{font:400 14px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:right;margin-bottom:6px}
-h1{font:800 clamp(28px,5vw,46px)/1.02 var(--sans);text-transform:uppercase;letter-spacing:-.01em;margin:0}
-h1 small{display:block;font-weight:400;font-size:.6em;letter-spacing:0;margin-bottom:2px}
-.lead{margin-top:10px;color:var(--ink);font-size:14.5px}
-#btn-config{margin-top:12px}
-section{margin-bottom:26px}
-h2{background:var(--bar);color:#fff;font:700 15px var(--sans);letter-spacing:.04em;text-align:center;padding:6px 10px;margin:0 0 14px;border-radius:0}
-.card{border:1px solid var(--line);border-radius:4px;padding:0;overflow:hidden;gap:0;background:var(--panel)}
-.card .ch{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--band-cur,var(--band-h))}
-.code{flex:none;min-width:34px;padding:0 4px;height:34px;border:2.5px solid var(--ink);border-radius:8px;display:grid;place-items:center;font:800 13.5px/1 var(--sans);background:var(--code-bg,#c9c9c9);color:var(--ink)}
-.card h3{font:700 12.5px/1.15 var(--sans);min-width:0;overflow-wrap:normal;word-break:normal;hyphens:manual;text-align:left;text-transform:uppercase;letter-spacing:.01em}
-.card .ico{border-radius:0;background:var(--panel);padding:10px 12px}
-a.card:hover .ico{background:var(--beige)}
-a.card:hover{border-color:var(--ink)}
-.card .go{padding:0 0 10px}
-.card .toggle{padding:8px 10px}
-.crumb a{border-radius:6px}
-.crumb b{font:800 22px var(--sans);text-transform:uppercase}
-.mats{gap:14px}
-.mat{padding:0;overflow:hidden;border-radius:4px;border:1px solid var(--line);gap:0}
-.mat .mh{display:flex;align-items:center;gap:12px;padding:14px;background:var(--band-x)}
-.mat .mh .code{width:52px;height:52px;border-width:4px;border-radius:12px;font-size:24px;background:var(--code-x)}
-.mat h3{text-align:left;font:800 22px var(--sans);text-transform:uppercase}
-.mat .ico{border-radius:0;background:var(--panel)}
-.mat .n{padding:8px 0 12px;font-family:var(--sans)}
-.mat.soon{background:var(--panel)}
-.crumb a{background:var(--ink)!important;border-color:var(--ink)!important;color:var(--panel)!important;border-radius:6px}
-@media (max-width:560px){.cards{grid-template-columns:1fr 1fr}.card .ch{padding:6px 7px;gap:7px}.card .ch .code{min-width:28px;height:28px;font-size:11.5px;border-width:2px;border-radius:6px}.card h3{font-size:11.5px}.badge-big{width:64px;height:64px;font-size:28px;border-width:4px;border-radius:12px}}
-footer{background:var(--beige);border:0;padding:12px 14px;border-radius:2px;color:var(--ink)}
-</style>
-</head>
-<body>
-<div class="wrap" id="app"></div>
-<script type="application/json" id="state">{"enabled":["zapata","medianera","esquina","combinada","centradora","atado","losa","losa-ampliacion","pilotes","encepado","muro","contencion","pantalla","unidireccional","reticular","viga","pilar"]}</script>
+<link rel="stylesheet" href="apple.css">
+</head><body data-page="menu">
+<div class="shell">
+  <nav class="sidebar glass" id="sidebar" aria-label="Materiales y herramientas"></nav>
+  <div class="content">
+    <header class="navbar glass" id="navbar"></header>
+    <div class="wrap" id="app"></div>
+  </div>
+</div>
+<nav class="tabbar glass" id="tabbar" aria-label="Materiales"></nav>
+<div class="scrim" id="scrim"></div>
+<div class="sheet glass" id="sheet" role="dialog" aria-label="Herramientas"></div>
+<script type="application/json" id="state">{"enabled": ["zapata", "medianera", "esquina", "combinada", "centradora", "atado", "losa", "losa-ampliacion", "pilotes", "encepado", "muro", "contencion", "pantalla", "unidireccional", "reticular", "viga", "pilar", "viga-acero", "pilar-acero", "basa", "soldadura", "tirante", "viga-madera", "pilar-madera", "fuego-madera"]}</script>
 <script src="app.js"></script>
-</body>
-</html>
+<script src="apple-nav.js"></script>
+</body></html>

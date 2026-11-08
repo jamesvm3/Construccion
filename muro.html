@@ -1,119 +1,16 @@
-<!doctype html><html><head><meta charset=utf8>
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
 <script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
-<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
 <title>Muro de sótano C2</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
-<style>
-/* Layout: datos a la izquierda (fijos), pasos 0 a 6 a la derecha, con resumen y dos dibujos arriba. Mismo lenguaje visual que la calculadora de la zapata. */
-:root{
-  --bg:#eef0ee; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#cfd5d3;
-  --soft:#f5f7f6; --accent:#1f5f7a; --accent-soft:#e1edf2; --rebar:#b0392b;
-  --concrete:#d9dcd8; --concrete-edge:#8e9692; --soil:#e8dcc3; --soil-ink:#7a6a46;
-  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
-  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
-  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    color-scheme:dark;
-    --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
-    --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
-    --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#3b3626; --soil-ink:#c9b98f;
-    --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
-  }
-}
-:root[data-theme="dark"]{
-  color-scheme:dark;
-  --bg:#141a1d; --panel:#1c2427; --ink:#e4e9e7; --muted:#9aa6a8; --line:#34403f;
-  --soft:#222c2f; --accent:#6db3d1; --accent-soft:#1d3642; --rebar:#e5705f;
-  --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#3b3626; --soil-ink:#c9b98f;
-  --ok:#6cc488; --ok-soft:#1c3325; --warn:#e3a849; --warn-soft:#3a2d15; --bad:#e5705f; --bad-soft:#3d1f1b;
-}
-*{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;margin:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.wrap{max-width:1180px;margin:0 auto;padding-block:28px 60px}
-header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
-.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-h1{font-family:var(--cond);font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance;letter-spacing:-.01em}
-.src{font-size:13px;color:var(--muted);max-width:44ch}
-.mode{display:flex;align-items:center;gap:10px;font-size:14px;background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:6px}
-.grid{display:grid;grid-template-columns:350px 1fr;gap:22px;align-items:start}
-@media (max-width:860px){.grid{grid-template-columns:1fr}}
-aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;flex-direction:column;gap:14px}
-@media (max-width:860px){aside{position:static}}
-.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px}
-.box h2{font-family:var(--cond);font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px;color:var(--accent)}
-.field{display:grid;grid-template-columns:1fr 112px 48px;align-items:center;gap:8px;padding-block:5px;border-bottom:1px dashed var(--line)}
-.field:last-child{border-bottom:0}
-.field label{font-size:13.5px}
-.field .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
-input[type=number],select{width:100%;font-family:var(--mono);font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--soft);color:var(--ink);text-align:right}
-select{text-align:left}
-input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
-.hint{font-size:12px;color:var(--muted);margin-top:8px}
-button{font-family:var(--sans);font-size:13px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:6px 12px;border-radius:4px;cursor:pointer}
-button.ghost{background:transparent;color:var(--accent)}
-button:disabled{opacity:.45;cursor:not-allowed}
-.summary{background:var(--ink);color:var(--bg);border-radius:6px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:18px 32px;align-items:baseline}
-.summary .big{font-family:var(--cond);font-size:24px;font-weight:700;letter-spacing:.01em}
-.summary .lab{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;display:block}
-.drawing{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
-@media (max-width:620px){.drawing{grid-template-columns:1fr}}
-.drawing .box{padding:10px 12px}
-.drawing h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:500}
-.cap{font-size:11.5px;color:var(--muted);margin:2px 0 0}
-svg{display:block;width:100%;height:auto}
-main{display:flex;flex-direction:column;gap:16px;min-width:0}
-.step{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
-.step-h{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--soft)}
-.num{font-family:var(--mono);font-weight:600;font-size:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--accent);color:var(--accent);flex:none}
-.step-h h2{font-family:var(--cond);font-size:19px;margin:0;font-weight:700}
-.step-h .tag{margin-left:auto}
-.step-b{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
-.why{font-size:14px;color:var(--muted);max-width:70ch;margin:0}
-.calc{display:flex;flex-direction:column;gap:8px}
-.row{display:grid;grid-template-columns:minmax(120px,170px) 1fr;gap:6px 14px;align-items:center;padding:8px 10px;border-radius:4px;background:var(--soft)}
-@media (max-width:520px){.row{grid-template-columns:1fr}}
-.row .k{font-size:13.5px;font-weight:500}
-.f{font-family:var(--mono);font-size:13.5px;line-height:1.5;overflow-wrap:anywhere}
-.f .gen{color:var(--muted)}
-.f .res{color:var(--accent);font-weight:600}
-.f sub,.f sup{font-size:.75em;line-height:0}
-/* quebrado con raya horizontal */
-.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .3em;line-height:1.3;text-align:center}
-.fr>span:first-child{padding:0 .3em .1em}
-.fr>span:last-child{border-top:1.6px solid currentColor;padding:.1em .3em 0}
-.fr .fr{font-size:.9em}
-.practice .res,.practice .sug,.practice .step-h .tag,.practice .summary,.practice .drawing svg,.practice .row .pill{filter:blur(7px);user-select:none}
-.try{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;border-top:1px dashed var(--line);padding-top:10px}
-.try input{width:104px}
-.pill{font-family:var(--mono);font-size:11.5px;padding:3px 8px;border-radius:20px;white-space:nowrap;margin-left:6px}
-.pill.ok{background:var(--ok-soft);color:var(--ok)}
-.pill.warn{background:var(--warn-soft);color:var(--warn)}
-.pill.bad{background:var(--bad-soft);color:var(--bad)}
-.pill.info{background:var(--accent-soft);color:var(--accent)}
-.decide{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px;border:1.5px solid var(--accent);border-radius:4px;background:var(--accent-soft)}
-.decide label{font-weight:600;font-size:14px}
-.decide input,.decide select{width:104px}
-.decide .sug{font-size:13px;color:var(--muted)}
-.note{font-size:13px;border-left:3px solid var(--warn);padding:6px 10px;background:var(--warn-soft);color:var(--ink);border-radius:0 4px 4px 0}
-.note.extra{border-left-color:var(--accent);background:var(--accent-soft)}
-.sub-h{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:4px 0 -2px}
-.inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:2px 18px}
-.inputs .field{grid-template-columns:1fr 92px 44px}
-footer{margin-top:26px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
-footer ul{margin:6px 0 0;padding-left:18px}
-.chk{display:flex;align-items:center;gap:8px;font-size:13px}
-@media (prefers-reduced-motion:no-preference){.res,.pill{transition:filter .25s ease}}
- </style>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
-<link rel="stylesheet" href="mute.css">
-
+<link rel="stylesheet" href="apple.css">
+</head><body data-page="tool" data-tool="muro" data-mat="H">
+<div class="shell">
+  <nav class="sidebar glass" id="sidebar" aria-label="Herramientas"></nav>
+  <div class="content">
+    <header class="navbar glass" id="navbar"></header>
 <div class="wrap">
-<a href="index.html#H" style="display:inline-flex;align-items:center;margin-bottom:14px;font:600 14px var(--sans);color:var(--panel);background:var(--ink);border:1px solid var(--ink);border-radius:6px;padding:6px 14px 6px 11px;text-decoration:none">← Menú de calculadoras</a>
 <header class="top mat-H">
   <div>
     <div class="mbadge">MS</div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Hormigón · Muros de contención</small>Muro de sótano</h1></div>
@@ -236,7 +133,7 @@ footer ul{margin:6px 0 0;padding-left:18px}
         <div class="row"><span class="k">Separación libre</span><span class="f" id="f45"></span></div>
         <div class="row"><span class="k">Trasdós</span><span class="f" id="f46"></span></div>
       </div>
-      <label class="chk"><input type="checkbox" id="same" checked> Armar el trasdós igual que el intradós (recomendado)</label>
+      <label class="chk"><input type="checkbox" id="same" checked><span> Armar el trasdós igual que el intradós (recomendado)</span></label>
       <div class="note extra">El momento negativo es la cuarta parte del positivo, pero con ese armado las barras quedarían muy separadas. Además, dos armados distintos en las dos caras son una fuente de errores en obra (se colocan al revés) y el empotramiento real no es perfecto. Por eso lo habitual es repetir el armado en las dos caras.</div>
       <div class="try"><span>Tu A<sub>s</sub><sup>+</sup>:</span><input type="number" step="any" id="try4" aria-label="Tu armadura del intradós en cm² por metro"><span class="u">cm²/m</span><span id="c4"></span><span style="margin-left:8px">Tu nº de redondos:</span><input type="number" step="1" id="try4b" aria-label="Tu número de redondos"><span id="c4b"></span></div>
     </div>
@@ -262,6 +159,7 @@ footer ul{margin:6px 0 0;padding-left:18px}
     </div>
   </article>
 
+  <div style="margin:0 0 14px;padding:12px 14px;border:1px solid var(--warn);background:var(--warn-soft);border-radius:6px;font-size:13.5px;line-height:1.5"><b>¿Cimentas con losa?</b> Entonces no hay zapata corrida bajo el muro: usa los pasos 0 a 5 y salta los pasos 6 y 7. Calcula después la losa con su calculadora e introduce el muro perimetral como carga lineal (peso propio del muro, e·H·25, más la carga del forjado que apoya en él). El empuje de tierras y la armadura del muro se resuelven aquí, no en la losa.</div>
   <article class="step" id="s6">
     <div class="step-h"><span class="num">6</span><h2>Zapata corrida: ancho y canto</h2><span class="tag" id="t6"></span></div>
     <div class="step-b">
@@ -279,22 +177,25 @@ footer ul{margin:6px 0 0;padding-left:18px}
   <article class="step" id="s7">
     <div class="step-h"><span class="num">7</span><h2>Armadura de la zapata</h2><span class="tag" id="t7"></span></div>
     <div class="step-b">
-      <p class="why">La zapata se calcula como una zapata aislada, por metro: el terreno empuja hacia arriba con σ<sub>adm</sub> y cada lado vuela a/2 desde el eje del muro, así que el momento en la sección del muro es M<sub>d</sub> = 1,5·σ<sub>adm</sub>·a²/8 (el 1,5 mayora). Con ese momento, A<sub>s</sub> = 10·M<sub>d</sub> / (0,8·h·f<sub>yd</sub>), con h en m, que da cm² por metro. En la dirección del muro se coloca además una armadura inferior del 2 ‰ del área A<sub>c</sub> = h·a. Si la A<sub>s</sub> calculada sale muy pequeña (zapata de poco vuelo), manda la armadura mínima.</p>
+      <p class="why">La zapata se calcula como una zapata aislada, por metro: el terreno empuja hacia arriba con σ<sub>adm</sub> y cada lado vuela a/2 desde el eje del muro, así que el momento en la sección del muro es M<sub>d</sub> = 1,5·σ<sub>adm</sub>·a²/8 (el 1,5 mayora). Con ese momento, A<sub>s</sub> = 10·M<sub>d</sub> / (0,8·h·f<sub>yd</sub>), con h en m, que da cm² por metro. En la dirección del muro se coloca además una armadura inferior del 2 ‰ del área A<sub>c</sub> = h·a. Si la A<sub>s</sub> calculada sale muy pequeña (zapata de poco vuelo), manda la armadura mínima: 1,8 ‰ de la sección con B 500 S (2,0 ‰ con B 400 S), y como solo se arma la cara inferior se toma la mitad, 0,9 ‰ (1,0 ‰), igual que en la zapata centrada.</p>
       <div class="calc">
         <div class="row"><span class="k">Momento de cálculo</span><span class="f" id="f70"></span></div>
-        <div class="row"><span class="k">A<sub>s</sub> transversal</span><span class="f" id="f71"></span></div>
+        <div class="row"><span class="k">A<sub>s</sub> transversal por cálculo</span><span class="f" id="f71"></span></div>
+        <div class="row"><span class="k">A<sub>s,mín</sub> transversal</span><span class="f" id="f75"></span></div>
+        <div class="row"><span class="k">A<sub>s</sub> transversal a disponer</span><span class="f" id="f76"></span></div>
         <div class="row"><span class="k">Área de hormigón A<sub>c</sub></span><span class="f" id="f72"></span></div>
         <div class="row"><span class="k">Armadura longitudinal 2 ‰</span><span class="f" id="f73"></span></div>
       </div>
       <div class="decide"><label for="phiZ">Diámetro Ø</label><select id="phiZ"><option>12</option><option>16</option><option>20</option></select><span class="u">mm</span><span class="sug" id="sug7"></span></div>
       <div class="calc">
+        <div class="row"><span class="k">Redondos transversales (por metro)</span><span class="f" id="f77"></span></div>
         <div class="row"><span class="k">Redondos longitudinales</span><span class="f" id="f74"></span></div>
       </div>
       <div class="try"><span>Tu M<sub>d</sub>:</span><input type="number" step="any" id="try7" aria-label="Tu momento en la zapata en kN por metro"><span class="u">kN·m/m</span><span id="c7"></span><span style="margin-left:8px">Tu A<sub>s,long</sub>:</span><input type="number" step="any" id="try7b" aria-label="Tu armadura longitudinal en cm cuadrados"><span class="u">cm²</span><span id="c7b"></span></div>
     </div>
   </article>
 
-  <div class="box" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px"><p style="margin:0;flex:1 1 240px;font-size:13.5px;color:var(--muted)">Ya sabes cuánto mide y cómo se arma el muro. ¿Y cómo se construye? Repasa el proceso de ejecución paso a paso.</p><a href="proceso-muro.html" style="font:600 14px var(--sans);color:var(--panel);background:var(--bad);border:1px solid var(--bad);border-radius:4px;padding:9px 16px;text-decoration:none">Proceso constructivo</a></div>
+  <div class="box cta"><p>Ya sabes cuánto mide y cómo se arma el muro. ¿Y cómo se construye? Repasa el proceso de ejecución paso a paso.</p><a class="btn" href="proceso-muro.html">Proceso constructivo</a></div>
 
   <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con la Guía de aplicación del Código Estructural y el DB SE-C. Tampoco sustituye al cálculo según el Código Estructural y el DB SE-C. No se comprueban:
     <ul>
@@ -310,6 +211,12 @@ footer ul{margin:6px 0 0;padding-left:18px}
 </div>
 </div>
 
+
+  </div>
+</div>
+<nav class="tabbar glass" id="tabbar" aria-label="Grupos de herramientas"></nav>
+<div class="scrim" id="scrim"></div>
+<div class="sheet glass" id="sheet" role="dialog" aria-label="Herramientas"></div>
 <script>
 (function(){
 const $=id=>document.getElementById(id);
@@ -327,7 +234,7 @@ function check(tryId,outId,val,tol){
   const ok=Math.abs(t-val)<=Math.max(Math.abs(val)*tol,1e-9);
   $(outId).innerHTML=ok?pill('ok','Correcto'):pill('bad','Revisa: no coincide');
 }
-const IDS=['f01','f02','f03','f04','f11','f21','f22','f23','f31','f32','f40','f41','f42','f43','f44','f45','f46','f50','f51','f52','f53','f60','f61','f70','f71','f72','f73','f74'];
+const IDS=['f01','f02','f03','f04','f11','f21','f22','f23','f31','f32','f40','f41','f42','f43','f44','f45','f46','f50','f51','f52','f53','f60','f61','f70','f71','f72','f73','f74','f75','f76','f77'];
 const TAGS=['t0','t1','t2','t3','t4','t5','t6','t7'];
 const CHK=['c0','c1','c2','c3','c3b','c4','c4b','c5','c5b','c6','c7','c7b'];
 function blank(){
@@ -472,7 +379,7 @@ function calc(){
   } else if(!(haveH&&e>0)&&Nk>0&&sig>0){ $('f60').innerHTML=`${dash} <span class="gen">(necesita H y el espesor del paso 1)</span>`; }
 
   /* Paso 7: armadura de la zapata */
-  let nZ=NaN,phiZ=v('phiZ'),AsL=NaN;
+  let nZ=NaN,phiZ=v('phiZ'),AsL=NaN,nZT=NaN;
   if(isFinite(a)&&isFinite(hz)&&sig>0){
     const fyd=fyk/1.15;
     const Md=1.5*sig*a*a/8;
@@ -482,12 +389,17 @@ function calc(){
     const Ab=Math.PI*Math.pow(phiZ/20,2);
     nZ=Math.max(2,Math.ceil(AsL/Ab-1e-9));
     $('f70').innerHTML=`${G('M<sub>d</sub> = 1,5·σ<sub>adm</sub>·')}${G(fr('a²','8'))} = 1,5·${nf(sig,0)}·${fr(`${nf(a)}²`,'8')} = ${R(nf(Md)+' kN·m/m')}`;
-    $('f71').innerHTML=`${G('A<sub>s</sub> = ')}${G(fr('10·M<sub>d</sub>','0,8·h·f<sub>yd</sub>'))} = ${fr(`10·${nf(Md)}`,`0,8·${nf(hz)}·${nf(fyd)}`)} = ${R(nf(AsT)+' cm²/m')}`+(AsT<1?' '+pill('warn','muy pequeña: manda la mínima'):'');
+    const rhoZ=fyk>=500?0.0009:0.0010, AsTmin=rhoZ*100*hz*100, AsTd=Math.max(AsT,AsTmin);
+    nZT=Math.max(2,Math.ceil(AsTd/Ab-1e-9));
+    $('f71').innerHTML=`${G('A<sub>s</sub> = ')}${G(fr('10·M<sub>d</sub>','0,8·h·f<sub>yd</sub>'))} = ${fr(`10·${nf(Md)}`,`0,8·${nf(hz)}·${nf(fyd)}`)} = ${R(nf(AsT)+' cm²/m')}`;
+    $('f75').innerHTML=`${G('ρ·100·h')} = ${fyk>=500?'0,9':'1,0'}‰·100·${nf(hz*100,0)} = ${R(nf(AsTmin)+' cm²/m')} <span class="gen">(h en cm, solo cara inferior)</span>`;
+    $('f76').innerHTML=`${R(nf(AsTd)+' cm²/m')} `+(AsT>=AsTmin?pill('ok','manda el cálculo'):pill('warn','manda la mínima'));
+    $('f77').innerHTML=`${G('n = ')}${G(fr('A<sub>s</sub>','A<sub>Ø</sub>'))} = ${fr(nf(AsTd),nf(Ab,3))} = ${nf(AsTd/Ab)} → ${R(nZT+' Ø'+phiZ+' por metro')} ${pill('info','c/'+nf(Math.floor(100/nZT),0))} <span class="gen">(con patilla en los extremos)</span>`;
     $('f72').innerHTML=`${G('A<sub>c</sub> = h·a')} = ${nf(hz)}·${nf(a)} = ${nf(hz*a,2)} m² = ${R(nf(Ac,0)+' cm²')}`;
     $('f73').innerHTML=`${G('A<sub>s,long</sub> = 0,002·A<sub>c</sub>')} = 0,002·${nf(Ac,0)} = ${R(nf(AsL)+' cm²')} <span class="gen">(inferior, en la dirección del muro)</span>`;
     $('f74').innerHTML=`${G('n = ')}${G(fr('A<sub>s,long</sub>','A<sub>Ø</sub>'))} = ${fr(nf(AsL),nf(Ab,3))} = ${nf(AsL/Ab)} → ${R(nZ+' Ø'+phiZ)} <span class="gen">(${nf(nZ*Ab)} cm²)</span>`;
     $('sug7').textContent=`Ø12 es el diámetro mínimo en cimientos`;
-    $('t7').innerHTML=pill('info',`${nZ} Ø${phiZ} long.`);
+    $('t7').innerHTML=pill('info',`Ø${phiZ} c/${nf(Math.floor(100/nZT),0)} transv. · ${nZ} Ø${phiZ} long.`);
     check('try7','c7',Md,0.02); check('try7b','c7b',AsL,0.02);
   }
 
@@ -496,11 +408,12 @@ function calc(){
   if(!(haveH||isFinite(P)||isFinite(a))){emptyAll();return;}
   $('summary').innerHTML=`
     <div><span class="lab">Muro</span><span class="big">${isFinite(e)?`e = ${nf(e,0)} cm`:'—'}${haveH?` · H = ${nf(H)} m`:''}</span></div>
-    <div><span class="lab">Vertical, intradós y trasdós</span><span class="big">${isFinite(nVsel)?`${nVsel} Ø${phiV}/m (c/${nf(Math.floor(100/nVsel),0)})`:'—'}</span></div>
+    <div><span class="lab">Vertical, intradós y trasdós</span><span class="big">${isFinite(nVsel)?`${nVsel} Ø${phiV} por metro de muro (c/${nf(Math.floor(100/nVsel),0)})`:'—'}</span></div>
     <div><span class="lab">Horizontal, por cara</span><span class="big">${isFinite(nHsel)?`${nHsel/2} Ø${phiH}`:'—'}</span></div>
     <div><span class="lab">Zapata corrida</span><span class="big">${isFinite(a)?`a = ${nf(a)} m · h = ${nf(hz)} m`:'—'}</span></div>
+    <div><span class="lab">Zapata, transversal</span><span class="big">${isFinite(nZT)?`${nZT} Ø${phiZ} por metro (c/${nf(Math.floor(100/nZT),0)})`:'—'}</span></div>
     <div><span class="lab">Zapata, longitudinal</span><span class="big">${isFinite(nZ)?`${nZ} Ø${phiZ}`:'—'}</span></div>`;
-  drawSection(H,e,a,hz,nVsel,phiV,nHsel,sH,$('same').checked,nZ,phiZ);
+  drawSection(H,e,a,hz,nVsel,phiV,nHsel,sH,$('same').checked,nZ,phiZ,nZT);
   drawModel(H,P,Mp,Mn);
 }
 
@@ -508,7 +421,7 @@ const T=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-family="IBM Plex Mono,monosp
 function hdim(x1,x2,y,t){return `<g stroke="var(--muted)" stroke-width="1"><line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}"/><line x1="${x1}" y1="${y-4}" x2="${x1}" y2="${y+4}"/><line x1="${x2}" y1="${y-4}" x2="${x2}" y2="${y+4}"/></g>`+T((x1+x2)/2,y+14,t,{a:'middle'});}
 function vdim(x,y1,y2,t){return `<g stroke="var(--muted)" stroke-width="1"><line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}"/><line x1="${x-4}" y1="${y1}" x2="${x+4}" y2="${y1}"/><line x1="${x-4}" y1="${y2}" x2="${x+4}" y2="${y2}"/></g>`+T(x-6,(y1+y2)/2,t,{a:'middle'}).replace('<text','<text transform="rotate(-90 '+(x-6)+' '+((y1+y2)/2)+')"');}
 
-function drawSection(H,e,a,hz,nV,phiV,nH,sH,same,nZ,phiZ){
+function drawSection(H,e,a,hz,nV,phiV,nH,sH,same,nZ,phiZ,nZT){
   const sec=$('sec'); if(!(H>0&&e>0)){sec.innerHTML='';return;}
   const hasA=isFinite(a)&&a>0&&isFinite(hz);
   const top=40, hp=150, sc=hp/H;            /* px por m en vertical */
@@ -530,19 +443,21 @@ function drawSection(H,e,a,hz,nV,phiV,nH,sH,same,nZ,phiZ){
     for(let i=0;i<half;i++){const y=half===1?(y0+y1)/2:y0+(y1-y0)*i/(half-1);
       g+=`<circle cx="${xi-3.4}" cy="${y}" r="2.1" fill="var(--rebar)"/><circle cx="${xt+3.4}" cy="${y}" r="2.1" fill="var(--rebar)"/>`;}}
   if(hasA&&nZ>=2){
-    g+=`<line x1="${cx-Bp/2+4}" y1="${yz+zh-4}" x2="${cx+Bp/2-4}" y2="${yz+zh-4}" stroke="var(--rebar)" stroke-width="2"/>`;
-    const m=Math.min(nZ,8);
-    for(let i=0;i<m;i++){const x=cx-Bp/2+10+(Bp-20)*(m===1?0.5:i/(m-1)); g+=`<circle cx="${x}" cy="${yz+zh-10}" r="2.2" fill="var(--rebar)"/>`;}
+    const pz=Math.min(12,zh*0.45);
+    g+=`<path d="M${cx-Bp/2+4} ${yz+zh-4-pz}V${yz+zh-4}H${cx+Bp/2-4}V${yz+zh-4-pz}" fill="none" stroke="var(--rebar)" stroke-width="2"/>`;
+    const m=nZ, rr=m>12?1.7:2.2;
+    for(let i=0;i<m;i++){const x=cx-Bp/2+8+(Bp-16)*(m===1?0.5:i/(m-1)); g+=`<circle cx="${x}" cy="${yz+zh-6.5-rr}" r="${rr}" fill="var(--rebar)"/>`;}
   }
   g+=vdim(xw-122,top,yz,`H = ${nf(H)} m`);
   g+=hdim(xw,xw+ep,top-34,`e = ${nf(e,0)} cm`);
-  if(hasA){ g+=hdim(cx-Bp/2,cx+Bp/2,yz+zh+14,`a = ${nf(a)} m`); g+=T(cx+Bp/2+8,yz+zh/2+4,`h = ${nf(hz)} m`,{c:'var(--muted)',s:10}); }
+  if(hasA){ g+=hdim(cx-Bp/2,cx+Bp/2,yz+zh+14,`a = ${nf(a)} m`); g+=T(cx+Bp/2+8,yz+zh/2-4,`h = ${nf(hz)} m`,{c:'var(--muted)',s:10});
+    if(nZ>=2&&isFinite(nZT)){ g+=T(Math.min(cx-Bp/2,20),yz+zh+46,`zapata: ${nZT} Ø${phiZ} por metro transversales (línea)`,{c:'var(--rebar)',s:10}); g+=T(Math.min(cx-Bp/2,20),yz+zh+60,`y ${nZ} Ø${phiZ} longitudinales (puntos)`,{c:'var(--rebar)',s:10}); } }
   g+=T(xw-108,top-18,'forjado',{c:'var(--muted)',s:10});
   g+=T(xw-108,yz-12,'solera',{c:'var(--muted)',s:10});
   g+=T(xw+ep+10,top+hp/2,'terreno',{c:'var(--soil-ink)',s:10});
-  if(nV>=2) g+=T(xw+ep+10,top+hp/2+16,`${nV} Ø${phiV}/m${same?'':' (intradós)'}`,{c:'var(--rebar)',s:10});
-  if(nH>=2) g+=T(xw+ep+10,top+hp/2+30,`${nH/2} Ø${$('phiH').value} por cara`,{c:'var(--rebar)',s:10});
-  sec.setAttribute('viewBox',`0 0 360 ${yz+zh+46}`);
+  if(nV>=2) g+=T(xw+ep+10,top+hp/2+16,`${nV} Ø${phiV}/m ${same?'en cada cara (vertical)':'en intradós (vertical)'}`,{c:'var(--rebar)',s:10});
+  if(nH>=2) g+=T(xw+ep+10,top+hp/2+30,`${nH/2} Ø${$('phiH').value} por cara (horizontal)`,{c:'var(--rebar)',s:10});
+  sec.setAttribute('viewBox',`0 0 360 ${yz+zh+(hasA&&nZ>=2?68:46)}`);
   sec.innerHTML=g;
 }
 
@@ -607,4 +522,7 @@ emptyAll();calc();
 </script>
 
 <script src="pdf.js"></script>
+
+<script src="app.js"></script>
+<script src="apple-nav.js"></script>
 </body></html>
