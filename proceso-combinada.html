@@ -1,94 +1,30 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8">
 <script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
 <title>Proceso: zapata combinada</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
-<style>
-:root{
-  --bg:#f4efe9; --panel:#ffffff; --ink:#1d2428; --muted:#5b666b; --line:#d9d0c6; --soft:#f8f4ef;
-  --accent:#8f2d3a; --accent-soft:#f3e1e3; --accent-ink:#ffffff;
-  --rebar:#2f3b42; --concrete:#d9dcd8; --concrete-edge:#8e9692; --soil:#c9bba3; --soil-edge:#9c8d73; --water:#3b86a8;
-  --ok:#2f7a45; --ok-soft:#e3f1e7; --warn:#a86608; --warn-soft:#fbefd9; --bad:#b0392b; --bad-soft:#f8e3e0;
-  --sans:"IBM Plex Sans",system-ui,sans-serif; --cond:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
-}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#1c1715; --panel:#262019; --ink:#e4e9e7; --muted:#9aa6a8; --line:#463b33; --soft:#2d2620;
-  --accent:#e08a95; --accent-soft:#3d1f25; --accent-ink:#2a1216;
-  --rebar:#c9d3d8; --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#4a4333; --soil-edge:#7a6f58; --water:#6db3d1;
-  --ok:#6fcf8b; --ok-soft:#1b3326; --warn:#e3a74f; --warn-soft:#3a2d14; --bad:#e5705f; --bad-soft:#3a1f1b; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#1c1715; --panel:#262019; --ink:#e4e9e7; --muted:#9aa6a8; --line:#463b33; --soft:#2d2620;
-  --accent:#e08a95; --accent-soft:#3d1f25; --accent-ink:#2a1216;
-  --rebar:#c9d3d8; --concrete:#3a4446; --concrete-edge:#6e7b7d; --soil:#4a4333; --soil-edge:#7a6f58; --water:#6db3d1;
-  --ok:#6fcf8b; --ok-soft:#1b3326; --warn:#e3a74f; --warn-soft:#3a2d14; --bad:#e5705f; --bad-soft:#3a1f1b; color-scheme:dark}
-*{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans);padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.wrap{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-.back{display:inline-flex;gap:6px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--accent);font-size:13px;font-weight:500;text-decoration:none}
-.back:hover{background:var(--accent-soft)}
-.eyebrow{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-h1{font:700 30px/1.15 var(--cond);margin:4px 0 6px;text-wrap:balance}
-.lead{color:var(--muted);margin:0;max-width:65ch}
-.tabs{display:flex;flex-wrap:wrap;gap:6px}
-.tab{font:500 14px var(--sans);padding:8px 14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;cursor:pointer}
-.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;min-width:0}
-.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px}
-@media(max-width:720px){.grid{grid-template-columns:minmax(0,1fr)}}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
-.chip{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--soft);color:var(--muted);font:500 13px var(--mono);cursor:pointer}
-.chip[aria-current="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.chip.done{color:var(--accent);border-color:var(--accent)}
-svg.sec{width:100%;height:auto;display:block;background:var(--soft);border:1px solid var(--line);border-radius:8px}
-svg text{font:500 10px var(--mono);fill:var(--muted)}
-.g{opacity:0;transition:opacity .35s}.g.on{opacity:1}
-h2{font:700 21px/1.2 var(--cond);margin:0 0 8px}
-h3{font:600 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:14px 0 4px}
-p{margin:0 0 8px}
-.pill{display:inline-block;font:500 11px var(--mono);padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
-.pill.bp{background:var(--soft);color:var(--muted);border:1px solid var(--line)}
-.why{border-left:3px solid var(--accent);background:var(--accent-soft);padding:8px 12px;border-radius:0 6px 6px 0}
-ul.ctl{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
-ul.ctl li{display:flex;gap:8px}ul.ctl li::before{content:"☐";color:var(--accent)}
-.nav{display:flex;justify-content:space-between;gap:8px;margin-top:16px}
-.btn{font:500 14px var(--sans);padding:8px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);cursor:pointer}
-.btn.sec{background:var(--panel);color:var(--accent)}
-.btn:disabled{opacity:.4;cursor:default}
-.ord{list-style:none;margin:12px 0;padding:0;display:flex;flex-direction:column;gap:6px}
-.ord li{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--soft);border-radius:8px;padding:8px 10px}
-.ord li.ok{border-color:var(--ok);background:var(--ok-soft)}.ord li.no{border-color:var(--bad);background:var(--bad-soft)}
-.ord .t{flex:1;min-width:0}
-.mv{display:flex;gap:4px}.mv button{width:32px;height:32px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;cursor:pointer}
-.fb{margin-top:12px;padding:10px 12px;border-radius:8px;border:1px solid var(--line)}
-.fb.ok{background:var(--ok-soft);border-color:var(--ok)}.fb.bad{background:var(--bad-soft);border-color:var(--bad)}.fb.warn{background:var(--warn-soft);border-color:var(--warn)}
-.opts{display:flex;flex-direction:column;gap:6px;margin:10px 0}
-.opt{text-align:left;font:400 14px var(--sans);padding:10px 12px;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:8px;cursor:pointer}
-.opt:hover:not(:disabled){border-color:var(--accent)}
-.opt.ok{background:var(--ok-soft);border-color:var(--ok)}.opt.no{background:var(--bad-soft);border-color:var(--bad)}
-.sym{background:var(--warn-soft);border:1px solid var(--warn);border-radius:8px;padding:10px 12px}
-.meta{display:flex;justify-content:space-between;font:500 12px var(--mono);color:var(--muted);margin-bottom:10px}
-.score{font:700 40px var(--cond)}
-footer{font-size:12px;color:var(--muted);max-width:75ch}
-.mode{display:flex;align-items:center;gap:10px;background:var(--accent);color:var(--accent-ink);border-radius:8px;padding:8px 14px;font:600 12px var(--mono);letter-spacing:.1em;text-transform:uppercase}.mode span{font-weight:400;opacity:.85;letter-spacing:.04em;text-transform:none}
-</style>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
-<link rel="stylesheet" href="mute.css">
-<link rel="stylesheet" href="proceso.css">
-
-</head><body>
+<link rel="stylesheet" href="apple.css">
+</head><body data-page="proceso" data-tool="combinada" data-mat="H">
+<div class="shell">
+  <nav class="sidebar glass" id="sidebar" aria-label="Herramientas"></nav>
+  <div class="content">
+    <header class="navbar glass" id="navbar"></header>
 <div class="wrap">
-  <div style="display:flex;flex-wrap:wrap;gap:8px"><a class="back" href="index.html#H">← Menú de calculadoras</a><a class="back" href="combinada.html">Calcular esta zapata →</a></div>
   <header class="top mat-H"><div><div class="mbadge"><b>ZCb</b><span>PROCESO</span></div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Hormigón · Cimentaciones superficiales</small>Zapata combinada</h1></div></div><p class="lead">Cuatro formas de repasar cómo se construye una zapata combinada, que recoge dos pilares: desde el replanteo junto al linde hasta el curado. Con dos pilares sobre una sola pieza, el replanteo de las esperas y la malla superior son los puntos críticos.</p></header>
-  <div class="mode">Proceso constructivo <span>· cómo se ejecuta en obra</span></div>
+  <div class="calclinks"><a href="combinada.html">Calcular esta zapata →</a></div>
+<div class="mode">Proceso constructivo <span>· cómo se ejecuta en obra</span></div>
   <div class="tabs" role="tablist" id="tabs"></div>
   <main id="main"></main>
   <footer>Herramienta de estudio de la asignatura Construcción (ETSIE y ETSA, UGR). Material orientativo para el repaso: en obra rigen el proyecto, el estudio geotécnico y las indicaciones de la dirección facultativa. Las referencias normativas indicadas son las verificadas; el resto de pasos son buena práctica constructiva. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
 </div>
 
+
+  </div>
+</div>
+<nav class="tabbar glass" id="tabbar" aria-label="Grupos de herramientas"></nav>
+<div class="scrim" id="scrim"></div>
+<div class="sheet glass" id="sheet" role="dialog" aria-label="Herramientas"></div>
 <script>
 var STEPS=[
 {id:1,t:"Replantear ejes y linde y excavar",
@@ -282,4 +218,7 @@ function renderExa(){
 function render(){ if(mode==="rec")renderRec(); else if(mode==="ord"){if(!order.length)newOrder();renderOrd(false)} else if(mode==="fal")renderFal(); else renderExa(); }
 tabs();render();
 </script>
+
+<script src="app.js"></script>
+<script src="apple-nav.js"></script>
 </body></html>

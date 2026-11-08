@@ -204,22 +204,22 @@ function jsonForScript(state) {
   return JSON.stringify(state).replace(/</g, '\\u003c');
 }
 
-/* El contenido de la página (lo que va dentro de <body>). */
+/* Documento del menú con el diseño Apple (lo que se publica al guardar la configuración). */
 function inner(state) {
-  return '<title>Predimensionado</title>\n' +
-    '<meta name="claude:viewport-fit-sides" content="cover">\n' +
-    '<link rel="preconnect" href="https://fonts.googleapis.com">\n' +
-    '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">\n' +
-    '<style>' + CSS + '</style>\n' +
-    '<div class="wrap" id="app"></div>\n' +
+  return '<div class="shell">\n' +
+    '  <nav class="sidebar glass" id="sidebar" aria-label="Materiales y herramientas"></nav>\n' +
+    '  <div class="content">\n    <header class="navbar glass" id="navbar"></header>\n    <div class="wrap" id="app"></div>\n  </div>\n</div>\n' +
+    '<nav class="tabbar glass" id="tabbar" aria-label="Materiales"></nav>\n<div class="scrim" id="scrim"></div>\n' +
+    '<div class="sheet glass" id="sheet" role="dialog" aria-label="Herramientas"></div>\n' +
     '<script type="application/json" id="state">' + jsonForScript(state) + '</script>\n' +
-    '<script src="app.js"></script>\n';
+    '<script src="app.js"></script>\n<script src="apple-nav.js"></script>\n';
 }
 
-/* El documento completo, con el mismo esqueleto que añade la plataforma al publicar. */
 function buildDoc(state) {
-  return '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>' +
-    RESET + '</style></head><body>' + inner(state) + '</body></html>';
+  return '<!DOCTYPE html>\n<html lang="es"><head><meta charset="utf-8">\n' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n' +
+    '<meta name="color-scheme" content="light dark">\n<title>Predimensionado</title>\n' +
+    '<link rel="stylesheet" href="apple.css">\n</head><body data-page="menu">\n' + inner(state) + '</body></html>\n';
 }
 
 if (typeof module !== 'undefined') module.exports = { CARDS, inner, buildDoc };
@@ -232,7 +232,7 @@ if (typeof module !== 'undefined') module.exports = { CARDS, inner, buildDoc };
   function readState() {
     try {
       const s = JSON.parse(document.getElementById('state').textContent);
-      if (s && Array.isArray(s.enabled)) return { enabled: s.enabled.filter(x => typeof x === 'string') };
+      if (s && Array.isArray(s.enabled)) return { enabled: s.enabled.filter(x => typeof x === 'string'), details: Array.isArray(s.details) ? s.details.filter(x => typeof x === 'string') : null };
     } catch (e) { /* se usa el valor por defecto */ }
     return { enabled: CARDS.map(c => c.id) };
   }
@@ -248,8 +248,32 @@ if (typeof module !== 'undefined') module.exports = { CARDS, inner, buildDoc };
     return MATS.some(m => m.id === h) ? h : null;
   }
   function goMat(id) {
-    try { if (id) location.hash = id; else history.pushState('', '', location.pathname + location.search); } catch (e) { /* ignorar */ }
+    try { location.hash = id || 'P'; } catch (e) { /* ignorar */ }
     render(); window.scrollTo(0, 0);
+  }
+  /* Portada: sin hash. #P = predimensionado (materiales), #H/#A/#M = un material */
+  function isPortal() {
+    try { return (location.hash || '').replace('#', '') === ''; } catch (e) { return true; }
+  }
+  function renderPortal() {
+    const hero = el('header', 'phero');
+    hero.append(el('div', 'eyebrow', 'Construcción · ETSIE y ETSA · Universidad de Granada'),
+      el('h1', null, 'Herramientas de apoyo'),
+      el('p', 'lead', 'Elige por dónde empezar: dimensionar un elemento o ver cómo se construye en obra.'));
+    const cards = el('div', 'pcards');
+    const mk = (cls, href, icon, title, text, cta) => {
+      const a = el('a', 'pcard ' + cls); a.href = href;
+      const i = el('div', 'pico'); i.innerHTML = icon;
+      a.append(i, el('h2', null, title), el('p', null, text), el('span', 'pgo', cta));
+      return a;
+    };
+    cards.append(
+      mk('p-calc', '#P', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8.5 7.5h7M8.5 12h2M13.5 12h2M8.5 16h2M13.5 16h2"/></svg>',
+        'Predimensionado', 'Calculadoras con el paso a paso y la normativa: cimentaciones, muros y estructura. Incluye el proceso constructivo de cada elemento.', 'Calcular →'),
+      mk('p-det', 'detalles.html', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M6 20v-5h12v5M9 15V5h6v10"/><path d="M5 11h3M16 11h3" /></svg>',
+        'Detalle constructivo', 'Dibujos para recorrer paso a paso, pulsar cada elemento y autoevaluarte: armado, juntas, impermeabilización y drenaje.', 'Ver detalles →'));
+    app.append(hero, cards);
+    app.append(el('footer', null, '© 2026 Jaime Vergara Muñoz · Universidad de Granada. Material docente de apoyo; no sustituye al CTE ni al proyecto.'));
   }
   window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
   // Al entrar desde otra herramienta o al volver atrás, empezar siempre arriba
@@ -280,6 +304,8 @@ if (typeof module !== 'undefined') module.exports = { CARDS, inner, buildDoc };
 
   function render() {
     app.textContent = '';
+    document.body.classList.toggle('portal', isPortal());
+    if (isPortal()) { renderPortal(); return; }
     const head = el('header');
     const left = el('div');
     const bb = el('div', 'badge-big', curMat() || 'PE');
@@ -394,6 +420,7 @@ if (typeof module !== 'undefined') module.exports = { CARDS, inner, buildDoc };
   async function doSave() {
     if (busy || !art) return;
     const next = { enabled: CARDS.filter(c => draft.has(c.id)).map(c => c.id) };
+    if (state.details) next.details = state.details;
     busy = true; msg = ''; render();
     try {
       await art.publish(buildDoc(next));

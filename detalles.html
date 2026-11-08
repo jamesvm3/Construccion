@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Detalles constructivos · Construcción</title>
+<style>
+:root{--bg:#f2f2f7;--panel:#fff;--ink:#1c1c1e;--muted:#6c6c70;--line:rgba(60,60,67,.16);--soft:rgba(118,118,128,.12);--group:#f2f2f7;
+--accent:#007aff;--accent-t:#0062cc;--accent-soft:rgba(0,122,255,.11);--ok:#34c759;--ok-t:#1f7a36;--ok-soft:rgba(52,199,89,.16);
+--warn:#ff9500;--warn-t:#9a5700;--warn-soft:rgba(255,149,0,.14);--bad:#ff3b30;--bad-t:#c4160c;--bad-soft:rgba(255,59,48,.12);
+--glass:rgba(255,255,255,.75);--glass-line:rgba(60,60,67,.18);
+--shadow:0 1px 2px rgba(0,0,0,.04),0 10px 28px -8px rgba(0,0,0,.10);--shadow-w:0 1px 2px rgba(0,0,0,.05),0 18px 40px -14px rgba(0,0,0,.20);
+--blob1:rgba(0,122,255,.14);--blob2:rgba(175,82,222,.08);--ease:cubic-bezier(.25,1,.5,1);
+--font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",system-ui,"Segoe UI",Roboto,sans-serif;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#000;--panel:#1c1c1e;--ink:#f5f5f7;--muted:#a1a1a6;--line:rgba(84,84,88,.55);--soft:rgba(118,118,128,.24);--group:#2c2c2e;
+--accent:#0a84ff;--accent-t:#64acff;--accent-soft:rgba(10,132,255,.2);--ok:#30d158;--ok-t:#4ade80;--ok-soft:rgba(48,209,88,.18);--warn:#ff9f0a;--warn-t:#ffb340;--warn-soft:rgba(255,159,10,.18);--bad:#ff453a;--bad-t:#ff7a70;--bad-soft:rgba(255,69,58,.2);
+--glass:rgba(30,30,30,.75);--glass-line:rgba(255,255,255,.12);--shadow:0 0 0 .5px rgba(255,255,255,.07),0 10px 28px -8px rgba(0,0,0,.6);--shadow-w:0 0 0 .5px rgba(255,255,255,.09),0 18px 40px -14px rgba(0,0,0,.8);--blob1:rgba(10,132,255,.2);--blob2:rgba(191,90,242,.12)}}
+:root[data-theme=dark]{color-scheme:dark;--bg:#000;--panel:#1c1c1e;--ink:#f5f5f7;--muted:#a1a1a6;--line:rgba(84,84,88,.55);--soft:rgba(118,118,128,.24);--group:#2c2c2e;
+--accent:#0a84ff;--accent-t:#64acff;--accent-soft:rgba(10,132,255,.2);--ok:#30d158;--ok-t:#4ade80;--ok-soft:rgba(48,209,88,.18);--warn:#ff9f0a;--warn-t:#ffb340;--warn-soft:rgba(255,159,10,.18);--bad:#ff453a;--bad-t:#ff7a70;--bad-soft:rgba(255,69,58,.2);
+--glass:rgba(30,30,30,.75);--glass-line:rgba(255,255,255,.12);--shadow:0 0 0 .5px rgba(255,255,255,.07),0 10px 28px -8px rgba(0,0,0,.6);--shadow-w:0 0 0 .5px rgba(255,255,255,.09),0 18px 40px -14px rgba(0,0,0,.8);--blob1:rgba(10,132,255,.2);--blob2:rgba(191,90,242,.12)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:var(--font);font-size:16px;line-height:1.45;color:var(--ink);-webkit-font-smoothing:antialiased;
+background:radial-gradient(900px 520px at 88% -8%,var(--blob1),transparent 62%),radial-gradient(760px 520px at -8% 38%,var(--blob2),transparent 60%),var(--bg);background-attachment:fixed;background-color:var(--bg)}
+button{font-family:inherit}
+:focus-visible{outline:3px solid rgba(0,122,255,.45);outline-offset:2px;border-radius:8px}
+.glass{background:var(--glass);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px)}
+.shell{display:grid;grid-template-columns:272px minmax(0,1fr);min-height:100vh}
+.sidebar{position:sticky;top:0;height:100vh;overflow-y:auto;border-right:.5px solid var(--glass-line);padding:18px 12px;display:flex;flex-direction:column;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;padding:0 6px}
+.appicon{width:38px;height:38px;border-radius:22.4%;background:linear-gradient(150deg,#5cb0ff,#007aff 55%,#0058d6);display:grid;place-items:center;box-shadow:0 4px 10px -2px rgba(0,122,255,.45),inset 0 .5px 0 rgba(255,255,255,.5);color:#fff;flex:none}
+.appicon svg{width:22px;height:22px}
+.brand b{display:block;font-size:15px;font-weight:600;letter-spacing:-.01em;line-height:1.15}.brand span{font-size:12px;color:var(--muted)}
+.navgroup{display:flex;flex-direction:column;gap:2px}
+.navgroup h4{margin:10px 8px 6px;font-size:12px;font-weight:600;letter-spacing:.02em;color:var(--muted)}
+.navitem{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:transparent;color:var(--ink);font-size:14px;line-height:1.2;font-weight:500;padding:5px 8px 5px 6px;border-radius:12px;cursor:pointer;transition:background .25s var(--ease),transform .25s var(--ease)}
+.navitem:hover{background:var(--soft)}.navitem:active{transform:scale(.98)}
+.navitem[aria-current=page]{background:var(--accent);color:#fff}
+.nt{display:flex;flex-direction:column;min-width:0}.nt small{font-size:12px;font-weight:400;color:var(--muted)}
+.navitem[aria-current=page] small{color:rgba(255,255,255,.82)}
+.tile{flex:none;width:54px;height:38px;border-radius:10px;overflow:hidden;background:#fbfaf6;border:.5px solid var(--line)}
+.tile img{width:100%;height:100%;object-fit:cover;object-position:50% 55%;display:block}
+.navitem[aria-current=page] .tile{border-color:rgba(255,255,255,.7)}
+.sidefoot{margin-top:auto;font-size:11.5px;color:var(--muted);padding:8px 8px 0;line-height:1.35}
+.content{min-width:0;padding-bottom:40px}
+.navbar{position:sticky;top:0;z-index:20;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;min-height:52px;padding:6px 16px;border-bottom:.5px solid transparent;transition:border-color .3s var(--ease)}
+.navbar.scrolled{border-bottom-color:var(--glass-line)}
+.crumb{font-size:15px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.backlink{border:0;background:transparent;color:var(--accent-t);font-size:15px;font-weight:500;padding:6px 8px 6px 0;display:inline-flex;align-items:center;gap:2px;cursor:pointer;border-radius:10px;text-decoration:none;white-space:nowrap}.backlink svg{width:18px;height:18px}
+.navtitle{font-size:16px;font-weight:600;letter-spacing:-.01em;opacity:0;transform:translateY(4px);transition:opacity .35s var(--ease),transform .35s var(--ease);white-space:nowrap}
+.navbar.scrolled .navtitle{opacity:1;transform:none}
+.navactions{display:flex;justify-content:flex-end}
+.iconbtn{width:36px;height:36px;border-radius:50%;border:0;background:var(--soft);color:var(--accent-t);display:grid;place-items:center;cursor:pointer;padding:0;transition:transform .3s var(--ease)}
+.iconbtn:active{transform:scale(.92)}
+.iconbtn svg{width:19px;height:19px;grid-area:1/1;transition:transform .5s var(--ease),opacity .3s var(--ease)}
+.iconbtn .moon{opacity:0;transform:rotate(-70deg) scale(.6)}.is-dark .iconbtn .sun{opacity:0;transform:rotate(70deg) scale(.6)}.is-dark .iconbtn .moon{opacity:1;transform:none}
+.wrap{max-width:1180px;margin:0 auto;padding:6px 20px 40px}
+.eyebrow{font-size:12.5px;color:var(--muted);letter-spacing:.01em}
+h1{margin:2px 0 6px;font-size:clamp(28px,4.4vw,38px);line-height:1.08;font-weight:700;letter-spacing:-.025em;text-wrap:balance}
+.lead{margin:0 0 16px;color:var(--muted);font-size:15px;max-width:68ch}
+.seg{position:relative;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--soft);border-radius:10px;padding:2px;isolation:isolate;max-width:460px;margin-bottom:16px}
+.seg button{position:relative;z-index:1;border:0;background:transparent;color:var(--ink);font-size:13.5px;font-weight:500;padding:7px 10px;border-radius:8px;cursor:pointer}
+.seg button[aria-pressed=true]{font-weight:600}
+.seg .thumb{position:absolute;z-index:0;top:2px;bottom:2px;left:2px;border-radius:8px;background:var(--panel);box-shadow:0 1px 3px rgba(0,0,0,.14),0 .5px 1px rgba(0,0,0,.08);transition:transform .45s var(--ease),width .45s var(--ease)}
+:root[data-theme=dark] .seg .thumb,.is-dark .seg .thumb{background:#636366}
+.grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(300px,1fr);gap:22px;align-items:start}
+.card{background:var(--panel);border-radius:26px;box-shadow:var(--shadow-w);padding:14px 14px 16px}
+.stage{position:relative;line-height:0;background:#fbfaf6;border-radius:18px;overflow:hidden}
+.stage img{width:100%;height:auto;display:block}
+.stage svg{position:absolute;inset:0;width:100%;height:100%}
+.hs{fill:transparent;stroke:transparent;stroke-width:6;cursor:pointer;vector-effect:non-scaling-stroke}
+.hs:hover{fill:rgba(0,122,255,.14);stroke:var(--accent);stroke-width:2}
+.hs.sel{fill:rgba(0,122,255,.2);stroke:var(--accent);stroke-width:2.5}
+.hs.flash{animation:fl .9s ease-in-out 3}
+@keyframes fl{50%{fill:rgba(52,199,89,.45);stroke:var(--ok);stroke-width:3}}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 4px 0}
+.steps{display:flex;gap:8px}
+.stp{width:34px;height:34px;border-radius:50%;border:0;background:var(--soft);color:var(--ink);font-size:15px;font-weight:600;cursor:pointer;transition:transform .3s var(--ease),background .3s var(--ease)}
+.stp:active{transform:scale(.92)}
+.stp[aria-pressed=true]{background:var(--accent);color:#fff}
+.btn{font-size:15px;font-weight:600;border:0;background:var(--accent-soft);color:var(--accent-t);padding:8px 16px;border-radius:12px;cursor:pointer;transition:transform .3s var(--ease),opacity .3s var(--ease)}
+.btn:active{transform:scale(.96)}.btn:disabled{opacity:.4;cursor:default}.btn.pri{background:var(--accent);color:#fff}
+.cap{margin:12px 6px 0;font-size:14.5px;color:var(--muted);line-height:1.5}.cap b{display:block;color:var(--ink);font-size:16px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px}
+.chk{display:flex;align-items:center;gap:12px;font-size:15px;cursor:pointer;margin:14px 6px 0}
+input[type=checkbox]{-webkit-appearance:none;appearance:none;flex:none;width:48px;height:29px;margin:0;border-radius:99px;background:rgba(120,120,128,.32);position:relative;cursor:pointer;transition:background .35s var(--ease)}
+input[type=checkbox]::after{content:"";position:absolute;top:2px;left:2px;width:25px;height:25px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.28),0 .5px 1px rgba(0,0,0,.2);transition:transform .4s var(--ease)}
+input[type=checkbox]:checked{background:var(--ok)}input[type=checkbox]:checked::after{transform:translateX(19px)}
+.panel{position:sticky;top:64px;background:var(--panel);border-radius:24px;box-shadow:var(--shadow);padding:6px 18px 16px;animation:reveal .5s var(--ease)}
+@keyframes reveal{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.panel h2{font-size:22px;font-weight:700;letter-spacing:-.02em;margin:10px 0 4px;line-height:1.2}
+.tag{display:inline-block;font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;background:var(--accent-soft);color:var(--accent-t);border-radius:99px;padding:3px 10px;margin-top:10px}
+.fld{padding:10px 0;border-top:.5px solid var(--line)}.fld:first-of-type{margin-top:8px}
+.fld h3{margin:0 0 2px;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}.fld p{margin:0;font-size:15px}
+.fld.err{background:var(--warn-soft);border-top:0;border-radius:14px;padding:10px 14px;margin-top:10px}
+.fld.err h3{color:var(--warn-t)}
+.hint{color:var(--muted);font-size:14.5px}
+.q{font-size:22px;font-weight:700;letter-spacing:-.02em;margin:10px 0 8px}
+.fb{min-height:1.5em;margin:6px 0 10px;font-size:15px}.ok{color:var(--ok-t)}.no{color:var(--bad-t)}
+.score{display:inline-block;font-weight:600;font-size:13.5px;background:var(--soft);border-radius:99px;padding:4px 12px}
+.foot{margin:14px auto 0;max-width:78ch;font-size:12px;line-height:1.5;color:var(--muted);text-align:center}
+.xl{display:flex;flex-wrap:wrap;gap:10px;margin:14px 6px 2px;padding-top:14px;border-top:.5px solid var(--line)}.xl .btn{text-decoration:none;display:inline-block}
+body.gal #viewer{display:none}body:not(.gal) #gallery{display:none}
+.gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;margin:18px 0 10px}
+.gcard{display:flex;flex-direction:column;gap:10px;text-align:left;border:0;font:inherit;color:var(--ink);background:var(--panel);border-radius:26px;padding:12px 12px 16px;box-shadow:var(--shadow);cursor:pointer;transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+.gcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-w)}.gcard:active{transform:scale(.98)}
+.gcard .gimg{background:#fbfaf6;border-radius:18px;overflow:hidden;line-height:0;aspect-ratio:16/10}
+.gcard .gimg img{width:100%;height:100%;object-fit:cover;object-position:50% 55%;display:block}
+.gcard h3{margin:4px 8px 0;font-size:18px;font-weight:700;letter-spacing:-.015em;line-height:1.2}
+.gcard small{margin:0 8px;color:var(--muted);font-size:13.5px}
+.gcard .gtag{margin:0 8px;align-self:flex-start;font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;background:var(--accent-soft);color:var(--accent-t);border-radius:99px;padding:3px 10px}
+@media (max-width:860px){.gcards{grid-template-columns:1fr}}
+.ic-c{fill:var(--concrete);stroke:var(--concrete-edge);stroke-width:1.2}.ic-a{fill:var(--steel);stroke:var(--steel-edge);stroke-width:1.2}.ic-m{fill:var(--wood);stroke:var(--wood-edge);stroke-width:1.2}
+:root{--concrete:#dcdce1;--concrete-edge:#8e8e93;--steel:#c9d3dd;--steel-edge:#6b7b8a;--wood:#ecd3a6;--wood-edge:#a07a48}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--concrete:#48484a;--concrete-edge:#98989d;--steel:#46525c;--steel-edge:#8a99a6;--wood:#4d3b25;--wood-edge:#9b7a50}}
+:root[data-theme=dark]{--concrete:#48484a;--concrete-edge:#98989d;--steel:#46525c;--steel-edge:#8a99a6;--wood:#4d3b25;--wood-edge:#9b7a50}
+.tile.mi{background:var(--group);display:grid;place-items:center;height:38px}.tile.mi svg{width:100%;height:100%;padding:4px}
+.navitem.sub{margin-left:26px;width:calc(100% - 26px);font-size:13.5px;padding:4px 8px}
+.tab .ti.mi{background:var(--group);display:grid;place-items:center;border:0}.tab .ti.mi svg{width:100%;height:100%;padding:3px 5px}
+.gmat{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:14px 0 0}
+.gchip{font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;background:var(--accent-soft);color:var(--accent-t);border-radius:99px;padding:4px 12px}
+.gsoon{grid-column:1/-1;background:var(--panel);border-radius:22px;padding:28px;color:var(--muted);box-shadow:var(--shadow);text-align:center}
+.adminbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;background:var(--accent-soft);border-radius:18px;padding:12px 16px;margin:12px 0 0}
+.adminbar span{color:var(--muted);font-size:14px;flex:1 1 220px}.adminbar .abtn{display:flex;gap:8px}.gstat{flex-basis:100%;margin:0;font-size:14px}
+.gtog{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;padding:6px 8px 4px;cursor:pointer}
+.sidelinks{display:flex;flex-direction:column;gap:2px}
+.tabbar,.legend{display:none}
+@media (max-width:860px){
+ .shell{display:block}.sidebar{display:none}
+ .navbar{grid-template-columns:1fr auto auto}.navtitle{display:none}
+ .wrap{padding:4px 14px calc(env(safe-area-inset-bottom,0px) + 100px)}
+ .grid{grid-template-columns:1fr}.panel{position:static}
+ .tabbar{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;position:fixed;left:0;right:0;bottom:0;z-index:40;padding:6px 8px calc(env(safe-area-inset-bottom,0px) + 4px);border-top:.5px solid var(--glass-line)}
+ .tab{display:flex;flex-direction:column;align-items:center;text-align:center;line-height:1.15;gap:3px;border:0;background:transparent;color:var(--muted);font-size:10.5px;font-weight:500;padding:4px 2px;border-radius:12px;cursor:pointer}
+ .tab .ti{width:48px;height:30px;border-radius:9px;overflow:hidden;border:1.5px solid transparent;background:#fbfaf6}
+ .tab .ti img{width:100%;height:100%;object-fit:cover;display:block}
+ .tab[aria-pressed=true]{color:var(--accent-t)}.tab[aria-pressed=true] .ti{border-color:var(--accent)}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
+</style></head><body>
+<div class="shell">
+ <nav class="sidebar glass" aria-label="Detalles">
+  <a class="brand" href="index.html" style="text-decoration:none;color:inherit"><div class="appicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M7 20v-6h10v6M9 14V6h6v8"/></svg></div><div><b>Construcción</b><span>ETSIE · Detalles</span></div></a>
+  <div class="sidelinks"><a class="navitem" href="index.html" style="text-decoration:none"><span class="nt"><span>‹ Inicio</span></span></a><a class="navitem" href="index.html#P" style="text-decoration:none"><span class="nt"><span>Predimensionado</span><small>25 calculadoras</small></span></a></div>
+  <div class="navgroup" id="side"></div>
+  <div class="sidefoot">© 2026 Jaime Vergara Muñoz<br>Universidad de Granada</div>
+ </nav>
+ <div class="content">
+  <header class="navbar glass" id="navbar"><div class="crumb" id="crumb"><a class="backlink" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span>Inicio</span></a></div><div class="navtitle" id="ntitle"></div>
+   <div class="navactions"><button class="iconbtn" id="theme" aria-label="Cambiar tema"><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></button></div></header>
+  <div class="wrap">
+   <div id="gallery">
+    <div class="eyebrow">Construcción · ETSIE y ETSA · Universidad de Granada</div>
+    <h1>Detalles constructivos</h1>
+    <p class="lead">Elige el material y el elemento cuyo detalle quieres recorrer: paso a paso, para estudiar o para autoevaluarte.</p>
+    <div class="gmat" id="gmat"></div><div id="gadmin"></div>
+    <div class="gcards" id="gcards"></div>
+   </div>
+   <div id="viewer">
+   <div class="eyebrow">Construcción · ETSIE y ETSA · Universidad de Granada</div>
+   <h1 id="h1">Zapata centrada</h1>
+   <p class="lead">Recorre el detalle paso a paso y pulsa sobre cualquier elemento del dibujo para ver su ficha. Todos los datos son de ejemplo: ajusta siempre a los de tu ejercicio.</p>
+   <div class="seg" id="seg" role="group" aria-label="Modo"><span class="thumb"></span>
+    <button data-mode="pasos" aria-pressed="true">Paso a paso</button><button data-mode="estudio" aria-pressed="false">Estudio</button><button data-mode="test" aria-pressed="false">Autoevaluación</button></div>
+   <div class="grid">
+    <div class="card"><div class="stage" id="stage"><img id="img" alt=""><svg id="ov" viewBox="0 0 1664 700" preserveAspectRatio="none"></svg></div><div id="ctl"></div></div>
+    <div class="panel" id="panel" aria-live="polite"></div>
+   </div>
+   </div>
+   <p class="foot">Asignatura de Construcción · ETSIE y ETSA (Universidad de Granada). © 2026 Jaime Vergara Muñoz. Material docente de apoyo; no sustituye al CTE (DB-SE-C, DB-HS) ni al proyecto.</p>
+  </div>
+ </div>
+</div>
+<nav class="tabbar glass" id="tabbar" aria-label="Detalles"></nav>
+<script>
+
+const IMG=null;
+const mk=(id,n,m,r,t,q,f,d,e)=>({id,n,m,r,t,q,f,d,e});
+// ---------- ZAPATA AISLADA CENTRADA (S 2.8, CX 832, Y0 560) ----------
+const E_AIS=[
+mk('terreno','Terreno natural',1,[[-135,-27,135,0]],'Terreno','Suelo natural sobre el que apoya la zapata.','Recibe la presión que transmite la zapata; la σadm (150 kN/m² en el ejemplo) limita esa presión.','Cota de apoyo y σadm salen del estudio geotécnico.','Apoyar sobre terreno removido o con vegetal.'),
+mk('carga','Carga Nk del pilar',1,[[-8,152,8,190]],'Acciones','Carga característica del pilar sobre la zapata (503 kN en el ejemplo).','Con Nk y la σadm se obtiene el área de la zapata: A ≥ (Nk + peso propio) / σadm.','Zapata de 2,05 × 2,05 m en el ejemplo.','Olvidar el peso propio de zapata y relleno al comprobar la tensión.'),
+mk('pilar','Pilar 30×30 · HA-25',1,[[-15,60,15,150]],'Estructura','Pilar de hormigón armado HA-25 de 30×30 cm, centrado sobre la zapata.','Transmite la carga a la zapata. La armadura del pilar llega hasta la cara superior de la zapata; por debajo se sustituye por las esperas.','Sección 0,30 × 0,30 m. Lleva cercos Ø6 más juntos en la base.','Dibujar el pilar sin la rotura que indica que continúa.'),
+mk('junta','Junta de hormigonado',1,[[-15,57,15,63]],'Ejecución','Unión entre la zapata y el pilar, que se hormigonan en días distintos. Se dibuja como línea ondulada.','Se deja rugosa y limpia para que el pilar agarre al hormigón de la zapata.','Se dibuja a la altura de la cara superior de la zapata.','Dibujarla como línea recta.'),
+mk('zapata','Zapata aislada 2,05 × 2,05 × 0,50',1,[[-102.5,10,102.5,60]],'Cimentación','Zapata aislada cuadrada, centrada bajo el pilar, de HA-25 y armada con B 500 S.','Reparte la carga puntual del pilar sobre una superficie mayor del terreno.','2,05 × 2,05 m en planta · canto 0,50 m.','Dibujarla sin centrar bajo el pilar.'),
+mk('limz','Hormigón de limpieza',1,[[-112.5,0,112.5,10]],'Cimentación','Capa de HL-150 de 10 cm bajo la zapata, sobre el terreno.','Da una base plana y limpia y permite colocar la armadura con su recubrimiento.','HL-150 (150 kg/m³ de cemento) · e = 10 cm · sobresale 10 cm por cada lado.','Contarlo como parte de la zapata o armar sobre tierra.'),
+mk('armpil','Armadura del pilar',2,[[-13.1,61.5,-10.5,146],[10.5,61.5,13.1,146]],'Armado','Barras verticales del pilar, que llegan hasta la cara superior de la zapata.','Resisten las cargas verticales del pilar.','Sin prolongarse dentro de la zapata: ahí van las esperas.','Prolongar las barras del pilar hasta la parrilla.'),
+mk('esperas','Esperas 8Ø16',2,[[-10.4,24,-8,124],[8,24,10.4,124]],'Armado','Barras del mismo diámetro que las del pilar que arrancan en la parrilla y asoman sobre la zapata.','Empalman por solape con las del pilar y le transmiten la carga a la zapata.','40Ø = 64 cm de longitud de solape, con patilla sobre la parrilla.','Esperas más cortas que 40Ø o sin patilla.'),
+mk('cercos','Cercos Ø6 de la base',2,[[-13.5,26,13.5,57]],'Armado','Cercos Ø6 del arranque del pilar dentro de la zapata.','Confinan las esperas y los primeros centímetros del pilar.','Más juntos en la base del pilar que en el resto.','Omitirlos en la zona de las esperas.'),
+mk('parrilla','Parrilla inferior 13Ø12 c/16,2',2,[[-97.5,14.3,97.5,20.5],[-98.6,15.6,-96.4,35.6],[96.4,15.6,98.6,35.6]],'Armado','Malla de barras B 500 S en las dos direcciones, en la cara inferior de la zapata.','Resiste la flexión de los vuelos de la zapata.','13Ø12 c/16,2 en ambas direcciones, con patilla de 20 cm en los extremos y recubrimiento de 5 cm.','Colocarla pegada al hormigón de limpieza.'),
+mk('sepa','Separadores (calzos)',2,[[-73,10,-67,15],[-8,10,-2,15],[67,10,73,15],[-125,30,-119,35],[119,30,125,35]],'Armado','Calzos que mantienen la armadura a su recubrimiento.','Garantizan el recubrimiento y que las barras no se muevan al hormigonar.','Material no absorbente; ≤ 60 cm entre ellos.','Usar trozos de ladrillo o no dibujarlos.'),
+mk('viga','Viga de atado 30 × 30',3,[[102.5,30,135,60],[-135,30,-102.5,60]],'Atado','Viga de hormigón armado que une la zapata con las vecinas.','Atan las zapatas entre sí y reducen los movimientos relativos y los esfuerzos horizontales.','Sección 30 × 30 cm con la cara superior alineada con la zapata.','Poner la viga más baja que la zapata.'),
+mk('armviga','Armadura de la viga de atado',3,[[-32,53.8,129,56.2],[-32,33.8,129,36.2],[-129,51.3,32,53.7],[-129,36.3,32,38.7]],'Armado','Barras longitudinales 4Ø16 (2 superiores y 2 inferiores) con cercos Ø6 c/24.','Absorben las tracciones de atado. Las dos vigas se solapan 40Ø bajo el pilar.','Solape 40Ø = 64 cm con el Ø mayor, bajo el pilar. Si no hay viga al otro lado, el extremo acaba en patilla.','Cortar las barras sin solape ni anclaje.'),
+mk('limv','Limpieza bajo las vigas',3,[[102.5,20,135,30],[-135,20,-102.5,30]],'Atado','Hormigón de limpieza HL-150 de 10 cm bajo ambas vigas de atado.','Mismo papel que bajo la zapata.','HL-150 · e = 10 cm.','Dejar las vigas apoyadas directamente sobre el terreno.'),
+mk('terc','Terreno compactado',4,[[-135,60,-15,70],[15,60,135,70]],'Solera','Terreno compactado bajo la solera.','Base estable para el encachado y la solera.','≥ 95 % del Proctor modificado.','Compactar por capas gruesas o no comprobar la densidad.'),
+mk('geo','Lámina geotextil',4,[[-135,69,-17,71.5],[17,69,135,71.5]],'Solera','Tela filtrante bajo el encachado.','Separa terreno y grava para que los finos no colmaten el encachado.','Se dibuja como línea de puntos verdes.','Omitirla.'),
+mk('enc','Encachado de grava',4,[[-135,71.5,-17,89],[17,71.5,135,89]],'Solera','Capa de grava bajo la solera.','Corta la subida de humedad por capilaridad y da una base estable.','e = 20 cm · compactado.','Dejar el encachado sin compactar.'),
+mk('poli','Lámina de polietileno',4,[[-135,89,-17,91.5],[17,89,135,91.5]],'Solera','Lámina plástica bajo la solera.','Barrera de vapor; impide la pérdida de lechada hacia el encachado.','Va entre el encachado y la solera.','Colocarla bajo el encachado.'),
+mk('solera','Solera HA-25 · e = 15 cm',4,[[-135,91.5,-17,105],[17,91.5,135,105]],'Solera','Solera de hormigón HA-25 de 15 cm de espesor, apoyada en el terreno.','Soporta el uso interior del edificio; no trabaja como cimentación.','Mallazo Ø6 c/20 en el tercio superior; e = 15 cm.','Confundirla con una losa de cimentación.'),
+mk('mallazo','Mallazo Ø6 c/20',4,[[-131,100,-21,102.2],[21,100,131,102.2]],'Solera','Mallado electrosoldado Ø6 c/20 que controla la fisuración de la solera.','Va en el tercio superior de la solera.','Ø6 c/20.','Dibujarlo en el centro o pegado al encachado.'),
+mk('jper','Junta perimetral 2 cm',4,[[-17,90,-15,105],[15,90,17,105]],'Solera','Junta de 2 cm entre solera y pilar, rellena de porexpan y sellada.','Permite el movimiento de la solera sin cargar el pilar ni fisurar.','Porexpan + sellado.','Hormigonar la solera pegada al pilar.')
+];
+// ---------- ZAPATA COMBINADA (S 1.9, CX 832, Y0 500) ----------
+const SG=[[-225,-162.8],[-128.8,84.7],[123.7,225]];
+const E_COM=[
+mk('terreno','Terreno natural',1,[[-225,-45,225,0]],'Terreno','Suelo natural sobre el que apoya la zapata combinada.','La σadm (200 kN/m² en el ejemplo) limita la presión bajo la zapata.','Cota de apoyo y σadm salen del estudio geotécnico.','Apoyar sobre terreno removido.'),
+mk('cdg','Centro de gravedad de las cargas',1,[[-3,-8,3,190]],'Dimensionado','Línea de acción de la resultante de las dos cargas.','Debe coincidir con el centro de la zapata para que la presión sobre el terreno sea uniforme.','Con Nk1 = 500 kN y Nk2 = 700 kN, el c.d.g. queda a 1,46 m del pilar 1 y 1,04 m del 2 (en el eje).','Centrar la zapata respecto a los pilares en vez de respecto al c.d.g.'),
+mk('cargas','Cargas Nk1 y Nk2',1,[[-150,152,-141,190],[99,152,109,190]],'Acciones','Cargas de los dos pilares: 500 kN y 700 kN en el ejemplo.','La zapata se dimensiona para la suma de ambas, con la resultante en el c.d.g.','Nk1 = 500 kN · Nk2 = 700 kN.','Calcular cada pilar con su propia zapata cuando uno queda en el borde.'),
+mk('p1','Pilar 1 · 30×30',1,[[-160.8,60,-130.8,150]],'Estructura','Pilar de 30×30 cm de HA-25.','Transmite la carga Nk1 a la zapata.','Armadura hasta la cara superior de la zapata.','Dibujarlo sin la rotura superior.'),
+mk('p2','Pilar 2 · 35×35',1,[[86.7,60,121.7,150]],'Estructura','Pilar de 35×35 cm de HA-25 con la carga mayor.','Transmite la carga Nk2 a la zapata.','Armadura hasta la cara superior de la zapata.','Dibujarlo del mismo tamaño que el 1.'),
+mk('junta','Junta de hormigonado',1,[[-160.8,57,-130.8,63],[86.7,57,121.7,63]],'Ejecución','Unión entre zapata y pilares, que se hormigonan en días distintos.','Se deja rugosa y limpia.','Línea ondulada en la cara superior de la zapata.','Dibujarla recta.'),
+mk('zapata','Zapata combinada 3,80 × 1,90 × 0,50',1,[[-190,10,190,60]],'Cimentación','Zapata común a dos pilares, de HA-25 y B 500 S.','Se usa cuando la zapata de un pilar de borde se solaparía con la del vecino o no cabe por el lindero.','3,80 × 1,90 × 0,50 m. Vuelos de 0,44 m y 0,86 m; separación entre pilares 2,50 m.','Dimensionarla sin comprobar que la resultante pasa por su centro.'),
+mk('limz','Hormigón de limpieza',1,[[-200,0,200,10]],'Cimentación','Capa de HL-150 de 10 cm bajo la zapata.','Base plana y limpia para la armadura.','HL-150 · e = 10 cm.','Armar sobre tierra.'),
+mk('esperas','Esperas 8Ø16',2,[[-156.3,22.8,-153.7,124],[-137.9,22.8,-135.3,124],[91.2,22.8,93.8,124],[114.6,22.8,117.2,124]],'Armado','Barras 8Ø16 del mismo Ø que las del pilar, que arrancan en la malla inferior.','Empalman el pilar con la zapata.','40Ø = 64 cm de solape, con patilla.','Esperas más cortas o sin patilla.'),
+mk('cercos','Cercos Ø6 más juntos en la base',2,[[-159.3,26,-132.3,52],[88.2,26,120.2,52]],'Armado','Cercos en la base de cada pilar, dentro de la zapata.','Confinan las esperas.','Más juntos que en el resto del pilar.','Omitirlos en la zona de las esperas.'),
+mk('mallas','Dos mallas iguales',2,[[-184.2,14.5,184.2,17.1],[-184.2,52.9,184.2,55.5]],'Armado','Una malla inferior y otra superior iguales (12Ø16 c/14 · 23Ø16 c/15), con recubrimiento de 5 cm.','La inferior resiste los momentos positivos; la superior, los negativos entre pilares.','12Ø16 c/14 en una dirección y 23Ø16 c/15 en la otra.','Poner solo malla inferior, como en una zapata aislada.'),
+mk('patillas','Patillas en los extremos',2,[[-185.2,15,-183.2,32],[183.2,15,185.2,32],[-185.2,38,-183.2,55],[183.2,38,185.2,55]],'Armado','Las dos mallas terminan en patilla en los extremos de la zapata.','Anclan las barras.','Longitud según el anclaje necesario.','Cortar las barras rectas en el borde.'),
+mk('cabal','Caballetes',2,[[-62,17,-58,53],[148,17,152,53]],'Armado','Armadura de montaje que sostiene la malla superior a su altura.','Mantiene la distancia entre las dos mallas al hormigonar.','Se colocan separados a lo largo de la zapata.','Dejar la malla superior sin soporte.'),
+mk('sepa','Separadores (calzos)',2,[[-123.7,10,-116.3,15],[-3.7,10,3.7,15],[116.3,10,123.7,15]],'Armado','Calzos bajo la malla inferior.','Garantizan el recubrimiento.','Material no absorbente; ≤ 60 cm entre ellos.','Usar trozos de ladrillo.'),
+mk('terc','Terreno compactado',3,[[-225,60,225,70]],'Solera','Terreno compactado sobre la zapata y bajo la solera.','Base estable.','≥ 95 % del Proctor modificado.','No compactarlo por tongadas.'),
+mk('geo','Lámina geotextil',3,[[-225,69,-162.8,71.5],[-128.8,69,84.7,71.5],[123.7,69,225,71.5]],'Solera','Tela filtrante bajo el encachado.','Evita que los finos del suelo colmaten la grava.','Línea de puntos verdes.','Omitirla.'),
+mk('enc','Encachado de grava',3,[[-225,71.5,-162.8,89],[-128.8,71.5,84.7,89],[123.7,71.5,225,89]],'Solera','Capa de grava bajo la solera.','Corta la capilaridad y da una base estable.','e = 20 cm.','Dejarlo sin compactar.'),
+mk('poli','Lámina de polietileno',3,[[-225,89,-162.8,91.5],[-128.8,89,84.7,91.5],[123.7,89,225,91.5]],'Solera','Lámina plástica bajo la solera.','Barrera de vapor.','Entre el encachado y la solera.','Colocarla bajo el encachado.'),
+mk('solera','Solera HA-25 · e = 15 cm',3,[[-225,91.5,-162.8,105],[-128.8,91.5,84.7,105],[123.7,91.5,225,105]],'Solera','Solera de hormigón HA-25 de 15 cm.','Soporta el uso interior; no cimenta.','Mallazo Ø6 c/20 en el tercio superior.','Pasarla por encima de los pilares.'),
+mk('mallazo','Mallazo Ø6 c/20',3,[[-221,100,-166.8,102.2],[-124.8,100,80.7,102.2],[127.7,100,221,102.2]],'Solera','Mallazo electrosoldado Ø6 c/20.','Controla la fisuración de la solera.','Tercio superior.','Colocarlo pegado al encachado.'),
+mk('jper','Junta perimetral 2 cm',3,[[-162.8,90,-160.8,105],[-130.8,90,-128.8,105],[84.7,90,86.7,105],[121.7,90,123.7,105]],'Solera','Junta de 2 cm entre solera y pilares, de porexpan y sellada.','Permite que la solera se mueva sin cargar los pilares.','Porexpan + sellado.','Hormigonar la solera contra el pilar.')
+];
+// ---------- ZAPATA CORRIDA CON IMPERMEABILIZACIÓN (S 2.8, CX 832, Y0 590) ----------
+const E_COR=[
+mk('terreno','Terreno natural',1,[[-135,-27,135,0]],'Terreno','Suelo natural bajo la zapata.','Soporta la zapata; σadm = 150 kN/m² en el ejemplo.','Cota de apoyo y σadm del estudio geotécnico.','Apoyar sobre terreno removido.'),
+mk('talud','Talud de excavación',1,[[-135,0,-50,114]],'Terreno','Vaciado inclinado en el lado del terreno.','Permite ejecutar la impermeabilización y el drenaje antes del relleno.','La inclinación la fija el estudio geotécnico.','Excavar vertical sin comprobar la estabilidad.'),
+mk('carga','Carga Nk',1,[[-8,150,8,200]],'Acciones','Carga característica del muro por metro lineal: 130 kN/m.','Con Nk y la σadm se obtiene el ancho: b ≥ Nk / σadm.','130 / 150 = 0,87 m (+ peso propio) → 1,00 m.','Olvidar el peso propio.'),
+mk('muro','Muro de sótano HA-25',1,[[-15,60,15,150]],'Estructura','Muro de hormigón armado HA-25 de 0,30 m.','Lleva la carga a la zapata y resiste el empuje del terreno.','e = 0,30 m · Ø12 c/20 vertical y Ø10 c/20 horizontal por cara.','Dibujarlo sin la rotura superior.'),
+mk('junta','Junta de hormigonado',1,[[-15,57,15,63]],'Ejecución','Unión entre zapata y muro, hormigonados en días distintos.','Se deja rugosa y limpia.','Línea ondulada.','Dibujarla recta.'),
+mk('zapata','Zapata corrida 1,00 × 0,50',1,[[-50,10,50,60]],'Cimentación','Zapata corrida de HA-25 centrada bajo el muro.','Reparte la carga lineal del muro en el terreno.','b = 1,00 m · h = 0,50 m.','Descentrarla sin justificación.'),
+mk('limz','Hormigón de limpieza',1,[[-60,0,60,10]],'Cimentación','Capa de HL-150 de 10 cm bajo la zapata.','Base plana y limpia para la armadura.','HL-150 · e = 10 cm.','Armar sobre tierra.'),
+mk('armmuro','Armadura del muro',2,[[-13.1,62,-10.5,146],[10.5,62,13.1,146]],'Armado','Barras verticales Ø12 c/20 y horizontales Ø10 c/20 (puntos).','Resisten el empuje del terreno y la carga vertical.','Recubrimiento 5 cm.','Dibujar las horizontales como líneas.'),
+mk('esperas','Esperas del muro',2,[[-10.4,24,-8,108],[8,24,10.4,108]],'Armado','Barras Ø12 que arrancan en la zapata y asoman sobre la junta.','Enlazan muro y zapata.','40Ø = 48 cm, con patilla hacia la puntera.','Esperas más cortas que 40Ø.'),
+mk('armzap','Armadura de la zapata',2,[[-45,14.3,45,20.5],[-46,15.6,-44,35.6],[44,15.6,46,35.6]],'Armado','Barras transversales Ø12 c/20 con patillas, y longitudinales de reparto 5Ø10.','Resiste la flexión de los vuelos.','Recubrimiento 5 cm; apoyada sobre separadores.','Colocarla pegada a la limpieza.'),
+mk('sepa','Separadores (calzos)',2,[[-38,10,-32,15],[-3,10,3,15],[32,10,38,15]],'Armado','Calzos bajo la armadura de la zapata.','Garantizan el recubrimiento.','Material no absorbente; ≤ 60 cm.','Usar trozos de ladrillo.'),
+mk('geoI','Lámina geotextil bajo el encachado',3,[[15,69,135,71.5]],'Interior','Tela filtrante bajo el encachado del interior.','Separa el terreno de la grava.','Línea de puntos verdes.','Omitirla.'),
+mk('enc','Encachado de grava',3,[[17,71.5,135,89]],'Interior','Capa de grava bajo la solera, en el interior.','Corta la capilaridad y da una base estable.','e = 20 cm.','Dejarlo sin compactar.'),
+mk('poli','Lámina de polietileno',3,[[17,89,135,91.5]],'Interior','Lámina bajo la solera.','Barrera de vapor.','Entre encachado y solera.','Colocarla bajo el encachado.'),
+mk('solera','Solera HA-25 · e = 15 cm',3,[[17,91.5,135,105]],'Interior','Solera de hormigón de 15 cm del interior del sótano.','Soporta el uso interior; no cimenta.','Mallazo Ø6 c/20 en el tercio superior.','Confundirla con una losa de cimentación.'),
+mk('mallazo','Mallazo Ø6 c/20',3,[[21,100,127,102.2]],'Interior','Mallazo electrosoldado Ø6 c/20.','Controla la fisuración.','Tercio superior de la solera.','Colocarlo pegado al encachado.'),
+mk('jper','Junta perimetral 2 cm',3,[[15,90,17,105]],'Interior','Junta de porexpan y sellado entre muro y solera.','Permite el movimiento sin cargar el muro.','2 cm.','Hormigonar la solera contra el muro.'),
+mk('imper','Impermeabilización del muro',4,[[-17.6,61,-14.4,150]],'Trasdós','Imprimación asfáltica (barrera de vapor) más lámina bituminosa soldada con soplete.','Impide que el agua del terreno atraviese el muro.','Sube ≥ 25 cm sobre el suelo terminado y se remata con perfil atornillado.','Dejarla corta o sin remate.'),
+mk('geomuro','Geotextil',4,[[-19.4,72,-17.6,109]],'Trasdós','Tela filtrante entre la lámina drenante y el relleno.','Protege la lámina drenante y la grava de los finos.','Del lado del terreno de la lámina drenante.','Omitirlo.'),
+mk('huev','Lámina drenante (huevera)',4,[[-22.6,72,-19.4,109]],'Trasdós','Lámina nodular que se coloca sobre el geotextil.','Protege la impermeabilización y conduce el agua al tubo.','Sobre el geotextil en la parte vertical.','Colocarla entre muro y geotextil.'),
+mk('grava','Grava de canto rodado 20/40',4,[[-101,63,-23.5,109]],'Trasdós','Relleno drenante entre la lámina y el talud.','Canaliza el agua hacia el tubo drenante.','Granulometría 20/40 mm.','Rellenar con la tierra excavada.'),
+mk('tubo','Tubo drenante',4,[[-36,59,-19,76]],'Trasdós','Tubo microperforado envuelto en geotextil, al pie del muro.','Recoge el agua y la evacúa.','Sobre media caña de mortero.','Ponerlo sin geotextil.'),
+mk('mcana','Media caña de mortero',4,[[-31,60,-15,66]],'Trasdós','Pieza de mortero entre muro y zapata.','Asiento del tubo y transición suave para la lámina.','≤ 3 cm e impermeabilizada.','Quiebro en ángulo recto.'),
+mk('arena','Arena de regularización',4,[[-110,109,-22,114]],'Acera','Capa de arena bajo el mortero de la acera.','Regulariza la base.','e = 5 cm.','Sustituirla por tierra suelta.'),
+mk('mort','Mortero de cemento',4,[[-125,114,-15,119]],'Acera','Mortero bajo la loseta de la acera.','Sujeta el pavimento exterior.','e = 5 cm.','Llamarlo solera.'),
+mk('lose','Loseta hidráulica',4,[[-125,119,-15,125]],'Acera','Pavimento de la acera exterior.','Aleja el agua del muro.','Pendiente ≥ 2 % hacia fuera.','Dejar pendiente hacia el muro.')
+];
+const E_SOT=[
+{id:'terreno',n:'Terreno natural',m:1,r:[[-137,-27,180,0]],t:'Terreno',
+ q:'Suelo natural sobre el que apoya la cimentación. Su tensión admisible (σadm = 150 kN/m² en el ejemplo) dimensiona la zapata.',
+ f:'Recibe la carga transmitida por la zapata. La cota de apoyo se fija por debajo de la capa vegetal y de rellenos.',
+ d:'La cota de apoyo y la σadm salen del estudio geotécnico.',
+ e:'Apoyar sobre terreno removido o con restos vegetales: la limpieza no corrige un mal terreno.'},
+{id:'talud',n:'Talud de excavación',m:1,r:[[-137,0,-30,115]],t:'Terreno',
+ q:'Pared inclinada del vaciado en el lado del terreno, que se abre para poder trabajar en el trasdós del muro.',
+ f:'Permite ejecutar la impermeabilización y el drenaje antes de rellenar.',
+ d:'La inclinación depende del terreno y de la altura; la fija el estudio geotécnico.',
+ e:'Excavar vertical sin comprobar la estabilidad o sin dejar espacio de trabajo.'},
+{id:'carga',n:'Carga Nk',m:1,r:[[-8,150,8,215]],t:'Acciones',
+ q:'Carga característica por metro lineal de muro que baja a la cimentación (130 kN/m en el ejemplo).',
+ f:'Con Nk y la σadm se calcula el ancho de la zapata: b ≥ Nk / σadm (con el peso propio añadido).',
+ d:'130 / 150 ≈ 0,87 m antes de añadir peso propio; se adopta 1,00 m.',
+ e:'Olvidar el peso propio de zapata y muro al comprobar la tensión en el terreno.'},
+{id:'muro',n:'Muro de sótano',m:1,r:[[-15,60,15,150]],t:'Estructura',
+ q:'Muro de hormigón armado HA-25 de 0,30 m de espesor.',
+ f:'Lleva la carga vertical a la zapata y resiste el empuje del terreno en el trasdós.',
+ d:'e = 0,30 m · HA-25 (25 N/mm²) · barras Ø12 c/20 verticales y Ø10 c/20 horizontales por cada cara.',
+ e:'Dibujarlo con menos de 0,25 m de espesor o sin la rotura que indica que continúa.'},
+{id:'junta',n:'Junta de hormigonado',m:1,r:[[-15,57,15,63]],t:'Ejecución',
+ q:'Unión entre el hormigón de la zapata y el del muro, que se hormigonan en días distintos. Se dibuja como línea ondulada.',
+ f:'Se deja rugosa y limpia para que el muro agarre bien a la zapata; las esperas la atraviesan.',
+ d:'Se dibuja ondulada y a la altura de la cara superior de la zapata.',
+ e:'Dibujarla como línea recta o no ponerla: parece un monolito y no se entiende la secuencia de obra.'},
+{id:'zapata',n:'Zapata solo con puntera',m:1,r:[[-15,10,85,60]],t:'Cimentación',
+ q:'Zapata corrida bajo el muro, sin talón: la cara del lado del terreno queda alineada con el muro y solo vuela la puntera hacia el interior.',
+ f:'Reparte la carga del muro en el terreno. Sin talón no hace falta excavar más hacia el trasdós.',
+ d:'b = 1,00 m (0,30 muro + 0,70 puntera) · h = 0,50 m · HA-25.',
+ e:'Dibujar talón o dejar la cara de la zapata más allá de la cara del muro del lado del terreno.'},
+{id:'limz',n:'Hormigón de limpieza bajo la zapata',m:1,r:[[-35,0,95,10]],t:'Cimentación',
+ q:'Capa delgada de hormigón pobre (HL-150) sobre el terreno, bajo la zapata.',
+ f:'Da una base plana y limpia, protege el terreno y permite colocar separadores y armadura con el recubrimiento correcto.',
+ d:'HL-150 · e = 10 cm · sobresale de la zapata por cada lado.',
+ e:'Contarla como parte de la zapata o apoyar la armadura directamente sobre tierra.'},
+{id:'talud11',n:'Descuelgue 0,20 y talud 1:1',m:3,r:[[84,0,106,30]],t:'Cimentación',
+ q:'La zapata (0,50 m) es 0,20 m más profunda que la losa (0,30 m) porque las dos caras superiores quedan alineadas. La transición del terreno entre los dos niveles se hace en talud.',
+ f:'Evita un escalón vertical en el terreno que podría desmoronarse durante el hormigonado.',
+ d:'Talud 1:1 según el estudio geotécnico.',
+ e:'Hacer el escalón vertical o con pendiente mayor que la que permite el terreno.'},
+{id:'armmuro',n:'Armadura del muro',m:2,r:[[-13.2,62,-10.6,146],[10.6,62,13.2,146]],t:'Armado',
+ q:'Barras verticales Ø12 c/20 en cada cara y barras horizontales Ø10 c/20, que en el corte se ven como puntos.',
+ f:'Resiste el empuje del terreno (flexión) y la carga vertical del muro.',
+ d:'Recubrimiento de 5 cm en la cara en contacto con el terreno.',
+ e:'Dibujar las horizontales como líneas: en esta sección son puntos.'},
+{id:'esperas',n:'Esperas del muro',m:2,r:[[-10.4,24,-8,108],[8,24,10.4,108]],t:'Armado',
+ q:'Barras Ø12 que arrancan en la zapata y asoman por encima de la junta de hormigonado.',
+ f:'Enlazan el muro con la zapata; los extremos de las barras del muro se solapan con ellas.',
+ d:'Longitud de solape 40Ø = 40 × 12 mm = 48 cm. La del trasdós lleva patilla hacia el interior; la del interior, hacia la puntera.',
+ e:'Dejar las esperas más cortas que 40Ø o sin patilla en la zapata.'},
+{id:'armzap',n:'Armadura de la zapata',m:2,r:[[-10,13,80,20.5],[79,15,81,50],[-11,15,-9,35]],t:'Armado',
+ q:'Barras transversales Ø12 c/20 con patillas verticales de 20 cm y barras longitudinales de reparto (5Ø10, en puntos).',
+ f:'La transversal resiste la flexión del vuelo de la puntera.',
+ d:'Recubrimiento inferior 5 cm sobre la limpieza, apoyada en separadores.',
+ e:'Colocarla pegada a la limpieza: sin separadores no hay recubrimiento.'},
+{id:'sepa',n:'Separadores y caballetes',m:2,r:[[-8,10,8,15],[27,10,43,15],[62,10,78,15],[117,30,133,35],[152,30,168,35],[110,35,120,55],[150,35,160,55]],t:'Armado',
+ q:'Los separadores (calzos) mantienen la armadura inferior a su recubrimiento; los caballetes sostienen la malla superior de la losa a su altura.',
+ f:'Garantizan el recubrimiento y que las mallas no se muevan al hormigonar.',
+ d:'Material no absorbente; separación ≤ 60 cm entre ellos.',
+ e:'Usar trozos de ladrillo o dejarlos sin dibujar.'},
+{id:'losa',n:'Losa de cimentación armada',m:3,r:[[105,30,180,60]],t:'Losa',
+ q:'Losa de hormigón armado HA-25 de 0,30 m que sustituye a la solera en el interior del sótano.',
+ f:'Soporta las cargas del interior, trabaja de forma solidaria con la zapata y recoge la subpresión si hay agua.',
+ d:'e = 0,30 m · cara superior alineada con la zapata.',
+ e:'Dibujarla como solera sin armar o con la cara inferior alineada con la de la zapata.'},
+{id:'mallas',n:'Mallas superior e inferior',m:3,r:[[-8,52.6,174,56.2],[-8,33.6,174,37.2],[-8,36,-5,45],[-8,45,-5,56]],t:'Armado',
+ q:'Dos mallas Ø12 c/20, una arriba y otra abajo. Llegan hasta el muro y terminan con patilla dentro de la zapata, bajo el muro (la superior hacia abajo, la inferior hacia arriba). Las barras longitudinales se ven como puntos.',
+ f:'Absorben los momentos de la losa y se anclan en la zapata para que losa y cimentación trabajen juntas.',
+ d:'Patilla de unos 8 cm en el ejemplo; la longitud real la fija el cálculo (anclaje).',
+ e:'Cortar las mallas en el borde de la zapata sin anclarlas en el muro.'},
+{id:'poli',n:'Lámina de polietileno',m:3,r:[[105,29,180,32]],t:'Losa',
+ q:'Lámina plástica entre la limpieza y la losa; solo bajo la losa, no bajo la zapata.',
+ f:'Impide la pérdida de lechada por el terreno y actúa de barrera de vapor.',
+ d:'Se dibuja como línea discontinua morada bajo la losa.',
+ e:'Extenderla bajo la zapata.'},
+{id:'liml',n:'Hormigón de limpieza de la losa (opcional)',m:3,r:[[105,20,180,30]],t:'Losa',
+ q:'Capa de limpieza HL-150 de 10 cm bajo la losa. Es opcional.',
+ f:'Da una base plana a la losa si el encachado no es suficiente.',
+ d:'HL-150 · e = 10 cm.',
+ e:'Ponerla siempre sin comprobar que el proyecto la exige.'},
+{id:'enc',n:'Encachado de grava',m:3,r:[[100,10.5,180,20]],t:'Losa',
+ q:'Capa de grava bajo la losa, sobre el terreno compactado.',
+ f:'Corta la subida de humedad por capilaridad y da una base drenante y estable.',
+ d:'e = 10 cm.',
+ e:'Dejar el encachado sin geotextil debajo.'},
+{id:'geo',n:'Lámina geotextil bajo el encachado',m:3,r:[[95,8,180,11.5]],t:'Losa',
+ q:'Tela filtrante bajo el encachado, sobre el terreno.',
+ f:'Separa terreno y grava para que los finos no colmaten el encachado.',
+ d:'Se dibuja como línea de puntos verdes.',
+ e:'Omitirla y que se mezclen suelo y grava.'},
+{id:'recr',n:'Recrecido de mortero',m:3,r:[[17,60,180,65]],t:'Acabados',
+ q:'Capa de mortero sobre la losa, bajo el pavimento.',
+ f:'Regulariza la superficie y da pendiente si hace falta.',
+ d:'e = 5 cm (4–8 cm).',
+ e:'Confundirlo con la solera, que aquí no existe: la losa la sustituye.'},
+{id:'pav',n:'Pavimento interior',m:3,r:[[17,65,180,67.5]],t:'Acabados',
+ q:'Acabado del suelo interior.',
+ f:'Capa de uso del sótano.',
+ d:'e ≈ 2 cm (1–3 cm).',
+ e:'Pegarlo sin junta perimetral.'},
+{id:'jper',n:'Junta perimetral',m:3,r:[[14,60,17.5,67.5]],t:'Acabados',
+ q:'Pequeña junta entre el muro y el recrecido/pavimento.',
+ f:'Absorbe las dilataciones y evita que el pavimento se agriete contra el muro.',
+ d:'1 cm.',
+ e:'Colocar el mortero pegado al muro sin junta.'},
+{id:'imper',n:'Impermeabilización del muro',m:4,r:[[-17.6,21,-14.4,150]],t:'Trasdós',
+ q:'Imprimación asfáltica (barrera de vapor) más lámina bituminosa soldada con soplete sobre la cara exterior del muro.',
+ f:'Impide que el agua del terreno atraviese el muro hacia el interior.',
+ d:'Sube al menos 25 cm sobre el suelo terminado y se remata con perfil atornillado.',
+ e:'Dejarla corta o sin remate: el agua entra por encima del perfil.'},
+{id:'geomuro',n:'Geotextil',m:4,r:[[-19.6,26,-17.6,150]],t:'Trasdós',
+ q:'Tela filtrante entre la lámina drenante y el relleno.',
+ f:'Protege de los finos del relleno a la lámina drenante y a la grava.',
+ d:'Va por el lado del terreno de la lámina drenante.',
+ e:'Ponerlo detrás de la lámina impermeable sin protegerla.'},
+{id:'huev',n:'Lámina drenante (huevera)',m:4,r:[[-23,26,-19.6,109]],t:'Trasdós',
+ q:'Lámina nodular de polietileno que se coloca sobre el geotextil; su cara con relieve forma una cámara de aire.',
+ f:'Protege la impermeabilización y conduce el agua hacia el tubo drenante.',
+ d:'Va por encima del geotextil en la parte vertical.',
+ e:'Colocarla entre el muro y el geotextil.'},
+{id:'gravaT',n:'Grava de canto rodado 20/40',m:4,r:[[-100,15,-23.5,111]],t:'Trasdós',
+ q:'Relleno drenante entre la lámina y el talud.',
+ f:'Canaliza el agua hasta el tubo drenante sin retenerla contra el muro.',
+ d:'Granulometría 20/40 mm.',
+ e:'Rellenar con el propio terreno de la excavación.'},
+{id:'tubo',n:'Tubo drenante',m:4,r:[[-36,11,-19,27]],t:'Trasdós',
+ q:'Tubo microperforado envuelto en geotextil, situado abajo y pegado al muro.',
+ f:'Recoge el agua y la lleva a un punto de evacuación.',
+ d:'Va sobre una media caña de mortero, bajo la cota de la losa.',
+ e:'Colocarlo por encima de la cara inferior de la losa o sin geotextil.'},
+{id:'mcana',n:'Media caña de mortero',m:4,r:[[-33,10,-17,14.5]],t:'Trasdós',
+ q:'Pieza redondeada de mortero entre el muro y la zapata.',
+ f:'Hace de asiento al tubo y evita ángulos vivos que dañen la lámina impermeable.',
+ d:'≤ 3 cm e impermeabilizada.',
+ e:'Pasar la lámina por un ángulo recto: se agrieta.'},
+{id:'arena',n:'Arena de regularización',m:4,r:[[-123,112,-17,116]],t:'Acera',
+ q:'Capa de arena bajo el mortero de la acera.',
+ f:'Regulariza la superficie de apoyo.',
+ d:'e = 5 cm.',
+ e:'Sustituir la arena por tierra suelta.'},
+{id:'mort',n:'Mortero de cemento',m:4,r:[[-123,116,-17,120]],t:'Acera',
+ q:'Mortero bajo la loseta de la acera (no solera).',
+ f:'Sujeta el pavimento exterior.',
+ d:'e = 5 cm.',
+ e:'Llamarlo solera.'},
+{id:'lose',n:'Loseta hidráulica',m:4,r:[[-123,120,-17,124]],t:'Acera',
+ q:'Pavimento de la acera exterior.',
+ f:'Evita la entrada de agua al trasdós.',
+ d:'Pendiente ≥ 2 % hacia fuera.',
+ e:'Dejar pendiente hacia el muro.'}
+];
+const NAMESALL={};
+const DETAILS=[
+{key:'sot',title:'Muro de sótano con losa de cimentación',short:'Muro de sótano con losa de cimentación',W:1800,H:760,S:2.4,CX:830,Y0:565,E:E_SOT,
+ steps:[['Paso 1 · Muro y zapata','Muro de sótano de 0,30 m sobre zapata solo con puntera (1,00 × 0,50 m), con limpieza de 10 cm y junta de hormigonado. La cara de la zapata del lado del terreno queda alineada con el muro.'],['Paso 2 · Armado','Armadura del muro, esperas con patilla (40Ø) y armadura de la zapata con separadores.'],['Paso 3 · Interior: losa armada','En vez de solera, una losa de 0,30 m con dos mallas, polietileno solo bajo la losa, encachado sobre geotextil y acabados.'],['Paso 4 · Trasdós: impermeabilización y drenaje','Imprimación y lámina bituminosa, geotextil, lámina drenante (huevera), grava, tubo drenante sobre media caña y acera con pendiente.']]},
+{key:'ais',title:'Zapata centrada',short:'Zapata centrada',W:1664,H:700,S:2.8,CX:832,Y0:560,E:E_AIS,
+ steps:[['Paso 1 · Geometría','Pilar de 30×30 sobre zapata aislada cuadrada de 2,05 × 2,05 × 0,50 m con limpieza de 10 cm y junta de hormigonado.'],['Paso 2 · Armado','Parrilla inferior 13Ø12 c/16,2 con patillas, separadores, esperas 8Ø16 con 40Ø = 64 cm y cercos Ø6 más juntos en la base del pilar.'],['Paso 3 · Viga de atado','Vigas de atado de 30 × 30 con la cara superior alineada con la zapata, solape 40Ø bajo el pilar y limpieza bajo ellas.'],['Paso 4 · Solera','Solera de 15 cm sobre encachado y geotextil, con mallazo, polietileno, junta perimetral de 2 cm y terreno compactado.']]},
+{key:'com',title:'Zapata combinada',short:'Zapata combinada',W:1664,H:770,S:1.9,CX:832,Y0:500,E:E_COM,
+ steps:[['Paso 1 · Geometría y cargas','Dos pilares (30×30 y 35×35) sobre una zapata común de 3,80 × 1,90 × 0,50 m. La resultante de las cargas (c.d.g.) pasa por el centro de la zapata.'],['Paso 2 · Armado','Dos mallas iguales con patillas, caballetes, separadores, esperas 8Ø16 y cercos más juntos en la base de cada pilar.'],['Paso 3 · Solera','Solera de 15 cm sobre encachado, geotextil y polietileno, interrumpida alrededor de los pilares con junta perimetral de 2 cm.']]},
+{key:'cor',title:'Muro de sótano con zapata corrida y solera',short:'Muro de sótano con zapata corrida y solera',W:1664,H:760,S:2.8,CX:832,Y0:590,E:E_COR,
+ steps:[['Paso 1 · Muro y zapata','Muro de 0,30 m sobre zapata corrida centrada de 1,00 × 0,50 m, con limpieza de 10 cm y junta de hormigonado.'],['Paso 2 · Armado','Armadura del muro, esperas 40Ø con patilla y armadura de la zapata con separadores.'],['Paso 3 · Interior: solera','Solera de 15 cm con mallazo, polietileno, encachado y geotextil, con junta perimetral de 2 cm.'],['Paso 4 · Trasdós: impermeabilización y drenaje','Imprimación y lámina bituminosa, geotextil, lámina drenante (huevera), grava, tubo drenante sobre media caña y acera con pendiente.']]}
+];
+{const ord=['ais','com','cor','sot'];DETAILS.sort((x,y)=>ord.indexOf(x.key)-ord.indexOf(y.key))}
+DETAILS.forEach(d=>{d.E.forEach(e=>{e.__d=d.key});d.SORT=[...d.E].sort((a,b)=>area(b)-area(a));d.nsteps=d.steps.length});
+function area(e){return e.r.reduce((a,r)=>a+(r[2]-r[0])*(r[3]-r[1]),0)}
+let D=DETAILS[0];
+const $=s=>document.querySelector(s),ov=$('#ov'),img=$('#img'),ctl=$('#ctl'),panel=$('#panel');
+const px=u=>D.CX+u*D.S, py=u=>D.Y0-u*D.S;
+let mode='pasos',step=1,labels=true,sel=null,test=null,sc={ok:0,n:0};
+const TAB={ais:'Centrada',com:'Combinada',cor:'Muro con solera',sot:'Muro con losa'};
+function names(){const o={};D.E.forEach(e=>o[e.id]=e.n);return o}
+function visible(e){return mode==='pasos'?e.m<=step:true}
+function draw(){
+ ov.setAttribute('viewBox',`0 0 ${D.W} ${D.H}`);ov.innerHTML='';
+ D.SORT.filter(visible).forEach(e=>e.r.forEach(r=>{
+  const el=document.createElementNS('http://www.w3.org/2000/svg','rect');
+  el.setAttribute('x',px(r[0]));el.setAttribute('y',py(r[3]));
+  el.setAttribute('width',(r[2]-r[0])*D.S);el.setAttribute('height',(r[3]-r[1])*D.S);
+  el.setAttribute('class','hs'+(sel===e.id&&mode!=='test'?' sel':''));el.dataset.id=e.id;
+  const tt=document.createElementNS('http://www.w3.org/2000/svg','title');tt.textContent=mode==='test'?'':e.n;el.appendChild(tt);
+  el.addEventListener('click',()=>pick(e.id));ov.appendChild(el);
+ }));
+}
+function setImg(){
+ const k=mode==='pasos'?String(step):(mode==='estudio'?(labels?'full':'nolab'):'nolab');
+ img.src='img/det-'+D.key+'-'+k+'.webp';img.setAttribute('width',D.W);img.setAttribute('height',D.H);img.alt='Detalle constructivo: '+D.title;
+}
+function ficha(e){return `<span class="tag">${e.t}</span><h2>${e.n}</h2>
+<div class="fld"><h3>Qué es</h3><p>${e.q}</p></div><div class="fld"><h3>Para qué sirve</h3><p>${e.f}</p></div>
+<div class="fld"><h3>Dato clave</h3><p>${e.d}</p></div><div class="fld err"><h3>Error frecuente</h3><p>${e.e}</p></div>`}
+function pick(id){if(mode==='test')return answer(id);sel=id;panel.innerHTML=ficha(D.E.find(x=>x.id===id));panel.style.animation='none';void panel.offsetWidth;panel.style.animation='';draw()}
+function moveThumb(){const seg=$('#seg'),b=seg.querySelector('[aria-pressed=true]'),t=seg.querySelector('.thumb');t.style.width=b.offsetWidth+'px';t.style.transform=`translateX(${b.offsetLeft-2}px)`}
+function render(){
+ setImg();
+ $('#h1').textContent=D.title;$('#ntitle').textContent=D.short;$('#crumb').innerHTML=BL('#'+D.mat,'Detalles');
+ if(mode==='pasos'){
+  const n=D.nsteps;
+  ctl.innerHTML=`<div class="bar"><button class="btn" id="prev" ${step==1?'disabled':''}>‹ Anterior</button><div class="steps">${D.steps.map((_,i)=>`<button class="stp" data-s="${i+1}" aria-pressed="${i+1==step}">${i+1}</button>`).join('')}</div><button class="btn pri" id="next" ${step==n?'disabled':''}>Siguiente ›</button></div>
+  <p class="cap"><b>${D.steps[step-1][0]}</b>${D.steps[step-1][1]}</p>`;
+  $('#prev').onclick=()=>{step--;sel=null;render()};$('#next').onclick=()=>{step++;sel=null;render()};
+  ctl.querySelectorAll('.stp').forEach(b=>b.onclick=()=>{step=+b.dataset.s;sel=null;render()});
+  panel.innerHTML=`<h2>Pulsa sobre el dibujo</h2><p class="hint">Cada elemento tiene una ficha: qué es, para qué sirve, su dato clave y el error más frecuente. Avanza por los pasos para ver cómo se construye el detalle.</p>`;
+ }else if(mode==='estudio'){
+  ctl.innerHTML=`<label class="chk"><input type="checkbox" id="lab" ${labels?'checked':''}> Mostrar rótulos</label><p class="cap">Quita los rótulos y repasa de memoria: pulsa un elemento para comprobar qué es.</p>`;
+  $('#lab').onchange=e=>{labels=e.target.checked;setImg()};
+  panel.innerHTML=`<h2>Pulsa sobre el dibujo</h2><p class="hint">Estudia el detalle completo y consulta la ficha de cada elemento.</p>`;
+ }else newQ(true);
+ draw();moveThumb();
+}
+function newQ(first){
+ let t;do{t=D.E[Math.floor(Math.random()*D.E.length)]}while(test&&t.id===test.id&&D.E.length>1);
+ test=t;if(first)sc={ok:0,n:0};
+ ctl.innerHTML=`<p class="cap"><b>Rótulos ocultos</b>Pulsa sobre el dibujo la zona que se te pide.</p>`;
+ panel.innerHTML=`<span class="tag">Autoevaluación</span><p class="q">Pulsa sobre: «${t.n}»</p><div class="fb" id="fb"></div>
+ <div class="bar" style="margin:0 0 12px"><button class="btn" id="show">Ver respuesta</button><button class="btn pri" id="nx">Otra pregunta</button></div><span class="score" id="sc">Aciertos: ${sc.ok} / ${sc.n}</span>`;
+ $('#show').onclick=()=>{flash(t.id);sc.n++;$('#sc').textContent=`Aciertos: ${sc.ok} / ${sc.n}`;$('#fb').innerHTML=`<span class="no">Respuesta marcada.</span> ${t.f}`};
+ $('#nx').onclick=()=>{newQ(false);draw()};draw();
+}
+function flash(id){ov.querySelectorAll(`[data-id="${id}"]`).forEach(r=>{r.classList.remove('flash');void r.getBoundingClientRect();r.classList.add('flash')})}
+function answer(id){
+ if(!test)return;const fb=$('#fb'),N=names();
+ if(id===test.id){sc.ok++;sc.n++;fb.innerHTML=`<span class="ok"><b>Correcto.</b></span> ${test.f}`;draw();flash(test.id)}
+ else{sc.n++;fb.innerHTML=`<span class="no"><b>Eso es: ${N[id]}.</b></span> Busca «${test.n}».`;draw()}
+ $('#sc').textContent=`Aciertos: ${sc.ok} / ${sc.n}`;
+}
+document.querySelectorAll('#seg button').forEach(b=>b.onclick=()=>{
+ mode=b.dataset.mode;sel=null;document.querySelectorAll('#seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render();
+});
+// ---------- materiales, estado y navegación ----------
+const MATS=[{"id": "H", "name": "Hormigón", "icon": "<svg viewBox=\"0 0 140 100\" aria-hidden=\"true\" focusable=\"false\"><rect class=\"ic-c\" x=\"40\" y=\"12\" width=\"60\" height=\"76\"/><g fill=\"var(--ink)\"><circle cx=\"50\" cy=\"22\" r=\"3.2\"/><circle cx=\"90\" cy=\"22\" r=\"3.2\"/><circle cx=\"50\" cy=\"78\" r=\"3.6\"/><circle cx=\"63\" cy=\"78\" r=\"3.6\"/><circle cx=\"77\" cy=\"78\" r=\"3.6\"/><circle cx=\"90\" cy=\"78\" r=\"3.6\"/></g><rect x=\"45\" y=\"17\" width=\"50\" height=\"66\" fill=\"none\" stroke=\"var(--ink)\" stroke-width=\"1.2\"/></svg>"}, {"id": "A", "name": "Acero", "icon": "<svg viewBox=\"0 0 140 100\" aria-hidden=\"true\" focusable=\"false\"><path class=\"ic-a\" d=\"M38 12 H102 V22 H75 V78 H102 V88 H38 V78 H65 V22 H38 Z\"/></svg>"}, {"id": "M", "name": "Madera", "icon": "<svg viewBox=\"0 0 140 100\" aria-hidden=\"true\" focusable=\"false\"><rect class=\"ic-m\" x=\"44\" y=\"10\" width=\"52\" height=\"80\"/><g fill=\"none\" stroke=\"var(--wood-edge)\" stroke-width=\"1.1\"><path d=\"M44 30 Q70 22 96 32\"/><path d=\"M44 48 Q70 40 96 50\"/><path d=\"M44 66 Q70 58 96 68\"/><ellipse cx=\"62\" cy=\"57\" rx=\"4\" ry=\"2.5\"/></g></svg>"}];
+DETAILS.forEach(d=>{d.mat='H'});
+const KIND={ais:'Zapata',com:'Zapata',cor:'Muro',sot:'Muro'};
+let STATE=null,curM='H',admin=false,draft=null,canAdmin=false,art=null,indexHTML='',msg='',busy=false;
+const vis=d=>!STATE||STATE.includes(d.key);
+const matName=id=>(MATS.find(m=>m.id===id)||{}).name||'';
+const nVis=m=>DETAILS.filter(d=>d.mat===m&&vis(d)).length;
+const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const timg=d=>`<img alt="" src="img/det-${d.key}-nolab.webp" loading="lazy">`;
+const CHEV='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+const BL=(h,t)=>`<a class="backlink" href="${h}">${CHEV}<span>${t}</span></a>`;
+function open(i){document.body.classList.remove('gal');D=DETAILS[i];curM=D.mat;step=1;sel=null;test=null;render();buildNav();window.scrollTo({top:0})}
+function go(i){location.hash='#'+DETAILS[i].key}
+function goMat(m){if((location.hash||'').slice(1)===m){route()}else location.hash='#'+m}
+function gallery(){document.body.classList.add('gal');$('#crumb').innerHTML=BL('index.html','Inicio');renderGallery();buildNav();window.scrollTo({top:0})}
+function route(){const h=(location.hash||'').slice(1);const i=DETAILS.findIndex(d=>d.key===h&&(vis(d)||admin));
+ if(i>=0)open(i);else{if(MATS.some(m=>m.id===h))curM=h;gallery()}}
+addEventListener('hashchange',route);
+function buildNav(){
+ const inViewer=!document.body.classList.contains('gal');
+ let h='<h4>Material</h4>';
+ MATS.forEach(m=>{const n=nVis(m.id);
+  h+=`<button class="navitem" data-m="${m.id}" ${curM===m.id?'aria-current="page"':''}><span class="tile mi">${m.icon}</span><span class="nt"><span style="font-weight:600">${m.name}</span><small>${n?n+(n==1?' detalle':' detalles'):'Próximamente'}</small></span></button>`;
+  if(curM===m.id)DETAILS.filter(d=>d.mat===m.id&&vis(d)).forEach(d=>{h+=`<button class="navitem sub" data-i="${DETAILS.indexOf(d)}" ${inViewer&&D===d?'aria-current="page"':''}><span class="nt"><span>${esc(d.short)}</span></span></button>`});
+ });
+ $('#side').innerHTML=h;
+ $('#tabbar').innerHTML=MATS.map(m=>`<button class="tab" data-m="${m.id}" aria-pressed="${curM===m.id}"><span class="ti mi">${m.icon}</span>${m.name}</button>`).join('');
+ document.querySelectorAll('#side [data-m],#tabbar [data-m]').forEach(b=>b.onclick=()=>goMat(b.dataset.m));
+ document.querySelectorAll('#side [data-i]').forEach(b=>b.onclick=()=>go(+b.dataset.i));
+}
+function renderGallery(){
+ $('#gmat').innerHTML=`<span class="gchip">${matName(curM)}</span>`+(canAdmin&&!admin?'<button class="btn" id="gcfg">Configurar detalles</button>':'');
+ const items=DETAILS.filter(d=>d.mat===curM&&(admin||vis(d)));
+ const box=$('#gcards');
+ if(!items.length){box.innerHTML=`<div class="gsoon">Próximamente: todavía no hay detalles de ${matName(curM).toLowerCase()}.</div>`}
+ else box.innerHTML=items.map(d=>{const on=admin?draft.has(d.key):true;
+  const inner=`<span class="gimg">${timg(d)}</span><span class="gtag">${KIND[d.key]}</span><h3>${esc(d.title)}</h3><small>${d.nsteps} pasos · ${d.E.length} fichas</small>`;
+  return admin?`<div class="gcard"><label class="gtog"><input type="checkbox" data-k="${d.key}" ${on?'checked':''}> <span>${on?'Visible para el alumnado':'Oculto'}</span></label>${inner}</div>`
+   :`<button class="gcard" data-i="${DETAILS.indexOf(d)}">${inner}</button>`}).join('');
+ box.querySelectorAll('button.gcard').forEach(b=>b.onclick=()=>go(+b.dataset.i));
+ box.querySelectorAll('input[data-k]').forEach(c=>c.onchange=()=>{c.checked?draft.add(c.dataset.k):draft.delete(c.dataset.k);c.nextElementSibling.textContent=c.checked?'Visible para el alumnado':'Oculto';chgBar()});
+ const g=$('#gcfg');if(g)g.onclick=()=>{admin=true;draft=new Set(STATE||DETAILS.map(d=>d.key));msg='';renderGallery()};
+ const ab=$('#gadmin');ab.innerHTML='';
+ if(admin){ab.innerHTML=`<div class="adminbar"><b>Configuración de detalles</b><span>Activa los detalles que verá el alumnado.</span><div class="abtn"><button class="btn pri" id="gsave" ${busy?'disabled':''}>${busy?'Guardando…':'Guardar'}</button><button class="btn" id="gcancel" ${busy?'disabled':''}>Cancelar</button></div>${msg?`<p class="gstat">${esc(msg)}</p>`:''}</div>`;
+  $('#gsave').onclick=saveCfg;$('#gcancel').onclick=()=>{admin=false;msg='';renderGallery()};chgBar()}
+}
+function chgBar(){const b=$('#gsave');if(!b)return;const cur=new Set(STATE||DETAILS.map(d=>d.key));let ch=cur.size!==draft.size;if(!ch)for(const k of draft)if(!cur.has(k))ch=true;b.disabled=busy||!ch}
+async function saveCfg(){
+ if(busy||!art||!indexHTML)return;
+ const keys=DETAILS.map(d=>d.key).filter(k=>draft.has(k));
+ const re=/(<script type="application\/json" id="state">)([\s\S]*?)(<\/script>)/;
+ const m=indexHTML.match(re);if(!m){msg='No se ha podido leer la configuración.';renderGallery();return}
+ let st;try{st=JSON.parse(m[2])}catch(e){st={}}
+ st.details=keys;
+ const html=indexHTML.replace(re,(x,p,q,r)=>p+JSON.stringify(st).replace(/</g,'\\u003c')+r);
+ busy=true;msg='';renderGallery();
+ try{await art.publish(html)}
+ catch(e){busy=false;const c=e&&e.code;if(c==='conflict')return;msg=(c==='not_writer'||c==='not_granted')?'No se puede guardar desde esta cuenta.':'No se ha podido guardar. Vuelve a intentarlo.';renderGallery();return}
+ busy=false;msg='Guardado.';renderGallery();
+}
+function loadState(){
+ return Promise.race([fetch('index.html').then(r=>r.ok?r.text():''),new Promise(r=>setTimeout(()=>r(''),2500))]).then(h=>{
+  indexHTML=h;const m=h.match(/<script type="application\/json" id="state">([\s\S]*?)<\/script>/);
+  if(m){try{const st=JSON.parse(m[1]);if(Array.isArray(st.details))STATE=st.details.filter(x=>typeof x==='string')}catch(e){}}
+ }).catch(()=>{});
+}
+(async function(){try{if(!window.claude||!window.claude.use)return;const u=await window.claude.use('user');if(!u||!(await u.isOwner()))return;art=await window.claude.use('artifact');if(!art)return;canAdmin=true;if(document.body.classList.contains('gal'))renderGallery()}catch(e){}})();
+// tema
+let theme=null;try{theme=localStorage.getItem('apple-theme')}catch(e){}
+function applyTheme(){const r=document.documentElement;if(theme)r.dataset.theme=theme;else r.removeAttribute('data-theme');
+ const dark=theme?theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;r.classList.toggle('is-dark',dark);moveThumb()}
+$('#theme').onclick=()=>{const dark=document.documentElement.classList.contains('is-dark');theme=dark?'light':'dark';try{localStorage.setItem('apple-theme',theme)}catch(e){}applyTheme()};
+addEventListener('scroll',()=>$('#navbar').classList.toggle('scrolled',scrollY>40),{passive:true});
+addEventListener('resize',moveThumb);
+applyTheme();
+loadState().then(()=>{if(!(location.hash||'').slice(1))curM='H';route()});
+</script>
+</body></html>
