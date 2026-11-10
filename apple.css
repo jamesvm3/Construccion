@@ -98,7 +98,7 @@ button,input,select{font-family:inherit}
 
 /* ---------- Content / navbar ---------- */
 .content{min-width:0;padding-bottom:40px}
-.navbar{position:sticky;top:0;z-index:20;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;min-height:52px;padding:calc(env(safe-area-inset-top,0px) + 6px) 16px 6px;border-bottom:.5px solid transparent;transition:border-color .3s var(--ease)}
+.navbar{position:sticky;top:0;z-index:20;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;min-height:52px;padding:6px 16px;border-bottom:.5px solid transparent;transition:border-color .3s var(--ease)}
 .navbar.scrolled{border-bottom-color:var(--glass-line)}
 .crumbs{display:flex;align-items:center;gap:4px;font-size:15px;color:var(--accent-t);min-width:0;white-space:nowrap;overflow:hidden}
 .crumbs button{border:0;background:transparent;color:var(--accent-t);font-size:15px;font-weight:500;padding:6px 8px 6px 2px;display:inline-flex;align-items:center;gap:2px;cursor:pointer;border-radius:10px}
