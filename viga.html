@@ -31,11 +31,15 @@
     <div class="field"><label for="S">Ancho tributario S</label><input id="S" type="number" step="any"><span class="u">m</span></div>
     <div class="field"><label for="L">Luz del tramo L</label><input id="L" type="number" step="any"><span class="u">m</span></div>
     <div class="field"><label for="tramo">Tipo de tramo</label><select id="tramo"><option value="ext" selected>Extremo</option><option value="int">Interior</option><option value="ais">Aislado (biapoyado)</option><option value="vol">Voladizo</option></select><span class="u"></span></div>
-    <div class="field"><label for="P">Carga puntual en el extremo del voladizo P</label><input id="P" type="number" step="any"><span class="u">kN</span></div>
+    <div class="field" id="fl-P" style="display:none"><label for="P">Carga puntual en el extremo del voladizo P</label><input id="P" type="number" step="any"><span class="u">kN</span></div>
     <div class="field"><label for="b">Ancho de la viga b</label><input id="b" type="number" step="any"><span class="u">m</span></div>
     <div class="field"><label for="h">Canto de la viga h</label><input id="h" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="pw">Ancho del pilar</label><input id="pw" type="number" step="any" placeholder="30"><span class="u">cm</span></div>
+    <div class="field"><label for="ta">Tamaño máximo del árido</label><input id="ta" type="number" step="any" placeholder="20"><span class="u">mm</span></div>
     <div class="field"><label for="fyk">Límite elástico acero f<sub>yk</sub></label><select id="fyk"><option value="400">400 (B400S)</option><option value="500" selected>500 (B500S)</option></select><span class="u">N/mm²</span></div>
     <div class="field"><label for="fck">Hormigón f<sub>ck</sub></label><select id="fck"><option value="25" selected>25 (HA-25)</option><option value="30">30 (HA-30)</option></select><span class="u">N/mm²</span></div>
+    <div id="trae" class="hint"></div>
+    <p class="hint"><b>¿De dónde sale S?</b> Para simplificar, el forjado se reparte entre las vigas por mitades: cada viga recoge la mitad de cada vano contiguo (S = L<sub>1</sub>/2 + L<sub>2</sub>/2), y un voladizo descarga entero (100 %) sobre su viga. Es un reparto geométrico, no exacto. En un proyecto, el ancho tributario correcto se calcula según los momentos.</p>
     <p class="hint">P solo se usa en voladizos. Viga de canto: h mayor que el forjado; viga plana: h igual al forjado. «Limpiar datos» lo deja todo en blanco.</p>
   </div>
 </aside>
@@ -47,6 +51,7 @@
       <div class="box"><h3>Momentos del tramo</h3><svg id="pl" viewBox="0 0 360 200" role="img" aria-label="Diagrama de momentos del tramo"></svg></div>
       <div class="box"><h3>Sección</h3><svg id="sec" viewBox="0 0 360 200" role="img" aria-label="Sección de la viga con armaduras"></svg></div>
     </div>
+    <div class="box" style="margin-top:16px"><h3>Alzado: distribución de cercos (orientativo)</h3><svg id="alz" viewBox="0 0 380 320" role="img" aria-label="Alzado de la viga con la distribución de cercos"></svg><p class="hint" style="margin-top:8px">El refuerzo de negativos puede sustituirse por barras corridas de apoyo a apoyo: gasta más acero, pero simplifica el despiece. Las longitudes reales salen del despiece (ley de momentos, decalaje y anclaje).</p></div>
   </section>
 
   <article class="step" id="s1">
@@ -85,7 +90,7 @@
         <div class="row"><span class="k">A<sub>s,mín</sub> por cara</span><span class="f" id="f33"></span></div>
         <div class="row"><span class="k">Separación libre</span><span class="f" id="f34"></span></div>
       </div>
-      <div class="note extra">Separación libre = (b − 2·(3 + 0,8) − n·Ø)/(n − 1), con recubrimiento de 3 cm y cerco de Ø8; debe ser al menos 2 cm y Ø.</div>
+      <div class="note extra">Separación libre = (b − 2·(3 + 0,8) − n·Ø)/(n − 1), con recubrimiento de 3 cm y cerco de Ø8; debe ser al menos el mayor de 2 cm, Ø y 1,25 veces el tamaño máximo del árido. Si no caben en una capa se proponen dos capas (con pérdida de canto útil) o un diámetro mayor.</div>
       <div class="try"><span>Tu A<sub>s</sub><sup>+</sup>:</span><input type="number" step="any" id="try3" aria-label="Tu armadura inferior"><span class="u">cm²</span><span id="c3"></span></div>
     </div>
   </article>
@@ -101,6 +106,7 @@
         <div class="row"><span class="k">A<sub>α</sub> necesaria</span><span class="f" id="f43"></span></div>
         <div class="row"><span class="k">Separación de cercos</span><span class="f" id="f44"></span></div>
       </div>
+      <div class="note extra">En el alzado, los cercos van a la separación calculada junto a los apoyos, hasta donde el cortante baja a V<sub>cu</sub> (cortante lineal, simplificación), y a la separación máxima (el menor de 0,75·d y 60 cm) en el resto. El primer cerco se coloca a media separación de la cara del pilar. Aquí d = h − 4 cm es el canto útil.</div>
       <div class="try"><span>Tu V<sub>d</sub>:</span><input type="number" step="any" id="try4" aria-label="Tu cortante en kN"><span class="u">kN</span><span id="c4"></span></div>
     </div>
   </article>
@@ -135,11 +141,12 @@ const OUT=['f11','f12','f21','f22','f23','f31','f32','f33','f34','f41','f42','f4
 function empty(){
   OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
   $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce q, S, L, b y h</span></div>';
-  $('sec').innerHTML='';$('pl').innerHTML='';
+  $('sec').innerHTML='';$('pl').innerHTML='';$('alz').innerHTML='';
 }
 function calc(){
+  $('fl-P').style.display=$('tramo').value==='vol'?'':'none';
   const q=v('q'),S=v('S'),L=v('L'),b=v('b'),h=v('h'),fyk=v('fyk'),fck=v('fck'),tramo=$('tramo').value;
-  const P=v('P')>0?v('P'):0;
+  const P=v('P')>0?v('P'):0, pw=(v('pw')>0?v('pw'):30)/100;
   if(!(q>0&&S>0&&L>0&&b>0&&h>0)){empty();return;}
   const ql=q*S, qd=1.5*ql, fcd=fck/1.5, fyd=fyk/1.15;
   const alpha={vol:2,ais:8,ext:10,int:14}[tramo];
@@ -168,10 +175,18 @@ function calc(){
   $('f31').innerHTML=`${G('M<sup>+</sup>·10/(0,8·h·f<sub>yd</sub>)')} = ${nf(Mp,1)}·10/(0,8·${nf(h)}·${nf(fyd)}) = ${nf(Ap)} cm² → ${R(nP+' Ø'+phiP)} ${pill('info',nf(nP*AbP)+' cm²')}`;
   $('f32').innerHTML=`${G('M<sup>−</sup>·10/(0,8·h·f<sub>yd</sub>)')} = ${nf(Mn,1)}·10/(0,8·${nf(h)}·${nf(fyd)}) = ${nf(An)} cm² → ${R(nN+' Ø'+phiN)} ${pill('info',nf(nN*AbN)+' cm²')}`;
   $('f33').innerHTML=`${G('C/1000·b·h')} = ${nf(Cv,1)}/1000·${nf(b*100,0)}·${nf(h*100,0)} = ${R(nf(Asmin)+' cm²')}`;
-  const sp=(n,phi)=>(b*100-2*3.8-n*phi/10)/(n-1);
-  const sP=sp(nP,phiP), sN=sp(nN,phiN), smin=x=>Math.max(2,x/10);
-  const ok=(s,phi)=>s>=smin(phi)?pill('ok','caben'):pill('bad','no caben: dos capas o más ancho');
-  $('f34').innerHTML=`inferior ${R(nf(sP,1)+' cm')} ${ok(sP,phiP)} · superior ${R(nf(sN,1)+' cm')} ${ok(sN,phiN)}`;
+  const cw=b*100-2*3.8, ta=v('ta')>0?v('ta'):20;
+  const sp=(n,phi)=>(cw-n*phi/10)/(n-1), smin=phi=>Math.max(2,phi/10,0.125*ta);
+  const nmax=phi=>Math.max(1,Math.floor((cw+smin(phi))/(phi/10+smin(phi))+1e-9));
+  const lay=(n,phi)=>{const m=nmax(phi);return n<=m?{c:1,n1:n,n2:0}:n<=2*m?{c:2,n1:m,n2:n-m}:{c:3,n1:m,n2:m};};
+  const alt=A=>{for(const f of [12,16,20,25]){const a=Math.PI*Math.pow(f/20,2),n=Math.max(2,Math.ceil(A/a-1e-9));if(n<=nmax(f))return n+' Ø'+f+' ('+nf(n*a)+' cm²)';}return null;};
+  const lineL=(nom,n,phi,A,l)=>{
+    const al=alt(A), altT=al?' · en una capa: '+R(al):'';
+    if(l.c===1)return `${nom} ${R(nf(sp(n,phi),1)+' cm')} ${pill('ok','caben en una capa')}`;
+    if(l.c===2)return `${nom} ${R(l.n1+' + '+l.n2+' Ø'+phi)} ${pill('warn','dos capas: se pierde canto útil')}${altT}`;
+    return `${nom} ${pill('bad','no caben ni en dos capas: sube Ø o ensancha')}${altT}`;};
+  const layP=lay(nP,phiP), layN=lay(nN,phiN);
+  $('f34').innerHTML=lineL('inferior',nP,phiP,AdP,layP)+'<br>'+lineL('superior',nN,phiN,AdN,layN);
   $('t3').innerHTML=pill('info',`${nP} Ø${phiP} / ${nN} Ø${phiN}`);
   check('try3','c3',Ap,0.02);
   const Vd=tramo==='vol'?1.5*(ql*L+P):qd*L/2;
@@ -185,13 +200,14 @@ function calc(){
   $('f44').innerHTML=`${G(Aa>0?'100·A<sub>cerco</sub>/A<sub>α</sub>, ≤ 0,75·d':'0,75·d (máximo)')} = ${R('c/'+scR+' cm')} con ${ram} ramas Ø${phiE} `+(scR<7?pill('warn','muy juntos: más ramas o mayor Ø'):'');
   $('t4').innerHTML=pill('info',`${ram}r Ø${phiE} c/${scR}`);
   check('try4','c4',Vd,0.02);
+  drawAlz({tramo,L,pw,Vd,Vcu,Aa,scR,ram,phiE,nP,nN,phiP,phiN,smax});
   $('summary').innerHTML=`
     <div><span class="lab">Viga</span><span class="big">${nf(b*100,0)} × ${nf(h*100,0)} cm</span></div>
     <div><span class="lab">Inferior / superior</span><span class="big">${nP} Ø${phiP} / ${nN} Ø${phiN}</span></div>
     <div><span class="lab">Cercos</span><span class="big">${ram}r Ø${phiE} c/${scR}</span></div>`;
-  draw(tramo,b,h,nP,nN);
+  draw(tramo,b,h,nP,nN,{layP,layN,phiP,phiN,sepv:Math.max(smin(phiP),smin(phiN))/100});
 }
-function draw(tr,b,h,nP,nN){
+function draw(tr,b,h,nP,nN,X){
   let g='';const x1=40,x2=320,y0=90;
   g+=`<line x1="${x1}" y1="${y0}" x2="${x2}" y2="${y0}" stroke="var(--ink)" stroke-width="2"/>`;
   const curve=(c)=>{let d='';for(let i=0;i<=40;i++){const t=i/40,x=x1+(x2-x1)*t;const y=y0+c(t);d+=(i?'L':'M')+x+' '+y;}return d;};
@@ -208,17 +224,61 @@ function draw(tr,b,h,nP,nN){
   const sc=Math.min(120/b,150/h), W=b*sc, H=h*sc, x0=(360-W)/2, yy=(200-H)/2;
   let s=`<rect x="${x0}" y="${yy}" width="${W}" height="${H}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/>`;
   const c=0.04*sc; s+=`<rect x="${x0+c}" y="${yy+c}" width="${W-2*c}" height="${H-2*c}" rx="3" fill="none" stroke="var(--rebar)" stroke-width="1.3"/>`;
-  const row=(n,y)=>{for(let i=0;i<n;i++){const x=x0+c+5+(W-2*c-10)*(n===1?.5:i/(n-1));s+=`<circle cx="${x}" cy="${y}" r="4" fill="var(--rebar)"/>`;}};
-  row(Math.min(nN,12),yy+c+5);row(Math.min(nP,12),yy+H-c-5);
-  s+=`<text x="${x0+W+8}" y="${yy+12}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--rebar)">${nN} sup.</text><text x="${x0+W+8}" y="${yy+H-4}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--rebar)">${nP} inf.</text>`;
+  const rr=p=>Math.max(2.2,p/2000*sc), tk=0.008*sc;
+  const put=(n,y,r)=>{for(let i=0;i<n;i++){const xa=x0+c+tk+r, xb=x0+W-c-tk-r, x=n===1?(xa+xb)/2:xa+(xb-xa)*i/(n-1);s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="var(--rebar)"/>`;}};
+  const layer=(l,phi,top)=>{const r=rr(phi), dd=(phi/1000+X.sepv)*sc, y1=top?yy+c+tk+r:yy+H-c-tk-r; put(l.n1,y1,r); if(l.n2)put(l.n2,top?y1+dd:y1-dd,r);};
+  layer(X.layN,X.phiN,true);layer(X.layP,X.phiP,false);
+  const LN=X.layN.c===1?nN+' Ø'+X.phiN:X.layN.n1+'+'+X.layN.n2+' Ø'+X.phiN, LP=X.layP.c===1?nP+' Ø'+X.phiP:X.layP.n1+'+'+X.layP.n2+' Ø'+X.phiP;
+  s+=`<text x="${x0+W+8}" y="${yy+12}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--rebar)">${LN}</text><text x="${x0+W+8}" y="${yy+H-4}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--rebar)">${LP}</text>`;
   $('sec').innerHTML=s;
 }
+function drawAlz(o){
+  const {tramo,L,pw,Vd,Vcu,Aa,scR,ram,phiE,nP,nN,phiP,phiN,smax}=o, el=$('alz');
+  const MU='var(--muted)';
+  const tx=(x,y,t,c,a,w)=>`<text x="${x}" y="${y}" text-anchor="${a||'middle'}" font-family="IBM Plex Mono,monospace" font-size="10.5"${w?' font-weight="700"':''} fill="${c||MU}">${t}</text>`;
+  if(tramo==='vol'){el.setAttribute('viewBox','0 0 380 60');el.innerHTML=tx(190,34,'Sin alzado de cercos para el voladizo');return;}
+  const lc=L-pw;
+  if(!(lc>0)){el.innerHTML='';return;}
+  const half=lc/2, s1=scR/100, s2m=smax/100;
+  const xz=Vd>Vcu?(L/2)*(1-Vcu/Vd):0, az=Aa>0?Math.max(0,Math.min(half,xz-pw/2)):0;
+  const pos=[];let x=s1/2;
+  if(az>0)while(x<=az+1e-9&&x<half-1e-9){pos.push(x);x+=s1;}
+  const first=pos.length?pos[0]:s2m/2;
+  if(!pos.length)pos.push(first);
+  const last=pos[pos.length-1], rem=half-last, ns=rem>1e-6?Math.max(1,Math.ceil(rem/s2m-1e-9)):0, s2=ns?rem/ns:s2m;
+  for(let k=1;k<=ns;k++)pos.push(last+k*s2);
+  const all=pos.concat(pos.filter(p=>Math.abs(p-half)>1e-6).map(p=>lc-p));
+  const SC=320/(L+pw), X0=30, fl=X0+pw*SC, fr=X0+L*SC, PX=p=>fl+p*SC, pwp=pw*SC;
+  let g=`<rect x="${X0}" y="86" width="${pwp}" height="102" fill="var(--steel)" stroke="var(--steel-edge)" stroke-width="0.8"/><rect x="${fr}" y="86" width="${pwp}" height="102" fill="var(--steel)" stroke="var(--steel-edge)" stroke-width="0.8"/><rect x="${fl}" y="108" width="${fr-fl}" height="56" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1"/>`;
+  all.forEach(p=>{g+=`<line x1="${PX(p)}" y1="113" x2="${PX(p)}" y2="159" stroke="#7F77DD" stroke-width="1.2"/>`;});
+  const sl=Math.round(0.25*lc*SC), nR=Math.max(0,nN-2);
+  g+=`<line x1="${fl+3}" y1="156" x2="${fr-3}" y2="156" stroke="var(--accent)" stroke-width="3"/>`;
+  g+=`<line x1="${fl+3}" y1="116" x2="${fr-3}" y2="116" stroke="var(--bad)" stroke-width="2"/>`;
+  if(nR>0)g+=`<line x1="${fl+3}" y1="122" x2="${fl+3+sl}" y2="122" stroke="var(--bad)" stroke-width="3"/><line x1="${fr-3-sl}" y1="122" x2="${fr-3}" y2="122" stroke="var(--bad)" stroke-width="3"/>`;
+  const f2=Math.floor(s2*100+1e-6), f1=scR;
+  const zones=(az>1e-6&&lc-2*az>1e-6)?[[0,az,'c/'+f1],[az,lc-az,'c/'+f2],[lc-az,lc,'c/'+f1]]:[[0,lc,'c/'+(az>1e-6?f1:f2)]];
+  zones.forEach(z=>{const xa=PX(z[0]),xb=PX(z[1]);
+    g+=`<g stroke="var(--muted)" stroke-width="0.8"><line x1="${xa}" y1="98" x2="${xb}" y2="98"/><line x1="${xa}" y1="94" x2="${xa}" y2="102"/><line x1="${xb}" y1="94" x2="${xb}" y2="102"/></g>`;
+    g+=tx((xa+xb)/2,90,nf(z[1]-z[0],2)+' m')+tx((xa+xb)/2,70,z[2],'var(--ink)','middle',1);});
+  const ax1=X0+pwp/2, ax2=X0+(L+pw/2)*SC;
+  g+=`<g stroke="var(--muted)" stroke-width="0.8"><line x1="${ax1}" y1="196" x2="${ax2}" y2="196"/><line x1="${ax1}" y1="192" x2="${ax1}" y2="200"/><line x1="${ax2}" y1="192" x2="${ax2}" y2="200"/></g>`;
+  g+=tx(190,214,'L = '+nf(L)+' m entre ejes · luz libre '+nf(lc)+' m');
+  g+=`<line x1="44" y1="238" x2="44" y2="250" stroke="#7F77DD" stroke-width="1.2"/>`+tx(56,248,'cercos Ø'+phiE+' ('+ram+' ramas) · zonas desde las caras',MU,'start');
+  g+=`<line x1="38" y1="266" x2="50" y2="266" stroke="var(--accent)" stroke-width="3"/>`+tx(56,270,'inferior: '+nP+' Ø'+phiP,MU,'start');
+  g+=`<line x1="38" y1="284" x2="50" y2="284" stroke="var(--bad)" stroke-width="3"/>`+tx(56,288,nR>0?'sup.: 2 Ø'+phiN+' corridas + '+nR+' Ø'+phiN+' refuerzo ≈L/4':'superior: 2 Ø'+phiN+' corridas (montaje y mínimo)',MU,'start');
+  g+=tx(56,308,'primer cerco a '+nf(first*100,0)+' cm de la cara · ≈ '+all.length+' cercos'+(Aa>0?'':' · mínimos'),MU,'start');
+  el.setAttribute('viewBox','0 0 380 320');el.innerHTML=g;
+}
 $('clear').addEventListener('click',()=>{
-  ['q','S','L','P','b','h','try1','try2','try3','try4'].forEach(id=>{$(id).value='';});
+  ['q','S','L','P','b','h','pw','ta','try1','try2','try3','try4'].forEach(id=>{$(id).value='';});
   $('tramo').value='ext';$('fyk').value='500';$('fck').value='25';$('phiP').value='16';$('phiN').value='16';$('ram').value='2';$('phiE').value='8';
   calc();$('q').focus();
 });
 $('practica').addEventListener('change',()=>document.querySelector('.wrap').classList.toggle('practice',$('practica').checked));
+(function(){try{const p=new URLSearchParams(location.hash.slice(1));
+  if(p.has('q')&&p.has('S')){['q','S','L'].forEach(k=>{if(parseFloat(p.get(k))>0)$(k).value=String(Math.round(parseFloat(p.get(k))*100)/100);});
+    $('trae').innerHTML='Datos traídos del forjado: q = '+nf(parseFloat(p.get('q')))+' kN/m² y S = '+nf(parseFloat(p.get('S')))+' m.'+(parseFloat(p.get('L'))>0?'':' Falta la luz de la viga.');}
+}catch(e){}})();
 document.querySelectorAll('input,select').forEach(el=>{if(el.id!=='practica')el.addEventListener('input',calc);});
 calc();
 })();
