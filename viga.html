@@ -28,6 +28,9 @@
     <h2>Datos de partida</h2>
     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"><button type="button" id="clear">Limpiar datos</button></div>
     <div class="field"><label for="q">Carga superficial del forjado q (sin mayorar)</label><input id="q" type="number" step="any"><span class="u">kN/m²</span></div>
+    <div class="field"><label for="pos">Posición de la viga</label><select id="pos"><option value="bor" selected>De borde (viguetas por un lado)</option><option value="int">Interior (viguetas por los dos lados)</option></select><span class="u"></span></div>
+    <div class="field"><label for="L1">Luz del forjado a un lado L<sub>1</sub></label><input id="L1" type="number" step="any" placeholder="opcional"><span class="u">m</span></div>
+    <div class="field" id="fl-L2" style="display:none"><label for="L2">Luz del forjado al otro lado L<sub>2</sub></label><input id="L2" type="number" step="any" placeholder="opcional"><span class="u">m</span></div>
     <div class="field"><label for="S">Ancho tributario S</label><input id="S" type="number" step="any"><span class="u">m</span></div>
     <div class="field"><label for="L">Luz del tramo L</label><input id="L" type="number" step="any"><span class="u">m</span></div>
     <div class="field"><label for="tramo">Tipo de tramo</label><select id="tramo"><option value="ext" selected>Extremo</option><option value="int">Interior</option><option value="ais">Aislado (biapoyado)</option><option value="vol">Voladizo</option></select><span class="u"></span></div>
@@ -39,7 +42,7 @@
     <div class="field"><label for="fyk">Límite elástico acero f<sub>yk</sub></label><select id="fyk"><option value="400">400 (B400S)</option><option value="500" selected>500 (B500S)</option></select><span class="u">N/mm²</span></div>
     <div class="field"><label for="fck">Hormigón f<sub>ck</sub></label><select id="fck"><option value="25" selected>25 (HA-25)</option><option value="30">30 (HA-30)</option></select><span class="u">N/mm²</span></div>
     <div id="trae" class="hint"></div>
-    <p class="hint"><b>¿De dónde sale S?</b> Para simplificar, el forjado se reparte entre las vigas por mitades: cada viga recoge la mitad de cada vano contiguo (S = L<sub>1</sub>/2 + L<sub>2</sub>/2), y un voladizo descarga entero (100 %) sobre su viga. Es un reparto geométrico, no exacto. En un proyecto, el ancho tributario correcto se calcula según los momentos.</p>
+    <p class="hint"><b>¿De dónde sale S?</b> Si escribes las luces del forjado a cada lado (L<sub>1</sub> y, en una viga interior, L<sub>2</sub>), S se calcula solo: S = L<sub>1</sub>/2 en una viga de borde y S = (L<sub>1</sub> + L<sub>2</sub>)/2 en una interior. También puedes escribir S directamente. Para simplificar, el forjado se reparte entre las vigas por mitades: cada viga recoge la mitad de cada vano contiguo (S = L<sub>1</sub>/2 + L<sub>2</sub>/2), y un voladizo descarga entero (100 %) sobre su viga. Es un reparto geométrico, no exacto. En un proyecto, el ancho tributario correcto se calcula según los momentos.</p>
     <p class="hint">P solo se usa en voladizos. Viga de canto: h mayor que el forjado; viga plana: h igual al forjado. «Limpiar datos» lo deja todo en blanco.</p>
   </div>
 </aside>
@@ -59,6 +62,7 @@
     <div class="step-b">
       <p class="why">La viga recoge el forjado de su ancho tributario (la mitad de la distancia a las vigas vecinas a cada lado): q<sub>viga</sub> = q·S. Mute da un canto orientativo con un coeficiente α según el tramo (voladizo 2, aislado 8, extremo 10, interior 14).</p>
       <div class="calc">
+        <div class="row"><span class="k">Ancho tributario</span><span class="f" id="f10"></span></div>
         <div class="row"><span class="k">Carga lineal</span><span class="f" id="f11"></span></div>
         <div class="row"><span class="k">Canto orientativo</span><span class="f" id="f12"></span></div>
       </div>
@@ -90,7 +94,7 @@
         <div class="row"><span class="k">A<sub>s,mín</sub> por cara</span><span class="f" id="f33"></span></div>
         <div class="row"><span class="k">Separación libre</span><span class="f" id="f34"></span></div>
       </div>
-      <div class="note extra">Separación libre = (b − 2·(3 + 0,8) − n·Ø)/(n − 1), con recubrimiento de 3 cm y cerco de Ø8; debe ser al menos el mayor de 2 cm, Ø y 1,25 veces el tamaño máximo del árido. Si no caben en una capa se proponen dos capas (con pérdida de canto útil) o un diámetro mayor.</div>
+      <div class="note extra">Separación libre = (b − 2·(3 + Ø<sub>cerco</sub>) − n·Ø)/(n − 1), con recubrimiento de 3 cm y el Ø de cerco elegido. Criterio del Código Estructural (Guía CE §8.1; art. 30 y 49.4): debe ser al menos el mayor de 20 mm, el mayor Ø de las barras y 1,25 veces el tamaño máximo del árido (&gt; T<sub>máx</sub> + 5 mm). Vale en horizontal y en vertical, y las barras de capas distintas se alinean en la misma vertical para que entre el vibrador. Si no caben en una capa se proponen dos capas (con pérdida de canto útil) o un diámetro mayor.</div>
       <div class="try"><span>Tu A<sub>s</sub><sup>+</sup>:</span><input type="number" step="any" id="try3" aria-label="Tu armadura inferior"><span class="u">cm²</span><span id="c3"></span></div>
     </div>
   </article>
@@ -99,13 +103,14 @@
     <div class="step-h"><span class="num">4</span><h2>Cortante y cercos</h2><span class="tag" id="t4"></span></div>
     <div class="step-b">
       <p class="why">Cortante en el apoyo: V<sub>d</sub> = 1,5·q·L/2 en un vano y 1,5·(q·L + P) en un voladizo. El hormigón resiste sin cercos, para predimensionar, una tensión de 0,5 N/mm² sobre b·d (Guía CE). Lo que falte lo llevan los cercos: A<sub>α</sub> = (V<sub>d</sub> − V<sub>cu</sub>)·10/(0,8·h·f<sub>yα,d</sub>) en cm² por metro, con f<sub>yα,d</sub> ≤ 400 N/mm². Separación máxima 0,75·d y 60 cm.</p>
-      <div class="decide"><label for="ram">Ramas</label><select id="ram"><option selected>2</option><option>4</option></select><label for="phiE">Ø cerco</label><select id="phiE"><option>6</option><option selected>8</option><option>10</option></select><span class="u">mm</span></div>
+      <div class="decide"><label for="ram">Ramas</label><select id="ram"><option selected>2</option><option>3</option><option>4</option></select><label for="phiE">Ø cerco</label><select id="phiE"><option>6</option><option selected>8</option><option>10</option></select><span class="u">mm</span></div>
       <div class="calc">
         <div class="row"><span class="k">V<sub>d</sub></span><span class="f" id="f41"></span></div>
         <div class="row"><span class="k">V<sub>cu</sub> del hormigón</span><span class="f" id="f42"></span></div>
         <div class="row"><span class="k">A<sub>α</sub> necesaria</span><span class="f" id="f43"></span></div>
         <div class="row"><span class="k">Separación de cercos</span><span class="f" id="f44"></span></div>
       </div>
+      <div class="note extra">Con 3 ramas, la sección dibuja el cerco exterior y una rama interior con ganchos (una ligadura); con 4 ramas, un cerco exterior y otro interior (cerco múltiple). Se usan en vigas anchas o con mucho cortante. El dibujo es esquemático: las barras se reparten de forma uniforme y no siempre coinciden con las esquinas del cerco interior.</div>
       <div class="note extra">En el alzado, los cercos van a la separación calculada junto a los apoyos, hasta donde el cortante baja a V<sub>cu</sub> (cortante lineal, simplificación), y a la separación máxima (el menor de 0,75·d y 60 cm) en el resto. El primer cerco se coloca a media separación de la cara del pilar. Aquí d = h − 4 cm es el canto útil.</div>
       <div class="try"><span>Tu V<sub>d</sub>:</span><input type="number" step="any" id="try4" aria-label="Tu cortante en kN"><span class="u">kN</span><span id="c4"></span></div>
     </div>
@@ -137,7 +142,7 @@ function check(tryId,outId,val,tol){
   const ok=Math.abs(t-val)<=Math.max(Math.abs(val)*tol,1e-9);
   $(outId).innerHTML=ok?pill('ok','Correcto'):pill('bad','Revisa: no coincide');
 }
-const OUT=['f11','f12','f21','f22','f23','f31','f32','f33','f34','f41','f42','f43','f44','t1','t2','t3','t4','c1','c2','c3','c4'];
+const OUT=['f10','f11','f12','f21','f22','f23','f31','f32','f33','f34','f41','f42','f43','f44','t1','t2','t3','t4','c1','c2','c3','c4'];
 function empty(){
   OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
   $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce q, S, L, b y h</span></div>';
@@ -151,6 +156,8 @@ function calc(){
   const ql=q*S, qd=1.5*ql, fcd=fck/1.5, fyd=fyk/1.15;
   const alpha={vol:2,ais:8,ext:10,int:14}[tramo];
   const hor=Math.sqrt(qd*L*L/(0.2*alpha*fcd*1000*b));
+  {const pos=$('pos').value,a=v('L1'),b2=v('L2');
+   $('f10').innerHTML=(a>0&&pos==='bor')?`${G('S = L<sub>1</sub>/2')} = ${nf(a)}/2 = ${R(nf(S)+' m')}`:(a>0&&b2>0&&pos==='int')?`${G('S = (L<sub>1</sub> + L<sub>2</sub>)/2')} = (${nf(a)} + ${nf(b2)})/2 = ${R(nf(S)+' m')}`:`${G('S introducida directamente')} = ${R(nf(S)+' m')}`;}
   $('f11').innerHTML=`${G('q<sub>viga</sub> = q·S')} = ${nf(q)}·${nf(S)} = ${R(nf(ql)+' kN/m')}`;
   $('f12').innerHTML=`${G('h ≈ √(q<sub>d</sub>·L²/(0,2·α·f<sub>cd</sub>·b))')} = √(${nf(qd)}·${nf(L)}²/(0,2·${alpha}·${nf(fcd*1000,0)}·${nf(b)})) = ${R(nf(hor,2)+' m')} `+(h>=hor-1e-9?pill('ok','h elegido ≥'):pill('warn','h elegido menor'));
   $('t1').innerHTML=pill('info',nf(ql,1)+' kN/m');
@@ -175,7 +182,7 @@ function calc(){
   $('f31').innerHTML=`${G('M<sup>+</sup>·10/(0,8·h·f<sub>yd</sub>)')} = ${nf(Mp,1)}·10/(0,8·${nf(h)}·${nf(fyd)}) = ${nf(Ap)} cm² → ${R(nP+' Ø'+phiP)} ${pill('info',nf(nP*AbP)+' cm²')}`;
   $('f32').innerHTML=`${G('M<sup>−</sup>·10/(0,8·h·f<sub>yd</sub>)')} = ${nf(Mn,1)}·10/(0,8·${nf(h)}·${nf(fyd)}) = ${nf(An)} cm² → ${R(nN+' Ø'+phiN)} ${pill('info',nf(nN*AbN)+' cm²')}`;
   $('f33').innerHTML=`${G('C/1000·b·h')} = ${nf(Cv,1)}/1000·${nf(b*100,0)}·${nf(h*100,0)} = ${R(nf(Asmin)+' cm²')}`;
-  const cw=b*100-2*3.8, ta=v('ta')>0?v('ta'):20;
+  const cw=b*100-2*(3+v('phiE')/10), ta=v('ta')>0?v('ta'):20;
   const sp=(n,phi)=>(cw-n*phi/10)/(n-1), smin=phi=>Math.max(2,phi/10,0.125*ta);
   const nmax=phi=>Math.max(1,Math.floor((cw+smin(phi))/(phi/10+smin(phi))+1e-9));
   const lay=(n,phi)=>{const m=nmax(phi);return n<=m?{c:1,n1:n,n2:0}:n<=2*m?{c:2,n1:m,n2:n-m}:{c:3,n1:m,n2:m};};
@@ -205,7 +212,7 @@ function calc(){
     <div><span class="lab">Viga</span><span class="big">${nf(b*100,0)} × ${nf(h*100,0)} cm</span></div>
     <div><span class="lab">Inferior / superior</span><span class="big">${nP} Ø${phiP} / ${nN} Ø${phiN}</span></div>
     <div><span class="lab">Cercos</span><span class="big">${ram}r Ø${phiE} c/${scR}</span></div>`;
-  draw(tramo,b,h,nP,nN,{layP,layN,phiP,phiN,sepv:Math.max(smin(phiP),smin(phiN))/100});
+  draw(tramo,b,h,nP,nN,{ram,layP,layN,phiP,phiN,sepv:Math.max(smin(phiP),smin(phiN))/100});
 }
 function draw(tr,b,h,nP,nN,X){
   let g='';const x1=40,x2=320,y0=90;
@@ -224,6 +231,9 @@ function draw(tr,b,h,nP,nN,X){
   const sc=Math.min(120/b,150/h), W=b*sc, H=h*sc, x0=(360-W)/2, yy=(200-H)/2;
   let s=`<rect x="${x0}" y="${yy}" width="${W}" height="${H}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/>`;
   const c=0.04*sc; s+=`<rect x="${x0+c}" y="${yy+c}" width="${W-2*c}" height="${H-2*c}" rx="3" fill="none" stroke="var(--rebar)" stroke-width="1.3"/>`;
+  {const xl=x0+c, yt=yy+c, k=Math.max(0.6*c,5.5), f=n=>n.toFixed(1); s+=`<path d="M${f(xl+0.95*k)} ${f(yt)} Q${f(xl+1.7*k)} ${f(yt+0.07*k)} ${f(xl+1.6*k)} ${f(yt+1.05*k)}" fill="none" stroke="var(--rebar)" stroke-width="1.6" stroke-linecap="round"/><path d="M${f(xl)} ${f(yt+1.0*k)} Q${f(xl+0.03*k)} ${f(yt+1.65*k)} ${f(xl+0.85*k)} ${f(yt+1.5*k)}" fill="none" stroke="var(--rebar)" stroke-width="1.6" stroke-linecap="round"/>`;}
+  if(X.ram===3){const xm=x0+W/2, ci=0.3*c, hk=0.35*c; s+=`<path d="M${xm+hk} ${yy+c+ci-hk} L${xm} ${yy+c+ci} L${xm} ${yy+H-c-ci} L${xm+hk} ${yy+H-c-ci+hk}" fill="none" stroke="var(--rebar)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>`;}
+  if(X.ram===4){const wi=W-2*c, xa=x0+c+wi/3, xb=x0+c+2*wi/3, ci=0.3*c; s+=`<rect x="${xa}" y="${yy+c+ci}" width="${xb-xa}" height="${H-2*c-2*ci}" rx="3" fill="none" stroke="var(--rebar)" stroke-width="1.3"/>`;}
   const rr=p=>Math.max(2.2,p/2000*sc), tk=0.008*sc;
   const put=(n,y,r)=>{for(let i=0;i<n;i++){const xa=x0+c+tk+r, xb=x0+W-c-tk-r, x=n===1?(xa+xb)/2:xa+(xb-xa)*i/(n-1);s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="var(--rebar)"/>`;}};
   const layer=(l,phi,top)=>{const r=rr(phi), dd=(phi/1000+X.sepv)*sc, y1=top?yy+c+tk+r:yy+H-c-tk-r; put(l.n1,y1,r); if(l.n2)put(l.n2,top?y1+dd:y1-dd,r);};
@@ -270,7 +280,7 @@ function drawAlz(o){
   el.setAttribute('viewBox','0 0 380 320');el.innerHTML=g;
 }
 $('clear').addEventListener('click',()=>{
-  ['q','S','L','P','b','h','pw','ta','try1','try2','try3','try4'].forEach(id=>{$(id).value='';});
+  ['q','S','L','L1','L2','P','b','h','pw','ta','try1','try2','try3','try4'].forEach(id=>{$(id).value='';});$('pos').value='bor';$('fl-L2').style.display='none';
   $('tramo').value='ext';$('fyk').value='500';$('fck').value='25';$('phiP').value='16';$('phiN').value='16';$('ram').value='2';$('phiE').value='8';
   calc();$('q').focus();
 });
@@ -279,6 +289,13 @@ $('practica').addEventListener('change',()=>document.querySelector('.wrap').clas
   if(p.has('q')&&p.has('S')){['q','S','L'].forEach(k=>{if(parseFloat(p.get(k))>0)$(k).value=String(Math.round(parseFloat(p.get(k))*100)/100);});
     $('trae').innerHTML='Datos traídos del forjado: q = '+nf(parseFloat(p.get('q')))+' kN/m² y S = '+nf(parseFloat(p.get('S')))+' m.'+(parseFloat(p.get('L'))>0?'':' Falta la luz de la viga.');}
 }catch(e){}})();
+function syncS(){
+  const pos=$('pos').value;$('fl-L2').style.display=pos==='int'?'':'none';
+  const a=v('L1'),b2=v('L2');let S=NaN;
+  if(a>0){if(pos==='bor')S=a/2;else if(b2>0)S=(a+b2)/2;}
+  if(isFinite(S))$('S').value=String(Math.round(S*100)/100);
+}
+['pos','L1','L2'].forEach(id=>$(id).addEventListener('input',syncS));
 document.querySelectorAll('input,select').forEach(el=>{if(el.id!=='practica')el.addEventListener('input',calc);});
 calc();
 })();

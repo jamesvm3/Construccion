@@ -172,5 +172,21 @@
       const first = !seen.has(host); seen.set(host, txt); if (first) return;
       host.classList.remove('pop'); void host.offsetWidth; host.classList.add('pop');
     })).observe(main, { childList: true, subtree: true, characterData: true });
+
+    /* textos largos plegables: botón "+" (solo calculadoras de predimensionado) */
+    const wrapMore = (el, label) => {
+      if (!el || el.closest('details.more')) return;
+      const d = document.createElement('details'); d.className = 'more';
+      const sm = document.createElement('summary');
+      sm.innerHTML = '<span class="pm" aria-hidden="true"></span><span>' + label + '</span>';
+      el.parentNode.insertBefore(d, el); d.appendChild(sm); d.appendChild(el);
+    };
+    const collapse = () => {
+      document.querySelectorAll('.step-b .why').forEach(e => wrapMore(e, '¿Por qué este paso?'));
+      document.querySelectorAll('.step-b .note.extra').forEach(e => wrapMore(e, 'Nota'));
+      document.querySelectorAll('aside p.hint').forEach(e => { if (e.textContent.length > 90) wrapMore(e, 'Más información'); });
+    };
+    collapse();
+    new MutationObserver(() => requestAnimationFrame(collapse)).observe(main, { childList: true, subtree: true });
   }
 })();

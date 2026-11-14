@@ -555,3 +555,13 @@ body[data-page=tool] label.chk input[type=checkbox]{width:48px!important;height:
 body[data-page=tool] div[style*="gap:6px 16px"]{display:block!important;background:var(--panel);border-radius:14px;padding:2px 14px;margin-top:8px}
 body[data-page=tool] div[style*="gap:6px 16px"]>span:first-child{display:block;font-weight:600;font-size:14px;padding:10px 0 2px}
 body[data-page=tool] div[style*="gap:6px 16px"] label.chk{text-transform:capitalize}
+
+/* ---- textos largos plegables con botón "+" (solo calculadoras de predimensionado) ---- */
+details.more{margin:0}
+details.more>summary{list-style:none;display:inline-flex;align-items:center;gap:8px;cursor:pointer;min-height:32px;padding:3px 0;font-size:13.5px;font-weight:600;color:var(--accent-t);-webkit-user-select:none;user-select:none}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary .pm{flex:none;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);display:grid;place-items:center;font-size:17px;line-height:1;font-weight:500;transition:transform .35s var(--ease),background .25s}
+details.more>summary .pm::before{content:"+"}
+details.more[open]>summary .pm{transform:rotate(45deg);background:var(--soft)}
+details.more[open]>summary{color:var(--muted)}
+details.more>.why,details.more>.note,details.more>.hint{margin-top:6px;animation:reveal .4s var(--ease)}
