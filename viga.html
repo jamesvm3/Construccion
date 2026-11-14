@@ -54,7 +54,7 @@
       <div class="box"><h3>Momentos del tramo</h3><svg id="pl" viewBox="0 0 360 200" role="img" aria-label="Diagrama de momentos del tramo"></svg></div>
       <div class="box"><h3>Sección</h3><svg id="sec" viewBox="0 0 360 200" role="img" aria-label="Sección de la viga con armaduras"></svg></div>
     </div>
-    <div class="box" style="margin-top:16px"><h3>Alzado: distribución de cercos (orientativo)</h3><svg id="alz" viewBox="0 0 380 320" role="img" aria-label="Alzado de la viga con la distribución de cercos"></svg><p class="hint" style="margin-top:8px">El refuerzo de negativos puede sustituirse por barras corridas de apoyo a apoyo: gasta más acero, pero simplifica el despiece. Las longitudes reales salen del despiece (ley de momentos, decalaje y anclaje).</p></div>
+    <div class="box" style="margin-top:16px"><h3>Despiece de la viga (orientativo)</h3><svg id="alz" viewBox="0 0 380 222" role="img" aria-label="Alzado de la viga con la distribución de cercos"></svg><div id="cuadro" style="overflow-x:auto;margin-top:8px"></div><details class="hint" style="margin-top:8px"><summary style="cursor:pointer"><b>+</b> Convenio del despiece y notas</summary>Convenio del despiece: las barras longitudinales llegan a 10 cm del eje del pilar (dentro de su armadura) y rematan con patilla de 0,25 m; el refuerzo de negativos se corta a x₀ + máx(d, lb,neta) del eje del apoyo (x₀ = punto de momento nulo, calculado con los momentos del paso 2; lb,neta = anclaje recto en posición II según Guía CE 8.2.3 y 8.2.4) y entra en el pilar con patilla de 0,25 m. Los cercos son aproximados (ganchos de 10 cm). El refuerzo de negativos puede sustituirse por barras corridas de apoyo a apoyo: gasta más acero, pero simplifica el despiece. Las longitudes reales salen del despiece (ley de momentos, decalaje y anclaje).</details></div>
   </section>
 
   <article class="step" id="s1">
@@ -146,7 +146,7 @@ const OUT=['f10','f11','f12','f21','f22','f23','f31','f32','f33','f34','f41','f4
 function empty(){
   OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
   $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce q, S, L, b y h</span></div>';
-  $('sec').innerHTML='';$('pl').innerHTML='';$('alz').innerHTML='';
+  $('sec').innerHTML='';$('pl').innerHTML='';$('alz').innerHTML='';$('cuadro').innerHTML='';
 }
 function calc(){
   $('fl-P').style.display=$('tramo').value==='vol'?'':'none';
@@ -207,7 +207,13 @@ function calc(){
   $('f44').innerHTML=`${G(Aa>0?'100·A<sub>cerco</sub>/A<sub>α</sub>, ≤ 0,75·d':'0,75·d (máximo)')} = ${R('c/'+scR+' cm')} con ${ram} ramas Ø${phiE} `+(scR<7?pill('warn','muy juntos: más ramas o mayor Ø'):'');
   $('t4').innerHTML=pill('info',`${ram}r Ø${phiE} c/${scR}`);
   check('try4','c4',Vd,0.02);
-  drawAlz({tramo,L,pw,Vd,Vcu,Aa,scR,ram,phiE,nP,nN,phiP,phiN,smax});
+  let x0v=0.25*L;
+  {const R=tramo==='ext'?qd*L/2+Mn/L:qd*L/2, disc=R*R-2*qd*Mn; if(Mn>0&&disc>=0)x0v=(R-Math.sqrt(disc))/qd;}
+  const mmv=({25:{400:1.2,500:1.5},30:{400:1.0,500:1.3}})[fck][fyk];
+  const lbIIv=Math.max(1.4*mmv*phiN*phiN,1.4*fyk/20*phiN)/1000;
+  const ratv=Math.min(1,An/(nN*AbN));
+  const lbnv=Math.max(lbIIv*ratv,10*phiN/1000,0.15,lbIIv/3);
+  drawAlz({tramo,L,pw,Vd,Vcu,Aa,scR,ram,phiE,nP,nN,phiP,phiN,smax,b,h,x0:x0v,lbn:lbnv,d,lbII:lbIIv,rat:ratv});
   $('summary').innerHTML=`
     <div><span class="lab">Viga</span><span class="big">${nf(b*100,0)} × ${nf(h*100,0)} cm</span></div>
     <div><span class="lab">Inferior / superior</span><span class="big">${nP} Ø${phiP} / ${nN} Ø${phiN}</span></div>
@@ -243,7 +249,7 @@ function draw(tr,b,h,nP,nN,X){
   $('sec').innerHTML=s;
 }
 function drawAlz(o){
-  const {tramo,L,pw,Vd,Vcu,Aa,scR,ram,phiE,nP,nN,phiP,phiN,smax}=o, el=$('alz');
+  const {tramo,L,pw,Vd,Vcu,Aa,scR,ram,phiE,nP,nN,phiP,phiN,smax,b,h,x0,lbn,d,lbII,rat}=o, el=$('alz');$('cuadro').innerHTML='';
   const MU='var(--muted)';
   const tx=(x,y,t,c,a,w)=>`<text x="${x}" y="${y}" text-anchor="${a||'middle'}" font-family="IBM Plex Mono,monospace" font-size="10.5"${w?' font-weight="700"':''} fill="${c||MU}">${t}</text>`;
   if(tramo==='vol'){el.setAttribute('viewBox','0 0 380 60');el.innerHTML=tx(190,34,'Sin alzado de cercos para el voladizo');return;}
@@ -261,10 +267,18 @@ function drawAlz(o){
   const SC=320/(L+pw), X0=30, fl=X0+pw*SC, fr=X0+L*SC, PX=p=>fl+p*SC, pwp=pw*SC;
   let g=`<rect x="${X0}" y="86" width="${pwp}" height="102" fill="var(--steel)" stroke="var(--steel-edge)" stroke-width="0.8"/><rect x="${fr}" y="86" width="${pwp}" height="102" fill="var(--steel)" stroke="var(--steel-edge)" stroke-width="0.8"/><rect x="${fl}" y="108" width="${fr-fl}" height="56" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1"/>`;
   all.forEach(p=>{g+=`<line x1="${PX(p)}" y1="113" x2="${PX(p)}" y2="159" stroke="#7F77DD" stroke-width="1.2"/>`;});
-  const sl=Math.round(0.25*lc*SC), nR=Math.max(0,nN-2);
-  g+=`<line x1="${fl+3}" y1="156" x2="${fr-3}" y2="156" stroke="var(--accent)" stroke-width="3"/>`;
-  g+=`<line x1="${fl+3}" y1="116" x2="${fr-3}" y2="116" stroke="var(--bad)" stroke-width="2"/>`;
-  if(nR>0)g+=`<line x1="${fl+3}" y1="122" x2="${fl+3+sl}" y2="122" stroke="var(--bad)" stroke-width="3"/><line x1="${fr-3-sl}" y1="122" x2="${fr-3}" y2="122" stroke="var(--bad)" stroke-width="3"/>`;
+  const nR=Math.max(0,nN-2), PT=0.25, AN=0.20, rc=Math.max(0.01,pw/2-0.10), LR=x0+Math.max(d,lbn), LRs=0.25*L+AN, pt=PT*SC*0.8;
+  const xa0=X0+rc*SC, xb0=X0+(L+pw-rc)*SC, axL=X0+pwp/2, axR=fr+pwp/2;
+  const bar=(x1,x2,y,col,w,u1,u2)=>`<path d="M${x1} ${y+u1*pt} L${x1} ${y} L${x2} ${y} L${x2} ${y+u2*pt}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linejoin="round"/>`;
+  g+=bar(xa0,xb0,156,'var(--accent)',3,-1,-1);
+  g+=bar(xa0+4,xb0-4,116,'var(--bad)',2,1,1);
+  if(nR>0){g+=bar(X0+rc*SC+8,axL+LR*SC,124,'var(--bad)',3,1,0)+bar(axR-LR*SC,fr+pwp-rc*SC-8,124,'var(--bad)',3,0,1);}
+  const mid=(fl+fr)/2;
+  g+=tx(mid,151,'①','var(--accent)','middle',1)+tx(mid,112,'②','var(--bad)','middle',1);
+  if(nR>0)g+=tx(axL+LR*SC+8,128,'③','var(--bad)','middle',1)+tx(axR-LR*SC-8,128,'③′','var(--bad)','middle',1);
+  
+  
+  
   const f2=Math.floor(s2*100+1e-6), f1=scR;
   const zones=(az>1e-6&&lc-2*az>1e-6)?[[0,az,'c/'+f1],[az,lc-az,'c/'+f2],[lc-az,lc,'c/'+f1]]:[[0,lc,'c/'+(az>1e-6?f1:f2)]];
   zones.forEach(z=>{const xa=PX(z[0]),xb=PX(z[1]);
@@ -273,11 +287,19 @@ function drawAlz(o){
   const ax1=X0+pwp/2, ax2=X0+(L+pw/2)*SC;
   g+=`<g stroke="var(--muted)" stroke-width="0.8"><line x1="${ax1}" y1="196" x2="${ax2}" y2="196"/><line x1="${ax1}" y1="192" x2="${ax1}" y2="200"/><line x1="${ax2}" y1="192" x2="${ax2}" y2="200"/></g>`;
   g+=tx(190,214,'L = '+nf(L)+' m entre ejes · luz libre '+nf(lc)+' m');
-  g+=`<line x1="44" y1="238" x2="44" y2="250" stroke="#7F77DD" stroke-width="1.2"/>`+tx(56,248,'cercos Ø'+phiE+' ('+ram+' ramas) · zonas desde las caras',MU,'start');
-  g+=`<line x1="38" y1="266" x2="50" y2="266" stroke="var(--accent)" stroke-width="3"/>`+tx(56,270,'inferior: '+nP+' Ø'+phiP,MU,'start');
-  g+=`<line x1="38" y1="284" x2="50" y2="284" stroke="var(--bad)" stroke-width="3"/>`+tx(56,288,nR>0?'sup.: 2 Ø'+phiN+' corridas + '+nR+' Ø'+phiN+' refuerzo ≈L/4':'superior: 2 Ø'+phiN+' corridas (montaje y mínimo)',MU,'start');
-  g+=tx(56,308,'primer cerco a '+nf(first*100,0)+' cm de la cara · ≈ '+all.length+' cercos'+(Aa>0?'':' · mínimos'),MU,'start');
-  el.setAttribute('viewBox','0 0 380 320');el.innerHTML=g;
+  g+=tx(PX(first),182,'④','#7F77DD','middle',1);
+  {const l1=L+pw-2*rc+2*PT, l3=pw/2-rc+LR+PT, l4=2*(b-0.06)+2*(h-0.06)+0.20, nC=all.length;
+   const f=x=>nf(x,2), td='style="padding:3px 5px;border-bottom:1px solid var(--line,#ccc);text-align:right"', tl='style="padding:3px 5px;border-bottom:1px solid var(--line,#ccc);text-align:left"';
+   const row=(p,d,n,forma,l)=>`<tr><td ${tl}><b>${p}</b></td><td ${td}>Ø${d}</td><td ${td}>${n}</td><td ${tl}>${forma}</td><td ${td}>${f(l)}</td><td ${td}>${f(n*l)}</td></tr>`;
+   let t=`<table style="border-collapse:collapse;font-family:IBM Plex Mono,monospace;font-size:11px;width:100%"><thead><tr><th ${tl}>Pos.</th><th ${td}>Ø</th><th ${td}>Nº</th><th ${tl}>Forma</th><th ${td}>Long. (m)</th><th ${td}>Total (m)</th></tr></thead><tbody>`;
+   t+=row('①',phiP,nP,'inferior con 2 patillas',l1)+row('②',phiN,2,'superior corrida con 2 patillas',l1);
+   if(nR>0)t+=row('③',phiN,nR,'refuerzo negativos, apoyo izquierdo',l3)+row('③′',phiN,nR,'refuerzo negativos, apoyo derecho',l3);
+   t+=row('④',phiE,nC,'cerco '+ram+' ramas (aprox.)',l4);
+   $('cuadro').innerHTML=t+'</tbody></table>'+(nR>0?`<details class="hint" style="margin-top:6px"><summary style="cursor:pointer"><b>+</b> Cómo se calcula el refuerzo ③</summary>Refuerzo ③: x₀ = ${f(x0)} m (momento nulo, a partir de los momentos del paso 2) · decalaje d = ${f(d)} m · l<sub>b,II</sub> = ${f(lbII)} m (posición II) · l<sub>b,neta</sub> = l<sub>b,II</sub>·A<sub>s,nec</sub>/A<sub>s,real</sub> = ${f(lbII)}·${f(rat)} → ${f(lbn)} m (prolongación recta, β = 1) → corte a ${f(LR)} m del eje.</details><details class="hint" style="margin-top:6px"><summary style="cursor:pointer"><b>+</b> Regla simplificada del refuerzo ③ (L/4 + 0,20 m)</summary>Regla rápida, solo orientativa: el refuerzo llega a L/4 desde el eje del apoyo más 0,20 m de anclaje, y entra en el pilar con patilla de 0,25 m. Aquí: L/4 + 0,20 = ${f(LRs)} m → longitud de cada barra ${f(pw/2-rc+LRs+PT)} m. No sale de los momentos ni del anclaje calculado, así que puede quedar corta o larga según el caso.</details>`:'');}
+  
+  
+  
+  el.setAttribute('viewBox','0 0 380 222');el.innerHTML=g;
 }
 $('clear').addEventListener('click',()=>{
   ['q','S','L','L1','L2','P','b','h','pw','ta','try1','try2','try3','try4'].forEach(id=>{$(id).value='';});$('pos').value='bor';$('fl-L2').style.display='none';

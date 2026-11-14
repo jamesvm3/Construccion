@@ -185,6 +185,7 @@
       document.querySelectorAll('.step-b .why').forEach(e => wrapMore(e, '¿Por qué este paso?'));
       document.querySelectorAll('.step-b .note.extra').forEach(e => wrapMore(e, 'Nota'));
       document.querySelectorAll('aside p.hint').forEach(e => { if (e.textContent.length > 90) wrapMore(e, 'Más información'); });
+      document.querySelectorAll('main .box > p.hint').forEach(e => { if (e.textContent.length > 160) wrapMore(e, 'Más información'); });
     };
     collapse();
     new MutationObserver(() => requestAnimationFrame(collapse)).observe(main, { childList: true, subtree: true });
