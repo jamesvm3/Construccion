@@ -231,7 +231,7 @@ function calc(){
   const Rr=useL?Nk*L/(L-e):Nk;
   const s3=(Rr+P)/(a*b), okT=s3<=sig+1e-9;
   $('f31').innerHTML=`${G('P = 25·a·b·h')} = 25·${nf(a)}·${nf(b)}·${nf(h/100)} = ${R(nf(P,1)+' kN')}`;
-  $('f32').innerHTML=useL?`${G('R = N<sub>k</sub>·L/(L − e)')} = ${nf(Nk)}·${nf(L)}/(${nf(L)} − ${nf(e,2)}) = ${R(nf(Rr,1)+' kN')} ${pill('info','+'+nf(100*(Rr/Nk-1),1)+' %')}`:`${G('sin L: R = N<sub>k</sub>')} = ${R(nf(Nk,1)+' kN')}`;
+  $('f32').innerHTML=useL?`${G('R = N<sub>k</sub>·L/(L − e)')} = ${nf(Nk)}·${nf(L)}/(${nf(L)} − ${nf(e,2)}) = ${R(nf(Rr,1)+' kN')} ${pill('info','+'+nf(100*(Rr/Nk-1),1)+' %')}<br>${G('Es lo que aumenta la carga sobre el terreno respecto a N<sub>k</sub>, porque el pilar de medianera no queda centrado en la zapata (excentricidad e).')}`:`${G('sin L: R = N<sub>k</sub>')} = ${R(nf(Nk,1)+' kN')}`;
   $('f33').innerHTML=`${G('σ = (R + P)/(a·b)')} = (${nf(Rr,1)} + ${nf(P,1)})/(${nf(a)}·${nf(b)}) = ${R(nf(s3,1)+' kN/m²')} `+(okT?pill('ok','≤ σadm'):pill('bad','> σadm: agranda la zapata'));
   $('t3').innerHTML=okT?pill('ok','Cumple'):pill('bad','No cumple');
   check('try3','c3',s3,0.02);

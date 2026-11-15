@@ -168,7 +168,7 @@ function calc(){
   const fcd=fck/1.5, fyd=fyk/1.15, Nc=A*fcd*1000;
   const As=10*(Nd-Nc)/fyd, Asmin=0.004*A*10000, Asd=Math.max(As,Asmin);
   $('f31').innerHTML=`${G('A·f<sub>cd</sub>')} = ${nf(A,4)}·${nf(fcd)}·1000 = ${R(nf(Nc,0)+' kN')}`;
-  $('f32').innerHTML=`${G('A<sub>s</sub> = (N<sub>d</sub> − A·f<sub>cd</sub>)·10/f<sub>yd</sub>')} = (${nf(Nd,1)} − ${nf(Nc,0)})·10/${nf(fyd)} = ${R(nf(As)+' cm²')}`+(As<=0?' '+pill('info','el hormigón basta'):'');
+  $('f32').innerHTML=`${G('A<sub>s</sub> = (N<sub>d</sub> − A·f<sub>cd</sub>)·10/f<sub>yd</sub>')} = (${nf(Nd,1)} − ${nf(Nc,0)})·10/${nf(fyd)} = ${R(nf(As)+' cm²')}`+(As<=0?' '+pill('info','el hormigón basta')+'<br>'+G('Negativo: el hormigón solo ya resiste N<sub>d</sub>. No es acero que quitar: se arma igualmente con la mínima.'):'');
   $('f33').innerHTML=`${G('0,004·A')} = 0,004·${nf(A*10000,0)} = ${R(nf(Asmin)+' cm²')}`;
   $('f34').innerHTML=R(nf(Asd)+' cm²')+' '+(Asmin>=As?pill('warn','manda la mínima'):pill('ok','manda el cálculo'));
   $('t3').innerHTML=pill('info',nf(Asd)+' cm²');

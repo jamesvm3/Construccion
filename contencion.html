@@ -207,7 +207,7 @@ function calc(){
   $('f21').innerHTML=`${G('e ≈ H<sub>1</sub>/10')} = ${nf(H1/10,2)} m → ${R(nf(eS)+' m')}${H1/10<0.25?' (mínimo 25 cm)':''}`;
   $('f22').innerHTML=`${G('B ≈ H<sub>1</sub>/3')} = ${R(nf(H1/3,2)+' m')}`;
   $('sug2').textContent=isFinite(BS)?`Sugerido: B = ${nf(BS)} m (el menor que cumple) · puntera ${nf(up5(BS/3))} m · e = ${nf(eS)} · canto ${nf(hzS)}`:'No se encuentra un ancho que cumpla: revisa los datos';
-  $('f23').innerHTML=`${G('t = B − p − e')} = ${nf(B)} − ${nf(p)} − ${nf(e)} = ${R(nf(s.t)+' m')}`+(s.t<0?' '+pill('bad','negativo'):'');
+  $('f23').innerHTML=`${G('t = B − p − e')} = ${nf(B)} − ${nf(p)} − ${nf(e)} = ${R(nf(s.t)+' m')}`+(s.t<0?' '+pill('bad','negativo')+'<br>'+G('Negativo: la base B no alcanza para la puntera p y el alzado e. Aumenta B o reduce p.'):'');
   $('t2').innerHTML=pill('info',`B = ${nf(B)} m`);
   // 3
   $('f31').innerHTML=`${G('P<sub>m</sub> = 25·e·H<sub>1</sub>')} = 25·${nf(e)}·${nf(H1)} = ${R(nf(s.Pm,1)+' kN/m')} · brazo ${nf(s.xm,2)} m`;
