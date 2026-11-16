@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Pilar C2</title>
+<link rel="stylesheet" href="apple.css">
+<style>
+.rl{list-style:none;margin:6px 0 4px;padding:0}
+.rl li{padding:9px 0;border-top:.5px solid rgba(128,128,128,.28);font-size:15px;line-height:1.45}
+.rl li:first-child{border-top:0}
+.rl li b{display:block;font-weight:600;margin-bottom:2px}
+.rl li span{color:var(--ink2,inherit);opacity:.92}
+.rd{margin-top:6px}
+.rh{margin:12px 0 2px;font-size:13px;letter-spacing:.04em;text-transform:uppercase;opacity:.65;font-weight:600}
+</style>
+</head><body data-page="tool" data-tool="pilar" data-mat="H">
+<div class="shell">
+  <nav class="sidebar glass" id="sidebar" aria-label="Herramientas"></nav>
+  <div class="content">
+    <header class="navbar glass" id="navbar"></header>
+<div class="wrap">
+<header class="top mat-H">
+  <div>
+    <div class="mbadge">PH</div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Hormigón · Estructura</small>Pilar</h1></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+    <label class="mode" for="practica"><input type="checkbox" id="practica"> Modo práctica: ocultar resultados</label>
+    <div class="hint" style="margin:0">Calcula tú, escribe tu resultado en cada paso y comprueba.</div>
+    <div class="src">Procedimiento de <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo), con las reglas de armado de la Guía de aplicación del Código Estructural (9.4).</div>
+  </div>
+</header>
+
+<div class="grid">
+<aside>
+  <div class="box">
+    <h2>Datos de partida</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"><button type="button" id="clear">Limpiar datos</button></div>
+    <div class="field"><label for="Nk">Axil característico N<sub>k</sub></label><input id="Nk" type="number" step="any"><span class="u">kN</span></div>
+    <div class="field"><label for="a">Lado del pilar a</label><input id="a" type="number" step="any"><span class="u">m</span></div>
+    <div class="field"><label for="b">Otro lado b (si no es cuadrado)</label><input id="b" type="number" step="any" placeholder="= a"><span class="u">m</span></div>
+    <div class="field"><label for="L">Altura libre del pilar L (opcional)</label><input id="L" type="number" step="any" placeholder="para la esbeltez"><span class="u">m</span></div>
+    <label class="chk" style="padding-block:7px;border-bottom:1px dashed var(--line)"><input type="checkbox" id="inc" checked><span> <span>Aumentar N<sub>d</sub> un 20 % por momentos</span></span></label>
+    <div class="field"><label for="fyk">Límite elástico acero f<sub>yk</sub></label><select id="fyk"><option value="400">400 (B400S)</option><option value="500" selected>500 (B500S)</option></select><span class="u">N/mm²</span></div>
+    <div class="field"><label for="fck">Hormigón f<sub>ck</sub></label><select id="fck"><option value="25" selected>25 (HA-25)</option><option value="30">30 (HA-30)</option></select><span class="u">N/mm²</span></div>
+    <p class="hint">Escribe los datos de tu ejercicio. «Limpiar datos» lo deja todo en blanco.</p>
+  </div>
+</aside>
+
+<main>
+  <section>
+    <div class="summary" id="summary"></div>
+    <div class="drawing">
+      <div class="box"><h3>Sección</h3><svg id="sec" viewBox="0 0 360 230" role="img" aria-label="Sección del pilar con las barras"></svg></div>
+      <div class="box"><h3>Reglas de armado</h3><svg id="pl" viewBox="0 0 360 230" role="img" aria-label="Resumen de reglas"></svg>
+        <details class="more"><summary><span class="pm" aria-hidden="true"></span><span>¿Cómo se obtienen estos resultados?</span></summary>
+          <h4 class="rh">Qué significa cada regla</h4>
+<ul class="rl">
+          <li><b>Diámetro mínimo</b><span>Ø ≥ 12 mm. Las barras no pueden ser más finas.</span></li>
+          <li><b>Una barra por esquina</b><span>Mínimo 4 barras: las de las esquinas sujetan el cerco.</span></li>
+          <li><b>Armadura mínima</b><span>A<sub>s</sub> mín = máx(0,1·N<sub>d</sub>/f<sub>yc,d</sub> ; 4 ‰·A<sub>c</sub>). Se toma la mayor: la que pide la carga o el 4 por mil del hormigón.</span></li>
+          <li><b>Armadura máxima</b><span>A<sub>s</sub> máx = 4 % A<sub>c</sub>. Con más, el hormigón no envuelve bien las barras.</span></li>
+          <li><b>Separación entre barras</b><span>Como mucho 30 cm. Si una cara es mayor, se añaden barras intermedias.</span></li>
+          <li><b>Diámetro del cerco</b><span>El mayor entre 6 mm y Ø/4.</span></li>
+          <li><b>Separación de cercos</b><span>La menor entre 15Ø, 30 cm y el lado menor del pilar.</span></li>
+        </ul>
+          <h4 class="rh">Aplicadas a tu pilar</h4>
+          <div id="rd" class="rd"></div>
+        </details>
+      </div>
+    </div>
+    <div class="box" style="margin-top:16px"><h3>Despiece del pilar (orientativo)</h3><svg id="des" viewBox="0 0 380 330" role="img" aria-label="Alzado del pilar con barras y cercos"></svg><div id="cuadro" style="overflow-x:auto;margin-top:8px"></div><details class="hint" style="margin-top:8px"><summary style="cursor:pointer"><b>+</b> Convenio del despiece y notas</summary>Convenio del despiece: las barras longitudinales recorren la altura libre y arrancan en el forjado inferior, donde se apoyan y se cortan, y salen por arriba un solape de 40Ø (el mismo que en las zapatas) para empalmar con las del pilar superior. Los cercos van a la separación calculada en el tramo central y a 0,6 de esa separación junto a los forjados, en una longitud igual al lado mayor del pilar. Si no has indicado la altura libre, se dibuja con 3,00 m. Los cercos son aproximados (ganchos de 10 cm). Las longitudes reales salen del despiece de proyecto.</details></div>
+  </section>
+
+  <article class="step" id="s1">
+    <div class="step-h"><span class="num">1</span><h2>Axil de cálculo</h2><span class="tag" id="t1"></span></div>
+    <div class="step-b">
+      <p class="why">El axil característico se mayora con γ<sub>f</sub> = 1,5. Además se aumenta un 20 % para cubrir de forma aproximada los momentos que llegan de las vigas, que en un predimensionado no se calculan.</p>
+      <div class="calc"><div class="row"><span class="k">N<sub>d</sub></span><span class="f" id="f11"></span></div></div>
+      <div class="try"><span>Tu N<sub>d</sub>:</span><input type="number" step="any" id="try1" aria-label="Tu axil en kN"><span class="u">kN</span><span id="c1"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s2">
+    <div class="step-h"><span class="num">2</span><h2>Armadura longitudinal</h2><span class="tag" id="t2"></span></div>
+    <div class="step-b">
+      <p class="why">El hormigón resiste N<sub>c</sub> = A<sub>c</sub>·f<sub>cd</sub>; lo que falte lo lleva el acero: A<sub>s</sub> = (N<sub>d</sub> − N<sub>c</sub>)/f<sub>yc,d</sub>. En compresión, la Guía del Código Estructural limita la tensión del acero a f<sub>yc,d</sub> = mín(f<sub>yd</sub>; 400 N/mm²). La armadura mínima es la mayor de 0,1·N<sub>d</sub>/f<sub>yc,d</sub> (Guía CE) y el 4 ‰ de la sección; la máxima, el 4 %.</p>
+      <div class="calc">
+        <div class="row"><span class="k">N<sub>c</sub> del hormigón</span><span class="f" id="f21"></span></div>
+        <div class="row"><span class="k">A<sub>s</sub> de cálculo</span><span class="f" id="f22"></span></div>
+        <div class="row"><span class="k">Mínimas</span><span class="f" id="f23"></span></div>
+        <div class="row"><span class="k">A<sub>s</sub> a disponer</span><span class="f" id="f24"></span></div>
+      </div>
+      <div class="note">En compresión el acero no puede pasar de 400 N/mm² (Guía CE), aunque f<sub>yd</sub> sea 434,8 N/mm².</div>
+      <div class="try"><span>Tu A<sub>s</sub>:</span><input type="number" step="any" id="try2" aria-label="Tu armadura en cm²"><span class="u">cm²</span><span id="c2"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s3">
+    <div class="step-h"><span class="num">3</span><h2>Redondos y separación</h2><span class="tag" id="t3"></span></div>
+    <div class="step-b">
+      <p class="why">Ø ≥ 12 mm, al menos una barra en cada esquina y armadura simétrica, así que el número de barras es múltiplo de 4. La separación libre entre barras de una cara se calcula restando el recubrimiento mecánico (r = 3 cm más el cerco) y no debe pasar de 30 cm.</p>
+      <div class="decide"><label for="phi">Diámetro Ø</label><select id="phi"><option>12</option><option selected>16</option><option>20</option><option>25</option></select><span class="u">mm</span></div>
+      <div class="calc"><div class="row"><span class="k">Nº de redondos</span><span class="f" id="f31"></span></div></div>
+      <div class="decide"><label for="nDef">Nº definitivo</label><input id="nDef" type="number" step="4" min="4" placeholder="auto"><span class="sug" id="sug3"></span></div>
+      <div class="calc"><div class="row"><span class="k">Separación libre</span><span class="f" id="f32"></span></div></div>
+      <div class="note extra">Se restan 2·(3 + 0,8) cm de recubrimiento y cerco.</div>
+      <div class="try"><span>Tu nº de redondos:</span><input type="number" step="1" id="try3" aria-label="Tu número de redondos"><span id="c3"></span></div>
+    </div>
+  </article>
+
+  <article class="step" id="s4">
+    <div class="step-h"><span class="num">4</span><h2>Cercos</h2><span class="tag" id="t4"></span></div>
+    <div class="step-b">
+      <p class="why"><b>Diámetro:</b> el mayor entre 6 mm y un cuarto de la barra más gruesa.<br><b>Separación general:</b> la menor entre 15 veces la barra más fina, 30 cm y el lado menor del pilar.<br><b>Más juntos (×0,6):</b> en la altura de un lado mayor junto a cada forjado, y en los solapes de barras de más de Ø12.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Ø del cerco</span><span class="f" id="f41"></span></div>
+        <div class="row"><span class="k">Separación</span><span class="f" id="f42"></span></div>
+      </div>
+    </div>
+  </article>
+
+  <article class="step" id="s5">
+    <div class="step-h"><span class="num">5</span><h2>Esbeltez</h2><span class="tag" id="t5"></span></div>
+    <div class="step-b">
+      <p class="why">Un pilar alto y delgado se dobla (pandea) antes de aplastarse. La esbeltez mide lo alto y delgado que es: altura entre radio de giro. Si no pasa del límite, el pandeo no importa y esta calculadora vale. Si lo pasa, el pilar aguanta menos de lo previsto y hay que comprobarlo aparte.</p>
+      <div class="calc">
+        <div class="row"><span class="k">Esbeltez λ</span><span class="f" id="f51"></span></div>
+        <div class="row"><span class="k">Límite</span><span class="f" id="f52"></span></div>
+        <div class="row"><span class="k">Resultado</span><span class="f" id="f53"></span></div>
+      </div>
+      <div class="note extra">Se supone un pilar de edificio sujeto por los forjados (longitud de pandeo = altura). El límite usa los valores prudentes de la Guía del Código Estructural, así que avisa antes de lo necesario.</div>
+    </div>
+  </article>
+
+  <div class="box cta"><p>Ya sabes cuánto mide y cómo se arma el pilar. ¿Y cómo se construye? Repasa el proceso de ejecución paso a paso.</p><a class="btn" href="proceso-pilar.html">Proceso constructivo</a></div>
+  <footer>Herramienta didáctica de predimensionado (Construcción, ETSIE y ETSA, UGR). Resultados aproximados: no sustituyen al cálculo de las asignaturas de Estructuras ni sirven para un proyecto real. Procedimientos basados en <em>Números gordos en el proyecto de estructuras</em> (J. C. Arroyo) y <em>Cálculo rápido de estructuras</em> (S. Mute), con la Guía de aplicación del Código Estructural y el DB SE-C. Válido para pilares poco esbeltos a compresión; no sustituye al cálculo a flexocompresión con pandeo según el Código Estructural. Unidades: kN, m, cm, mm y N/mm². Errores o sugerencias: <a href="mailto:jaimevergara@ugr.es">jaimevergara@ugr.es</a>. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</main>
+</div>
+</div>
+
+
+  </div>
+</div>
+<nav class="tabbar glass" id="tabbar" aria-label="Grupos de herramientas"></nav>
+<div class="scrim" id="scrim"></div>
+<div class="sheet glass" id="sheet" role="dialog" aria-label="Herramientas"></div>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const nf=(x,d=2)=>isFinite(x)?x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const v=id=>parseFloat($(id).value);
+const R=s=>`<span class="res">${s}</span>`;
+const G=s=>`<span class="gen">${s}</span>`;
+const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+function check(tryId,outId,val,tol){
+  const t=parseFloat(String($(tryId).value).replace(',','.'));
+  if(!isFinite(t)||!isFinite(val)){$(outId).innerHTML='';return;}
+  const ok=Math.abs(t-val)<=Math.max(Math.abs(val)*tol,1e-9);
+  $(outId).innerHTML=ok?pill('ok','Correcto'):pill('bad','Revisa: no coincide');
+}
+const OUT=['f51','f52','f53','t5','f11','f21','f22','f23','f24','f31','f32','f41','f42','t1','t2','t3','t4','c1','c2','c3'];
+function empty(){
+  OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
+  $('sug3').textContent='';
+  $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce N<sub>k</sub> y el lado del pilar</span></div>';
+  $('sec').innerHTML='';$('pl').innerHTML='';$('des').innerHTML='';$('cuadro').innerHTML='';$('rd').innerHTML='<p class="gen">Introduce los datos del pilar para ver cómo se aplican.</p>';
+}
+function calc(){
+  const Nk=v('Nk'),a=v('a'),fyk=v('fyk'),fck=v('fck');
+  const b=v('b')>0?v('b'):a;
+  if(!(Nk>0&&a>0)){empty();return;}
+  const inc=$('inc').checked, Nd=(inc?1.2:1)*1.5*Nk;
+  $('f11').innerHTML=`${G(`N<sub>d</sub> = ${inc?'1,2·':''}1,5·N<sub>k</sub>`)} = ${inc?'1,2·':''}1,5·${nf(Nk)} = ${R(nf(Nd,1)+' kN')}`;
+  $('t1').innerHTML=pill('info',nf(Nd,0)+' kN');
+  check('try1','c1',Nd,0.01);
+  const Ac=a*b, fcd=fck/1.5, fyd=fyk/1.15, fyc=Math.min(fyd,400);
+  const Nc=Ac*fcd*1000, As=10*(Nd-Nc)/fyc;
+  const Am1=10*0.1*Nd/fyc, Am2=0.004*Ac*1e4, Amax=0.04*Ac*1e4, Asmin=Math.max(Am1,Am2), Asd=Math.max(As,Asmin);
+  $('f21').innerHTML=`${G('N<sub>c</sub> = A<sub>c</sub>·f<sub>cd</sub>')} = ${nf(a)}·${nf(b)}·${nf(fcd)}·1000 = ${R(nf(Nc,0)+' kN')}`;
+  $('f22').innerHTML=`${G('A<sub>s</sub> = (N<sub>d</sub> − N<sub>c</sub>)·10/f<sub>yc,d</sub>')} = (${nf(Nd,1)} − ${nf(Nc,0)})·10/${nf(fyc,0)} = ${R(nf(As)+' cm²')}`+(As<=0?' '+pill('info','basta el hormigón')+'<br>'+G('Negativo: el hormigón solo ya resiste N<sub>d</sub>. No es acero que quitar: se arma igualmente con la mínima.'):'');
+  $('f23').innerHTML=`${G('0,1·N<sub>d</sub>/f<sub>yc,d</sub>')} = ${nf(Am1)} cm² · ${G('4 ‰·A<sub>c</sub>')} = ${nf(Am2)} cm² · máxima 4 % = ${nf(Amax,1)} cm²`;
+  const tooMuch=Asd>Amax;
+  $('f24').innerHTML=R(nf(Asd)+' cm²')+' '+(tooMuch?pill('bad','supera el 4 %: agranda el pilar'):(Asmin>=As?pill('warn','manda la mínima'):pill('ok','manda el cálculo')));
+  $('t2').innerHTML=tooMuch?pill('bad','sección pequeña'):pill('info',nf(Asd)+' cm²');
+  check('try2','c2',Asd,0.02);
+  const phi=v('phi'), Ab=Math.PI*Math.pow(phi/20,2), nT=Asd/Ab, nS=Math.max(4,4*Math.ceil(nT/4-1e-9));
+  const nI=parseInt($('nDef').value,10), n=nI>=4?nI:nS;
+  const phiE=Math.max(6,Math.ceil(phi/4/2)*2), r=3+phiE/10;
+  const mA=Math.round(n/4)+1, side=Math.min(a,b)*100;
+  const s=(side-2*r-mA*phi/10)/(mA-1);
+  $('f31').innerHTML=`${G('A<sub>s</sub>/A<sub>Ø</sub>')} = ${nf(Asd)}/${nf(Ab,3)} = ${R(nf(nT))}`;
+  $('sug3').textContent=`Sugerido: ${nS} Ø${phi} (múltiplo de 4)`;
+  $('f32').innerHTML=`${G('(lado − 2·r − m·Ø)/(m − 1)')}, con m = ${mA} barras por cara = (${nf(side,0)} − 2·${nf(r,1)} − ${mA}·${nf(phi/10,1)})/${mA-1} = ${R(nf(s,1)+' cm')} `+(s>30?pill('warn','> 30 cm: más barras'):s<Math.max(2,phi/10)?pill('bad','no caben'):pill('ok','correcta'));
+  $('t3').innerHTML=n*Ab>=Asd-1e-9?pill('ok',`${n} Ø${phi}`):pill('bad','Faltan barras');
+  check('try3','c3',nS,0.001);
+  const st=Math.min(15*phi/10,30,side);
+  $('f41').innerHTML=`${G('máx(6 mm; Ø/4)')} = máx(6; ${nf(phi/4,1)}) → ${R('Ø'+phiE)}`;
+  $('f42').innerHTML=`${G('mín(15·Ø; 30 cm; lado menor)')} = mín(${nf(15*phi/10,0)}; 30; ${nf(side,0)}) = ${R(nf(st,0)+' cm')} · junto a forjados ${R(nf(Math.floor(0.6*st),0)+' cm')}`;
+  $('t4').innerHTML=pill('info',`Ø${phiE} c/${Math.floor(st)}`);
+  $('summary').innerHTML=`
+    <div><span class="lab">Pilar</span><span class="big">${nf(a*100,0)} × ${nf(b*100,0)} cm</span></div>
+    <div><span class="lab">Armadura longitudinal</span><span class="big">${n} Ø${phi}</span></div>
+    <div><span class="lab">Cercos</span><span class="big">Ø${phiE} c/${Math.floor(st)} (c/${Math.floor(0.6*st)} en extremos)</span></div>`;
+  const Aset=n*Ab, okp=(c,t)=>pill(c,t);
+  $('rd').innerHTML=`<ul class="rl">
+    <li><b>Diámetro</b><span>Ø${phi} ≥ 12 → ${okp(phi>=12?'ok':'bad',phi>=12?'cumple':'no cumple')}</span></li>
+    <li><b>Barras</b><span>${n} Ø${phi}: ${n===4?'una en cada esquina':'4 en las esquinas y '+(n-4)+' intermedias'} → ${okp(n>=4?'ok':'bad',n>=4?'cumple':'faltan')}</span></li>
+    <li><b>Armadura mínima</b><span>Por carga: ${nf(Am1)} cm². Por cuantía (4 ‰): ${nf(Am2)} cm². Manda ${Am1>=Am2?'la carga':'la cuantía'}: ${R(nf(Asmin)+' cm²')}. Colocas ${R(nf(Aset)+' cm²')} → ${okp(Aset>=Asd-1e-9?'ok':'bad',Aset>=Asd-1e-9?'cumple':'insuficiente')}</span></li>
+    <li><b>Armadura máxima</b><span>4 % de ${nf(Ac*1e4,0)} cm² = ${nf(Amax,1)} cm². Colocas ${nf(Aset)} cm² → ${okp(Aset<=Amax?'ok':'bad',Aset<=Amax?'cumple':'agranda el pilar')}</span></li>
+    <li><b>Separación entre barras</b><span>${nf(s,1)} cm entre barras de una cara → ${okp(s>30?'warn':(s<Math.max(2,phi/10)?'bad':'ok'),s>30?'más de 30: añade barras':(s<Math.max(2,phi/10)?'no caben':'cumple'))}</span></li>
+    <li><b>Diámetro del cerco</b><span>Un cuarto de Ø${phi} son ${nf(phi/4,1)} mm; el mínimo es 6 mm → ${R('Ø'+phiE)}</span></li>
+    <li><b>Separación de cercos</b><span>15·Ø = ${nf(15*phi/10,0)} cm, 30 cm, lado menor ${nf(side,0)} cm → ${R(nf(st,0)+' cm')}. Junto a los forjados y en solapes, ×0,6 = ${R(nf(Math.floor(0.6*st),0)+' cm')}</span></li>
+  </ul>`;
+  const Lh=v('L'), sS=$('s5');
+  if(Lh>0){
+    const lado=Math.min(a,b), i=lado/Math.sqrt(12), lam=Lh/i;
+    const lim=35;
+    $('f51').innerHTML=`${G('λ = altura / radio de giro')} = ${nf(Lh*100,0)}/${nf(i*100,1)} = ${R(nf(lam,1))}`;
+    let okE, msg;
+    if(Lh<=3){okE=true;$('f52').innerHTML=G('No se comprueba (altura ≤ 3 m)');msg=pill('ok','Sin problema de pandeo')+'<br>'+G('Con altura de planta ≤ 3 m el pandeo se desprecia en el predimensionado.');}
+    else{
+      $('f52').innerHTML=`${R('λ ≤ '+lim)} ${G('(valor orientativo en pilares de edificación)')}`;
+      okE=lam<=lim;
+      if(okE)msg=pill('ok','Poco esbelto')+'<br>'+G('El pandeo no importa: el predimensionado vale.');
+      else{
+        let sug=null;
+        for(let l=Math.floor(lado*20+1e-6)*5+5;l<=120;l+=5){if(Lh/(l/100/Math.sqrt(12))<=lim){sug=l;break;}}
+        msg=pill('warn','Esbelto')+'<br>'+G(sug?`Aumenta el lado menor a ${sug} cm (o añade arriostramiento) y vuelve a calcular.`:'Aumenta bastante la sección o arriostra el pilar.');
+      }
+    }
+    $('f53').innerHTML=msg;
+    $('t5').innerHTML=okE?pill('ok',Lh<=3?'sin pandeo':`λ = ${nf(lam,0)}`):pill('warn',`λ = ${nf(lam,0)}`);
+  } else {['f51','f52','f53'].forEach(id=>$(id).innerHTML='<span class="gen">—</span>');$('t5').innerHTML='';$('f51').innerHTML='<span class="gen">Introduce la altura libre L para valorar la esbeltez.</span>';}
+  draw(a,b,n,phi);
+  drawDes(a,b,n,phi,phiE,st,r,Lh>0?Lh:NaN,fyk);
+}
+function drawDes(a,b,n,phi,phiE,st,r,Lh,fyk){
+  const el=$('des'), cu=$('cuadro'), MU='var(--muted)';
+  const tx=(x,y,t,c,an,w)=>`<text x="${x}" y="${y}" text-anchor="${an||'middle'}" font-family="IBM Plex Mono,monospace" font-size="10.5"${w?' font-weight="700"':''} fill="${c||MU}">${t}</text>`;
+  const H=Lh>0?Lh:3, lado=Math.max(a,b)*100, side=Math.min(a,b)*100;
+  const s2=Math.floor(st), s1=Math.floor(0.6*st), lr=Math.min(lado, H*100/2);
+  const lbc=40*phi/1000;
+  const hc=H*100, pos=[];
+  let y=s1/2;while(y<=lr+1e-9){pos.push(y);y+=s1;}
+  const lastB=pos[pos.length-1], zT=hc-lr, nMid=Math.max(0,Math.ceil((zT-lastB)/s2-1e-9)), sm=nMid?(zT-lastB)/nMid:0;
+  for(let k=1;k<=nMid;k++)pos.push(lastB+k*sm);
+  const nz=pos.length, zone=pos.slice(0,Math.max(0,Math.min(pos.length,Math.round(lr/s1))));
+  zone.forEach(p=>pos.push(hc-p));
+  const all=[...new Set(pos.map(p=>Math.round(p*100)/100))].sort((x,y)=>x-y);
+  const Y0=290, SC=200/hc, YT=Y0-hc*SC, X0=120, W=64, PY=p=>Y0-p*SC, ext=Math.min(lbc*100*SC,60);
+  let g=`<rect x="70" y="${Y0}" width="164" height="14" fill="var(--steel)" stroke="var(--steel-edge)" stroke-width="0.8"/><rect x="70" y="${YT-14}" width="164" height="14" fill="var(--steel)" stroke="var(--steel-edge)" stroke-width="0.8"/><rect x="${X0}" y="${YT}" width="${W}" height="${Y0-YT}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1"/>`;
+  all.forEach(p=>{g+=`<line x1="${X0+4}" y1="${PY(p)}" x2="${X0+W-4}" y2="${PY(p)}" stroke="#7F77DD" stroke-width="1.2"/>`;});
+  const off=12, bp=(x,d)=>`<path d="M${x} ${Y0} L${x} ${YT} L${x+d*off} ${YT-14} L${x+d*off} ${YT-14-ext}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round"/>`;
+  g+=bp(X0+7,1)+bp(X0+W-7,-1);
+  g+=`<line x1="${X0+7}" y1="${YT-14-ext}" x2="${X0+7}" y2="${YT-14}" stroke="var(--bg,#fff)" stroke-width="1" stroke-dasharray="3 3" opacity="0"/>`;
+  const dim=(ya,yb,lab,xx)=>`<g stroke="${MU}" stroke-width="0.8"><line x1="${xx}" y1="${ya}" x2="${xx}" y2="${yb}"/><line x1="${xx-4}" y1="${ya}" x2="${xx+4}" y2="${ya}"/><line x1="${xx-4}" y1="${yb}" x2="${xx+4}" y2="${yb}"/></g>`+tx(xx+8,(ya+yb)/2+4,lab,MU,'start');
+  g+=dim(PY(0),PY(lr),'c/'+s1,252)+dim(PY(lr),PY(hc-lr),'c/'+s2,252)+dim(PY(hc-lr),PY(hc),'c/'+s1,252);
+  g+=dim(PY(0),PY(hc),nf(H)+' m',22);
+  g+=tx(X0+7-12,YT-14-ext+2,'①','var(--accent)','end',1);
+  g+=tx(X0+W+10,PY(pos[0]||s1/2)+4,'','#7F77DD');
+  g+=tx(X0+W/2,YT-14-ext-8,'solape '+nf(lbc)+' m',MU);
+  g+=tx(X0+W/2,PY(hc/2)+4,'②','#7F77DD','middle',1);
+  el.setAttribute('viewBox','0 0 380 330');el.innerHTML=g;
+  const f=x=>nf(x,2), td='style="padding:3px 5px;border-bottom:1px solid var(--line,#ccc);text-align:right"', tl='style="padding:3px 5px;border-bottom:1px solid var(--line,#ccc);text-align:left"';
+  const row=(p,d,nn,forma,l)=>`<tr><td ${tl}><b>${p}</b></td><td ${td}>Ø${d}</td><td ${td}>${nn}</td><td ${tl}>${forma}</td><td ${td}>${f(l)}</td><td ${td}>${f(nn*l)}</td></tr>`;
+  const lc=2*(a+b)-8*r/100+0.20, nC=all.length;
+  cu.innerHTML=`<table style="border-collapse:collapse;font-family:IBM Plex Mono,monospace;font-size:11px;width:100%"><thead><tr><th ${tl}>Pos.</th><th ${td}>Ø</th><th ${td}>Nº</th><th ${tl}>Forma</th><th ${td}>Long. (m)</th><th ${td}>Total (m)</th></tr></thead><tbody>`+row('①',phi,n,'con quiebro y solape',H+lbc)+row('②',phiE,nC,'cerco (aprox.)',lc)+'</tbody></table>'+(Lh>0?'':'<p class="hint" style="margin-top:6px">Altura no indicada: despiece con 3,00 m.</p>');
+}
+function draw(a,b,n,phi){
+  const sc=Math.min(170/a,170/b), W=a*sc, H=b*sc, x0=(360-W)/2, y0=(230-H)/2;
+  let g=`<rect x="${x0}" y="${y0}" width="${W}" height="${H}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/>`;
+  const c=0.04*sc; g+=`<rect x="${x0+c}" y="${y0+c}" width="${W-2*c}" height="${H-2*c}" rx="3" fill="none" stroke="var(--rebar)" stroke-width="1.5"/>`;
+  const m=Math.round(n/4)+1, pts=[];
+  for(let i=0;i<m;i++){const t=i/(m-1);pts.push([t,0],[t,1]);if(i>0&&i<m-1){pts.push([0,t],[1,t]);}}
+  const cc=c+5;pts.forEach(([u,w])=>g+=`<circle cx="${x0+cc+(W-2*cc)*u}" cy="${y0+cc+(H-2*cc)*w}" r="4" fill="var(--rebar)"/>`);
+  $('sec').innerHTML=g;
+  const L=['Ø ≥ 12 mm','1 barra por esquina','A_s mín = máx(0,1·N_d/f_yc,d ; 4 ‰)','A_s máx = 4 % A_c','s libre ≤ 30 cm','cerco ≥ máx(6; Ø/4)','s cercos ≤ mín(15Ø; 30; lado)'];
+  $('pl').innerHTML=L.map((t,i)=>`<text x="20" y="${30+i*26}" font-family="IBM Plex Mono,monospace" font-size="12" fill="var(--ink)">· ${t.replace(/_([a-z,]+)/g,'$1')}</text>`).join('');
+}
+$('clear').addEventListener('click',()=>{
+  ['Nk','a','b','L','nDef','try1','try2','try3'].forEach(id=>{$(id).value='';});
+  $('fyk').value='500';$('fck').value='25';$('phi').value='16';$('inc').checked=true;
+  calc();$('Nk').focus();
+});
+$('practica').addEventListener('change',()=>document.querySelector('.wrap').classList.toggle('practice',$('practica').checked));
+document.querySelectorAll('input,select').forEach(el=>{if(el.id!=='practica')el.addEventListener('input',calc);});
+calc();
+})();
+</script>
+
+<script src="pdf.js"></script>
+
+<script src="app.js"></script>
+<script src="apple-nav.js"></script>
+</body></html>
