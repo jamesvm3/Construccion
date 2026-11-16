@@ -69,7 +69,7 @@
         </details>
       </div>
     </div>
-    <div class="box" style="margin-top:16px"><h3>Despiece del pilar (orientativo)</h3><svg id="des" viewBox="0 0 380 330" role="img" aria-label="Alzado del pilar con barras y cercos"></svg><div id="cuadro" style="overflow-x:auto;margin-top:8px"></div><details class="hint" style="margin-top:8px"><summary style="cursor:pointer"><b>+</b> Convenio del despiece y notas</summary>Convenio del despiece: las barras longitudinales recorren la altura libre y arrancan en el forjado inferior, donde se apoyan y se cortan, y salen por arriba un solape de 40Ø (el mismo que en las zapatas) para empalmar con las del pilar superior. Los cercos van a la separación calculada en el tramo central y a 0,6 de esa separación junto a los forjados, en una longitud igual al lado mayor del pilar. Si no has indicado la altura libre, se dibuja con 3,00 m. Los cercos son aproximados (ganchos de 10 cm). Las longitudes reales salen del despiece de proyecto.</details></div>
+    <div class="box" style="margin-top:16px"><h3>Despiece del pilar (orientativo)</h3><svg id="des" viewBox="0 0 380 330" role="img" aria-label="Alzado del pilar con barras y cercos"></svg><div id="cuadro" style="overflow-x:auto;margin-top:8px"></div><details class="hint" style="margin-top:8px"><summary style="cursor:pointer"><b>+</b> Convenio del despiece y notas</summary>Convenio del despiece: las barras longitudinales recorren la altura libre y arrancan en el forjado inferior, donde se apoyan y se cortan, y salen por arriba un solape de 40Ø (el mismo que en las zapatas) para empalmar con las del pilar superior. La longitud de la barra es la altura libre más el canto del forjado, donde se hace el quiebro (se supone 0,30 m), más el solape. Los cercos van a la separación calculada en el tramo central y a 0,6 de esa separación junto a los forjados, en una longitud igual al lado mayor del pilar. Si no has indicado la altura libre, se dibuja con 3,00 m. Los cercos son aproximados (ganchos de 10 cm). Las longitudes reales salen del despiece de proyecto.</details></div>
   </section>
 
   <article class="step" id="s1">
@@ -164,7 +164,7 @@ function empty(){
   OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
   $('sug3').textContent='';
   $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce N<sub>k</sub> y el lado del pilar</span></div>';
-  $('sec').innerHTML='';$('pl').innerHTML='';$('des').innerHTML='';$('cuadro').innerHTML='';$('rd').innerHTML='<p class="gen">Introduce los datos del pilar para ver cómo se aplican.</p>';
+  $('sec').innerHTML='';$('pl').innerHTML='';$('des').innerHTML='';window.SKP=null;$('cuadro').innerHTML='';$('rd').innerHTML='<p class="gen">Introduce los datos del pilar para ver cómo se aplican.</p>';
 }
 function calc(){
   const Nk=v('Nk'),a=v('a'),fyk=v('fyk'),fck=v('fck');
@@ -248,6 +248,7 @@ function drawDes(a,b,n,phi,phiE,st,r,Lh,fyk){
   const nz=pos.length, zone=pos.slice(0,Math.max(0,Math.min(pos.length,Math.round(lr/s1))));
   zone.forEach(p=>pos.push(hc-p));
   const all=[...new Set(pos.map(p=>Math.round(p*100)/100))].sort((x,y)=>x-y);
+  window.SKP={kind:'pilar',A:a,B:b,H:H,N:n,PHI:phi};
   const Y0=290, SC=200/hc, YT=Y0-hc*SC, X0=120, W=64, PY=p=>Y0-p*SC, ext=Math.min(lbc*100*SC,60);
   let g=`<rect x="70" y="${Y0}" width="164" height="14" fill="var(--steel)" stroke="var(--steel-edge)" stroke-width="0.8"/><rect x="70" y="${YT-14}" width="164" height="14" fill="var(--steel)" stroke="var(--steel-edge)" stroke-width="0.8"/><rect x="${X0}" y="${YT}" width="${W}" height="${Y0-YT}" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1"/>`;
   all.forEach(p=>{g+=`<line x1="${X0+4}" y1="${PY(p)}" x2="${X0+W-4}" y2="${PY(p)}" stroke="#7F77DD" stroke-width="1.2"/>`;});
@@ -265,7 +266,7 @@ function drawDes(a,b,n,phi,phiE,st,r,Lh,fyk){
   const f=x=>nf(x,2), td='style="padding:3px 5px;border-bottom:1px solid var(--line,#ccc);text-align:right"', tl='style="padding:3px 5px;border-bottom:1px solid var(--line,#ccc);text-align:left"';
   const row=(p,d,nn,forma,l)=>`<tr><td ${tl}><b>${p}</b></td><td ${td}>Ø${d}</td><td ${td}>${nn}</td><td ${tl}>${forma}</td><td ${td}>${f(l)}</td><td ${td}>${f(nn*l)}</td></tr>`;
   const lc=2*(a+b)-8*r/100+0.20, nC=all.length;
-  cu.innerHTML=`<table style="border-collapse:collapse;font-family:IBM Plex Mono,monospace;font-size:11px;width:100%"><thead><tr><th ${tl}>Pos.</th><th ${td}>Ø</th><th ${td}>Nº</th><th ${tl}>Forma</th><th ${td}>Long. (m)</th><th ${td}>Total (m)</th></tr></thead><tbody>`+row('①',phi,n,'con quiebro y solape',H+lbc)+row('②',phiE,nC,'cerco (aprox.)',lc)+'</tbody></table>'+(Lh>0?'':'<p class="hint" style="margin-top:6px">Altura no indicada: despiece con 3,00 m.</p>');
+  cu.innerHTML=`<table style="border-collapse:collapse;font-family:IBM Plex Mono,monospace;font-size:11px;width:100%"><thead><tr><th ${tl}>Pos.</th><th ${td}>Ø</th><th ${td}>Nº</th><th ${tl}>Forma</th><th ${td}>Long. (m)</th><th ${td}>Total (m)</th></tr></thead><tbody>`+row('①',phi,n,'con quiebro y solape',H+0.30+lbc)+row('②',phiE,nC,'cerco (aprox.)',lc)+'</tbody></table>'+(Lh>0?'':'<p class="hint" style="margin-top:6px">Altura no indicada: despiece con 3,00 m.</p>');
 }
 function draw(a,b,n,phi){
   const sc=Math.min(170/a,170/b), W=a*sc, H=b*sc, x0=(360-W)/2, y0=(230-H)/2;
@@ -293,4 +294,5 @@ calc();
 
 <script src="app.js"></script>
 <script src="apple-nav.js"></script>
+<script src="skp.js"></script>
 </body></html>

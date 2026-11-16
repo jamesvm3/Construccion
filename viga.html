@@ -146,7 +146,7 @@ const OUT=['f10','f11','f12','f21','f22','f23','f31','f32','f33','f34','f41','f4
 function empty(){
   OUT.forEach(id=>{const e=$(id);if(e)e.innerHTML=id[0]==='f'?'<span class="gen">—</span>':'';});
   $('summary').innerHTML='<div><span class="lab">Sin datos</span><span class="big">Introduce q, S, L, b y h</span></div>';
-  $('sec').innerHTML='';$('pl').innerHTML='';$('alz').innerHTML='';$('cuadro').innerHTML='';
+  $('sec').innerHTML='';$('pl').innerHTML='';$('alz').innerHTML='';$('cuadro').innerHTML='';window.SKP=null;
 }
 function calc(){
   $('fl-P').style.display=$('tramo').value==='vol'?'':'none';
@@ -213,7 +213,7 @@ function calc(){
   const lbIIv=Math.max(1.4*mmv*phiN*phiN,1.4*fyk/20*phiN)/1000;
   const ratv=Math.min(1,An/(nN*AbN));
   const lbnv=Math.max(lbIIv*ratv,10*phiN/1000,0.15,lbIIv/3);
-  drawAlz({tramo,L,pw,Vd,Vcu,Aa,scR,ram,phiE,nP,nN,phiP,phiN,smax,b,h,x0:x0v,lbn:lbnv,d,lbII:lbIIv,rat:ratv});
+  drawAlz({tramo,qd,L,pw,Vd,Vcu,Aa,scR,ram,phiE,nP,nN,phiP,phiN,smax,b,h,x0:x0v,lbn:lbnv,d,lbII:lbIIv,rat:ratv});
   $('summary').innerHTML=`
     <div><span class="lab">Viga</span><span class="big">${nf(b*100,0)} × ${nf(h*100,0)} cm</span></div>
     <div><span class="lab">Inferior / superior</span><span class="big">${nP} Ø${phiP} / ${nN} Ø${phiN}</span></div>
@@ -249,12 +249,16 @@ function draw(tr,b,h,nP,nN,X){
   $('sec').innerHTML=s;
 }
 function drawAlz(o){
-  const {tramo,L,pw,Vd,Vcu,Aa,scR,ram,phiE,nP,nN,phiP,phiN,smax,b,h,x0,lbn,d,lbII,rat}=o, el=$('alz');$('cuadro').innerHTML='';
+  const {tramo,qd,L,pw,Vd,Vcu,Aa,scR,ram,phiE,nP,nN,phiP,phiN,smax,b,h,x0,lbn,d,lbII,rat}=o, el=$('alz');$('cuadro').innerHTML='';
   const MU='var(--muted)';
   const tx=(x,y,t,c,a,w)=>`<text x="${x}" y="${y}" text-anchor="${a||'middle'}" font-family="IBM Plex Mono,monospace" font-size="10.5"${w?' font-weight="700"':''} fill="${c||MU}">${t}</text>`;
-  if(tramo==='vol'){el.setAttribute('viewBox','0 0 380 60');el.innerHTML=tx(190,34,'Sin alzado de cercos para el voladizo');return;}
+  window.SKP=null;
+  if(tramo==='vol'){el.setAttribute('viewBox','0 0 380 60');el.innerHTML=tx(190,34,'Sin alzado de cercos para el voladizo');
+    if(scR>=3){const azv=Aa>0?Math.max(0,Math.min(L-pw/2,(Vd-Vcu)/qd-pw/2)):0;window.SKP={kind:'viga',VOL:1,L:L,PW:pw,BV:b,HV:h,NP:nP,PHIP:phiP,NN:nN,PHIN:phiN,PHIE:phiE,SCR:scR,AZ:azv,X0:0,LBN:0};}
+    return;}
   const lc=L-pw;
   if(!(lc>0)){el.innerHTML='';return;}
+  if(!(scR>=3)){el.setAttribute('viewBox','0 0 380 60');el.innerHTML=tx(190,34,'Cortante excesivo: aumenta la sección o las ramas/Ø');return;}
   const half=lc/2, s1=scR/100, s2m=smax/100;
   const xz=Vd>Vcu?(L/2)*(1-Vcu/Vd):0, az=Aa>0?Math.max(0,Math.min(half,xz-pw/2)):0;
   const pos=[];let x=s1/2;
@@ -299,6 +303,7 @@ function drawAlz(o){
   
   
   
+  window.SKP={kind:'viga',L:L,PW:pw,BV:b,HV:h,NP:nP,PHIP:phiP,NN:nN,PHIN:phiN,PHIE:phiE,SCR:scR,AZ:az,X0:x0,LBN:lbn};
   el.setAttribute('viewBox','0 0 380 222');el.innerHTML=g;
 }
 $('clear').addEventListener('click',()=>{
@@ -324,6 +329,7 @@ calc();
 </script>
 
 <script src="pdf.js"></script>
+<script src="skp.js"></script>
 
 <script src="app.js"></script>
 <script src="apple-nav.js"></script>

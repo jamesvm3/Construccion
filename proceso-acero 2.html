@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<script>try{history.scrollRestoration="manual"}catch(e){}addEventListener("pageshow",function(){scrollTo(0,0)});</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Proceso: estructura de acero</title>
+<link rel="stylesheet" href="apple.css">
+</head><body data-page="proceso" data-tool="pilar-acero" data-mat="A">
+<div class="shell">
+  <nav class="sidebar glass" id="sidebar" aria-label="Herramientas"></nav>
+  <div class="content">
+    <header class="navbar glass" id="navbar"></header>
+<div class="wrap">
+  <header class="top mat-A"><div><div class="mbadge"><b>A</b><span>PROCESO</span></div><div><div class="eyebrow">Construcción · ETSIE y ETSA · UGR</div><h1><small>Acero · Montaje</small>Estructura de acero</h1></div></div><p class="lead">Cuatro formas de repasar cómo se monta una estructura de acero en obra: de la documentación de montaje y las placas base a la protección contra la corrosión. Las piezas llegan fabricadas de taller: lo que se decide en obra es el orden, el apriete y las uniones.</p></header>
+  <div class="calclinks"><a href="pilar-acero.html">Calcular el soporte →</a><a href="basa.html">Calcular la basa →</a><a href="soldadura.html">Calcular la soldadura →</a></div>
+<div class="mode">Proceso constructivo <span>· cómo se ejecuta en obra</span></div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <main id="main"></main>
+  <footer>Herramienta de estudio de la asignatura Construcción (ETSIE y ETSA, UGR). Material orientativo para el repaso: en obra rigen el proyecto, el estudio geotécnico y las indicaciones de la dirección facultativa. Las referencias normativas indicadas son las verificadas; el resto de pasos son buena práctica constructiva. © 2026 Jaime Vergara Muñoz, Universidad de Granada. Obra con licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener license">CC BY-NC-ND 4.0</a>: puede compartirse citando la autoría, sin uso comercial ni obras derivadas.</footer>
+</div>
+
+
+  </div>
+</div>
+<nav class="tabbar glass" id="tabbar" aria-label="Grupos de herramientas"></nav>
+<div class="scrim" id="scrim"></div>
+<div class="sheet glass" id="sheet" role="dialog" aria-label="Herramientas"></div>
+<script>
+var STEPS=[
+{id:1,t:"Revisar la documentación de montaje y recibir las piezas",
+ q:"Antes de izar nada, la dirección facultativa revisa y aprueba la documentación que elabora el montador: memoria de montaje (con las tolerancias de posición, las ayudas al montaje, las uniones en obra, la protección de soldaduras y el apriete de tornillos), planos de montaje (con medios de izado y apuntalados provisionales) y plan de puntos de inspección. Se comprueba que las piezas recibidas coinciden con las pedidas.",
+ w:"Una estructura de acero llega fabricada en taller y se ensambla en obra como un mecanismo: cada pieza tiene su sitio y su orden. Si falta algún documento o la pieza no es la pedida, se descubre cuando ya está en el aire.",
+ c:["Memoria de montaje, planos y plan de inspección aprobados","Tolerancias de posición coherentes con el sistema general, sobre todo en placas base","Piezas recibidas conformes con el pedido","Medios de izado y apuntalados provisionales definidos"],
+ r:"DB SE-A 12.5.1 (documentación de montaje) y 10.8.1 (recepción de productos)",ref:true,
+ antes:"Es el primer paso: sin documentación aprobada ni piezas recibidas no se debe empezar el montaje."},
+{id:2,t:"Replantear y preparar las placas base",
+ q:"Se replantean las placas base con las tolerancias de la documentación de montaje y se comprueban los pernos de anclaje. Cada placa se nivela y se apoya sobre mortero o calzos, y bajo la placa puede ir mortero de nivelación: la resistencia del apoyo del cálculo vale si el mortero tiene una resistencia al menos de 0,2 veces la del hormigón y un espesor no mayor de 0,2 veces el lado menor de la placa.",
+ w:"El pilar nace de la placa base: si esta queda desplazada, inclinada o mal asentada, todo el pilar empieza fuera de plano y la carga no se reparte sobre el hormigón como se calculó.",
+ c:["Placa replanteada dentro de tolerancias","Pernos de anclaje en su posición y roscas protegidas","Placa nivelada, con apoyo continuo sobre mortero o calzos","Mortero de nivelación con resistencia y espesor conformes"],
+ r:"DB SE-A 12.5.1 (replanteo de placas base) y 8.8.1 (mortero de nivelación)",ref:true,
+ antes:"Necesita la documentación de montaje aprobada, donde figuran las tolerancias de las placas."},
+{id:3,t:"Izar y aplomar los pilares con arriostramiento provisional",
+ q:"Los pilares se izan con los medios y las ayudas al montaje previstos (orejetas de izado, casquillos provisionales de apoyo), se centran sobre la placa y se aploman. Hasta que la estructura esté conectada, se mantienen con apuntalados o arriostramientos provisionales, según los planos de montaje.",
+ w:"Un pilar de acero recién colocado no se sostiene solo: apoya sobre una placa con pernos y puede volcar con una pequeña carga lateral, un golpe o el viento. Y las comprobaciones de seguridad durante el montaje son parte de la memoria de montaje.",
+ c:["Pilar centrado y aplomado sobre su placa","Tuercas de los pernos apretadas según procedimiento","Arriostramiento provisional colocado antes de soltar la grúa","Comprobaciones de seguridad durante el montaje realizadas"],
+ r:"DB SE-A 12.5.1 (planos de montaje: izado y apuntalados provisionales)",ref:true,
+ antes:"Necesita las placas base y los pernos ya replanteados y nivelados."},
+{id:4,t:"Colocar las vigas y presentar las uniones",
+ q:"Se izan las vigas y se presentan sobre las uniones previstas (angulares, casquillos, chapas), centradas y alineadas, con los medios provisionales de montaje que indique la documentación. Los dispositivos provisionales deben ser fáciles de retirar sin dañar la pieza. Las uniones se dejan puntedas o con tornillos de montaje hasta comprobar la geometría.",
+ w:"Presentar la unión sin cerrarla permite corregir plomos y alineaciones antes de que el apriete o la soldadura la fijen. Cerrar una unión desalineada obliga a forzar las piezas y deja tensiones que no estaban calculadas.",
+ c:["Viga a su cota y alineada con los pilares","Unión presentada, sin forzar las piezas","Dispositivos provisionales retirables sin daño","Geometría comprobada antes de cerrar la unión"],
+ r:"DB SE-A 10.3 (soldaduras: dispositivos provisionales) y 12.5.1",ref:true,
+ antes:"Necesita los pilares ya aplomados y arriostrados."},
+{id:5,t:"Apretar las uniones atornilladas",
+ q:"Los tornillos son de 12 mm de diámetro como mínimo, salvo que el proyecto diga otra cosa. Cada conjunto debe quedar apretado a tope, sin sobrepretensar, y en los grupos grandes el apriete se hace de los tornillos centrales hacia el exterior, con algún ciclo adicional. Si los tornillos son pretensados, se usan arandelas endurecidas y se sigue uno de los métodos calibrados: par torsor, giro de tuerca, indicador directo de tensión o combinado. No se sueldan los tornillos.",
+ w:"Un grupo de tornillos reparte el esfuerzo si todos trabajan a la vez. Si se aprieta desde el borde, la chapa no asienta y los centrales quedan flojos. Y un conjunto ya apretado hasta el pretensado mínimo y luego aflojado se descarta: ha perdido la condición con la que se calculó.",
+ c:["Diámetro mínimo y longitud de espiga correctos","Apriete progresivo, del centro al borde, en ciclos","Pretensado con el método calibrado y las arandelas indicadas","Conjuntos aflojados tras pretensar, descartados"],
+ r:"DB SE-A 10.4 (uniones atornilladas)",ref:true,
+ antes:"Necesita las uniones presentadas y la geometría comprobada."},
+{id:6,t:"Ejecutar las soldaduras en obra",
+ q:"El soldeo lo hacen soldadores cualificados, con las uniones limpias y las piezas en contacto estrecho. La soldadura en ángulo no puede ser menor que el espesor de garganta y el lado especificados. Los defectos no se cubren con soldaduras posteriores y se eliminan en cada pasada, igual que la escoria. Los puntos de soldadura provisionales no incorporados a las soldaduras finales se eliminan. Si el material y el enfriamiento lo piden, se precalienta, y se extiende 75 mm en cada componente.",
+ w:"Una soldadura es un cordón continuo que debe tener el espesor calculado de garganta. Cubrir un defecto con otra pasada lo esconde sin arreglarlo, y la escoria atrapada debilita el cordón.",
+ c:["Soldadores cualificados y procedimiento definido","Garganta y lado no menores que lo especificado","Defectos y escoria eliminados en cada pasada","Puntos provisionales eliminados"],
+ r:"DB SE-A 10.3 (soldaduras) y 12.5.2 (personal cualificado)",ref:true,
+ antes:"Necesita las piezas presentadas y alineadas, y las superficies limpias."},
+{id:7,t:"Controlar las uniones antes de proteger",
+ q:"Se inspeccionan visualmente y, cuando proceda, con ensayos, las soldaduras y el apriete de los tornillos, siguiendo el plan de puntos de inspección. Se comprueba que cada operación se ha hecho en el orden y con las herramientas especificados. No se hace ningún tratamiento superficial sobre los elementos de fijación antes de que se hayan inspeccionado.",
+ w:"Una vez pintada, una unión ya no se puede revisar: la pintura tapa fisuras, escorias y tornillos mal apretados. Por eso el control va antes del tratamiento superficial, y no después.",
+ c:["Inspección según el plan de puntos de inspección","Soldaduras y apriete comprobados","Disconformidades corregidas y reensayadas","Elementos de fijación sin tratar hasta la inspección"],
+ r:"DB SE-A 12.5.2 (control del montaje) y 10.7",ref:true,
+ antes:"Necesita las uniones ya ejecutadas, atornilladas y soldadas."},
+{id:8,t:"Proteger frente a la corrosión",
+ q:"Se limpian las superficies (chorreado o cepillado metálico, quitando la cascarilla, el polvo y la grasa) y se aplica el recubrimiento (pintura o galvanizado) según las instrucciones del fabricante. Si se dan varias capas, cada una lleva una tonalidad distinta. Las superficies que van a estar en contacto con el hormigón no se pintan, solo se limpian, y el tratamiento de las zonas contiguas se extiende al menos 30 mm sobre ellas. No se pinta sobre una soldadura sin quitar antes las escorias.",
+ w:"El acero se oxida con el aire y la humedad, y la protección es la barrera. Pintar donde después va hormigón impide la adherencia, y pintar sobre escoria o grasa hace que la pintura se desprenda en poco tiempo.",
+ c:["Superficies limpias y preparadas antes de pintar","Capas de tonalidades distintas","Superficies en contacto con el hormigón sin pintar, con tratamiento 30 mm más allá","Soldaduras sin escorias antes de pintar"],
+ r:"DB SE-A 10.6 (tratamientos de protección)",ref:true,
+ antes:"Va al final: se protege cuando las uniones ya están ejecutadas y controladas."}
+];
+var FAILS=[
+{s:"Al montar el segundo pilar, los agujeros de la viga no coinciden con los de la unión y hay que forzar las piezas con la grúa.",
+ o:["Las placas base y los pilares se replantearon fuera de tolerancias","La pintura era de dos capas","Los tornillos eran de 16 mm","El mortero era muy resistente"],a:0,
+ cons:"Se fuerza la estructura y quedan tensiones de montaje que no estaban en el cálculo.",
+ prev:"Paso 2: replantear las placas base con las tolerancias de la documentación de montaje y comprobar los pernos."},
+{s:"Una ráfaga de viento tumba un pilar recién izado, antes de colocar las vigas.",
+ o:["No tenía arriostramiento provisional","Se usó pintura galvanizada","Las tuercas eran de 12 mm","El mortero era de nivelación"],a:0,
+ cons:"Un pilar sin conectar apoya solo en su placa y puede volcar con una pequeña carga lateral.",
+ prev:"Paso 3: apuntalado o arriostramiento provisional según los planos de montaje, antes de soltar la grúa."},
+{s:"Meses después, la placa base de un pilar se ha asentado de un lado y el mortero de debajo está agrietado.",
+ o:["El mortero de nivelación era demasiado grueso o poco resistente","Los pilares eran HEB","La viga era IPE","La soldadura tenía garganta de 4 mm"],a:0,
+ cons:"Un mortero flojo o demasiado grueso no reparte la carga sobre el hormigón como se calculó.",
+ prev:"Paso 2: mortero con al menos 0,2 veces la resistencia del hormigón y espesor ≤ 0,2 veces el lado menor de la placa."},
+{s:"En una unión con muchos tornillos, la chapa queda abierta en el centro y los tornillos centrales están flojos.",
+ o:["Se apretó desde los bordes hacia el centro","Se usaron arandelas","El diámetro era de 12 mm","La unión era atornillada"],a:0,
+ cons:"La chapa no asienta y los tornillos centrales no trabajan: la unión resiste menos de lo calculado.",
+ prev:"Paso 5: apretar de los tornillos centrales hacia el exterior, con algún ciclo adicional."},
+{s:"Al inspeccionar una soldadura se ve que hay una grieta tapada por otra pasada.",
+ o:["Se cubrió un defecto con soldaduras posteriores","El soldador era cualificado","El precalentamiento era de 75 mm","La garganta era la especificada"],a:0,
+ cons:"El defecto sigue ahí, escondido, y el cordón no resiste lo calculado.",
+ prev:"Paso 6: eliminar los defectos y la escoria en cada pasada y no cubrirlos."},
+{s:"Un conjunto tornillo-tuerca de una unión pretensada se aprieta hasta el pretensado, se afloja para corregir una chapa y se vuelve a apretar.",
+ o:["No se descartó el conjunto aflojado tras el pretensado","Se usó llave dinamométrica","Se pusieron arandelas endurecidas","Se apretó del centro al borde"],a:0,
+ cons:"El tornillo reutilizado ya no tiene el pretensado con el que se calculó la unión.",
+ prev:"Paso 5: un conjunto apretado hasta el pretensado mínimo y luego aflojado se retira y se descarta."},
+{s:"A los pocos meses la pintura se desconcha en una viga y aparecen manchas de óxido; debajo hay escoria de soldadura.",
+ o:["Se pintó sin limpiar ni quitar las escorias","Se aplicaron dos capas de distinto color","La pieza era de S275","El fabricante dio instrucciones"],a:0,
+ cons:"La pintura no se adhiere a una superficie sucia, y bajo la escoria el acero se oxida.",
+ prev:"Paso 8: limpiar y preparar las superficies, y quitar las escorias antes de pintar."}
+];
+var EXAM=[
+{q:"¿Quién revisa y aprueba la documentación de montaje de una estructura de acero?",o:["La dirección facultativa","El fabricante de pintura","El soldador","Nadie"],a:0,e:"La elabora el montador y la aprueba la dirección facultativa (DB SE-A 12.5.1)."},
+{q:"¿Qué incluye la documentación de montaje?",o:["Memoria de montaje, planos de montaje y plan de puntos de inspección","Solo los planos de cimentación","Solo las facturas","Nada"],a:0,e:"Con las tolerancias de posición, los medios de izado y los apuntalados provisionales."},
+{q:"¿Qué tolerancia se revisa especialmente al replantear?",o:["La de las placas base","La del color de la pintura","La de las arandelas","La del cemento"],a:0,e:"El DB SE-A destaca el replanteo de las placas base."},
+{q:"El valor de cálculo del apoyo de la placa base sobre mortero de nivelación se admite si el mortero tiene…",o:["Una resistencia ≥ 0,2 veces la del hormigón y un espesor ≤ 0,2 veces el lado menor de la placa","Cualquier resistencia","Al menos 10 cm de espesor","Un espesor mayor que la placa"],a:0,e:"Con esas condiciones puede tomarse βj = 2/3 (DB SE-A 8.8.1)."},
+{q:"¿Por qué se arriostra un pilar recién izado?",o:["Porque apoya solo en su placa y puede volcar hasta que se conecte","Para pintarlo","Para curarlo","Para soldar la viga"],a:0,e:"Los planos de montaje indican los apuntalados provisionales."},
+{q:"¿Cuál es el diámetro nominal mínimo de los tornillos, salvo que el proyecto diga otra cosa (DB SE-A 10.4)?",o:["12 mm","6 mm","8 mm","20 mm"],a:0,e:"El diámetro mínimo es de 12 mm."},
+{q:"En un grupo grande de tornillos, ¿cómo se aprieta?",o:["De los tornillos centrales hacia el exterior, con algún ciclo adicional","De los bordes al centro","Solo los de las esquinas","Al azar"],a:0,e:"Así la chapa asienta y todos los tornillos trabajan."},
+{q:"¿Qué se hace con un conjunto tornillo-tuerca apretado hasta el pretensado mínimo y luego aflojado?",o:["Se retira y se descarta, salvo que lo admita el pliego de condiciones","Se vuelve a usar","Se suelda","Se pinta"],a:0,e:"Ha perdido el pretensado con el que se calculó la unión."},
+{q:"¿Cuál de estos es un método de apriete de tornillos pretensados?",o:["Control del par torsor, giro de tuerca, indicador directo de tensión o combinado","Solo apretar a mano","Soldar la tuerca","Pintar el tornillo"],a:0,e:"Deben estar calibrados con ensayos de procedimiento."},
+{q:"En soldadura, ¿qué debe hacerse con los defectos detectados?",o:["Eliminarlos en cada pasada, sin cubrirlos con soldaduras posteriores","Taparlos con otra pasada","Pintarlos","Ignorarlos"],a:0,e:"Lo mismo con las escorias."},
+{q:"¿Qué se hace con las superficies de acero que van a estar en contacto con el hormigón?",o:["No se pintan, solo se limpian, y el tratamiento de la zona contigua se extiende 30 mm","Se pintan con dos capas","Se galvanizan siempre","Se cubren de grasa"],a:0,e:"DB SE-A 10.6.1."},
+{q:"¿Cuándo se hace el tratamiento superficial de los elementos de fijación?",o:["Después de inspeccionarlos","Antes de apretar","Sin inspección","Nunca"],a:0,e:"Una vez tratados, ya no se pueden revisar bien."}
+];
+
+var $=function(s){return document.querySelector(s)};
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
+
+var MODES=[["rec","Recorrido paso a paso"],["ord","Ordena el proceso"],["fal","¿Qué falla?"],["exa","Repaso tipo examen"]];
+var mode="rec",cur=0;
+
+function tabs(){
+  $("#tabs").innerHTML=MODES.map(function(m){return '<button class="tab" role="tab" aria-selected="'+(m[0]===mode)+'" data-m="'+m[0]+'">'+m[1]+'</button>'}).join("");
+  document.querySelectorAll(".tab").forEach(function(b){b.onclick=function(){mode=b.dataset.m;tabs();render()}});
+}
+
+function svg(n){
+  var on=function(i){return n>=i?" on":""};
+  var P=[90,310];
+  var pil=P.map(function(x){return '<rect x="'+(x-8)+'" y="100" width="16" height="122" fill="var(--steel)" stroke="var(--steel-edge)" stroke-width="1.5"/>'}).join("");
+  var zap=P.map(function(x){return '<rect x="'+(x-42)+'" y="226" width="84" height="24" fill="var(--concrete)" stroke="var(--concrete-edge)" stroke-width="1.2"/>'}).join("");
+  var plate=P.map(function(x){return '<rect x="'+(x-22)+'" y="220" width="44" height="6" fill="var(--steel)" stroke="var(--steel-edge)" stroke-width="1.5"/>'+[-16,16].map(function(d){return '<line x1="'+(x+d)+'" y1="206" x2="'+(x+d)+'" y2="240" stroke="var(--rebar)" stroke-width="2.5"/>'}).join("")}).join("");
+  return '<svg class="sec" viewBox="0 0 400 270" role="img" aria-label="Alzado de un pórtico de acero en montaje: pilares sobre placa base y viga atornillada">'+
+  '<line x1="0" y1="250" x2="400" y2="250" stroke="var(--concrete-edge)" stroke-width="2"/>'+zap+
+  '<g class="g'+on(1)+'"><rect x="290" y="10" width="96" height="62" rx="2" fill="var(--soft)" stroke="var(--steel-edge)"/><rect x="294" y="14" width="88" height="54" fill="none" stroke="var(--muted)" stroke-width=".6"/><path d="M304 58 V30 H352 V58" fill="none" stroke="var(--steel-edge)" stroke-width="2.2"/><line x1="298" y1="58" x2="358" y2="58" stroke="var(--muted)" stroke-width=".8"/><rect x="360" y="52" width="22" height="16" fill="none" stroke="var(--muted)" stroke-width=".8"/><line x1="360" y1="60" x2="382" y2="60" stroke="var(--muted)" stroke-width=".6"/><g transform="rotate(-14 368 30)"><circle cx="368" cy="30" r="11" fill="none" stroke="'+(n===1?'var(--accent)':'var(--muted)')+'" stroke-width="1.8"/><path d="M362 30 l4 4.5 l8 -9" fill="none" stroke="'+(n===1?'var(--accent)':'var(--muted)')+'" stroke-width="2"/></g><text x="388" y="86" text-anchor="end" style="font-size:9px">planos y memoria de montaje</text></g>'+'<g class="g on" style="opacity:'+(n===1?1:0)+'"><rect x="140" y="232" width="120" height="18" fill="var(--steel)" stroke="var(--steel-edge)" stroke-width="1.5"/><line x1="140" y1="235" x2="260" y2="235" stroke="var(--steel-edge)"/><line x1="140" y1="247" x2="260" y2="247" stroke="var(--steel-edge)"/><text x="156" y="226">piezas recibidas</text></g>'+
+  '<g class="g'+on(2)+'">'+plate+'<rect x="68" y="226" width="44" height="3" fill="var(--accent)"/><rect x="288" y="226" width="44" height="3" fill="var(--accent)"/><text x="20" y="262">placa base, pernos y mortero</text></g>'+
+  '<g class="g'+on(3)+'">'+pil+'<text x="22" y="150">pilar</text></g>'+
+  '<g class="g'+on(3)+'" style="opacity:'+(n>=7?.25:n>=3?1:0)+'"><line x1="82" y1="180" x2="30" y2="246" stroke="var(--accent)" stroke-width="2" stroke-dasharray="5 3"/><line x1="318" y1="180" x2="370" y2="246" stroke="var(--accent)" stroke-width="2" stroke-dasharray="5 3"/><text x="250" y="262" style="font-size:9px">arriostr. provisional</text></g>'+
+  '<g class="g'+on(4)+'"><rect x="98" y="96" width="204" height="16" fill="var(--steel)" stroke="var(--steel-edge)" stroke-width="1.5"/><rect x="98" y="96" width="12" height="30" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 2"/><rect x="290" y="96" width="12" height="30" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 2"/><circle cx="200" cy="90" r="4" fill="none" stroke="var(--rebar)" stroke-width="2"/><text x="170" y="82">viga</text></g>'+
+  '<g class="g'+on(5)+'">'+[[104,102],[104,110],[104,118],[296,102],[296,110],[296,118]].map(function(c){return '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="2.6" fill="var(--accent)"/>'}).join("")+'<text x="124" y="136" style="font-size:9px">tornillos: del centro al borde</text></g>'+
+  '<g class="g'+on(6)+'">'+[[98,223],[122,223],[278,223],[302,223]].map(function(c,i){return '<path d="M'+c[0]+' '+c[1]+' h6 v-6 z" fill="var(--accent)" transform="'+(i%2?'translate('+(2*c[0]+6)+',0) scale(-1,1)':'')+'"/>'}).join("")+'<text x="132" y="212" style="font-size:9px">soldadura</text></g>'+
+  '<g class="g'+on(7)+'"><circle cx="200" cy="150" r="14" fill="none" stroke="var(--ok)" stroke-width="2"/><path d="M193 150 l5 6 l10-12" stroke="var(--ok)" stroke-width="2.5" fill="none"/><text x="160" y="180" style="font-size:9px">control antes de pintar</text></g>'+
+  '<g class="g'+on(8)+'"><rect x="82" y="100" width="16" height="116" fill="none" stroke="var(--ok)" stroke-width="2.5" stroke-dasharray="7 3" opacity=".9"/><rect x="302" y="100" width="16" height="116" fill="none" stroke="var(--ok)" stroke-width="2.5" stroke-dasharray="7 3" opacity=".9"/><rect x="98" y="94" width="204" height="20" fill="none" stroke="var(--ok)" stroke-width="2.5" stroke-dasharray="7 3" opacity=".9"/><text x="112" y="56">protección (no en el hormigón)</text></g>'+
+  '</svg>';
+}
+
+function renderRec(){
+  var s=STEPS[cur];
+  var chips='<div class="chips">'+STEPS.map(function(x,i){return '<button class="chip'+(i<cur?' done':'')+'" aria-current="'+(i===cur)+'" data-i="'+i+'" aria-label="Paso '+x.id+'">'+x.id+'</button>'}).join("")+'</div>';
+  $("#main").innerHTML='<div class="box">'+chips+'<div class="grid"><div>'+svg(s.id)+'</div><div>'+
+   '<span class="pill'+(s.ref?'':' bp')+'">'+(s.ref?'Referencia: ':'')+esc(s.r)+'</span>'+
+   '<h2 style="margin-top:8px">'+s.id+'. '+esc(s.t)+'</h2><p>'+esc(s.q)+'</p>'+
+   '<h3>Por qué se hace así</h3><div class="why">'+esc(s.w)+'</div>'+
+   '<h3>Control antes de pasar al siguiente</h3><ul class="ctl">'+s.c.map(function(c){return '<li>'+esc(c)+'</li>'}).join("")+'</ul>'+
+   '</div></div><div class="nav"><button class="btn sec" id="prev" '+(cur===0?'disabled':'')+'>← Anterior</button><button class="btn" id="next" '+(cur===STEPS.length-1?'disabled':'')+'>Siguiente →</button></div></div>';
+  document.querySelectorAll(".chip").forEach(function(b){b.onclick=function(){cur=+b.dataset.i;renderRec()}});
+  $("#prev").onclick=function(){cur--;renderRec()};$("#next").onclick=function(){cur++;renderRec()};
+}
+
+var order=[];
+function newOrder(){do{order=shuffle(STEPS.map(function(s){return s.id}))}while(order.every(function(v,i){return v===i+1}))}
+function renderOrd(res){
+  var html='<div class="box"><h2>Ordena el proceso</h2><p>Coloca los pasos de montaje de la estructura en el orden correcto con las flechas.</p><ol class="ord">'+
+   order.map(function(id,i){var s=STEPS[id-1];var cl=res?(id===i+1?' class="ok"':' class="no"'):'';
+    return '<li'+cl+'><span class="t">'+esc(s.t)+'</span><span class="mv"><button data-i="'+i+'" data-d="-1" aria-label="Subir">↑</button><button data-i="'+i+'" data-d="1" aria-label="Bajar">↓</button></span></li>'}).join("")+'</ol>';
+  if(res){
+    var firstBad=-1;order.forEach(function(id,i){if(firstBad<0&&id!==i+1)firstBad=i});
+    if(firstBad<0){html+='<div class="fb ok"><strong>Orden correcto.</strong> Cada paso prepara el siguiente: documentación, placas base, pilares, vigas, tornillos, soldaduras, control y protección.</div>'}
+    else{var wrongId=firstBad+1;var st=STEPS[wrongId-1];
+      html+='<div class="fb bad"><strong>El paso '+wrongId+' debería ir en la posición '+wrongId+'.</strong> Ahora tienes «'+esc(STEPS[order[firstBad]-1].t)+'» en esa posición. Recuerda: '+esc(st.antes)+'</div>'}
+  }
+  html+='<div class="nav"><button class="btn sec" id="rs">Mezclar de nuevo</button><button class="btn" id="ck">Comprobar</button></div></div>';
+  $("#main").innerHTML=html;
+  document.querySelectorAll(".mv button").forEach(function(b){b.onclick=function(){var i=+b.dataset.i,j=i+(+b.dataset.d);if(j<0||j>=order.length)return;var t=order[i];order[i]=order[j];order[j]=t;renderOrd(false)}});
+  $("#rs").onclick=function(){newOrder();renderOrd(false)};$("#ck").onclick=function(){renderOrd(true)};
+}
+
+var fi=0,fdone=false;
+function renderFal(){
+  var f=FAILS[fi];
+  var opts=f.o.map(function(o,i){return '<button class="opt" data-i="'+i+'">'+esc(o)+'</button>'}).join("");
+  $("#main").innerHTML='<div class="box"><div class="meta"><span>CASO '+(fi+1)+' / '+FAILS.length+'</span></div><h2>¿Qué falla?</h2><div class="sym">'+esc(f.s)+'</div><h3>¿Cuál es la causa más probable?</h3><div class="opts">'+opts+'</div><div id="fb"></div>'+
+   '<div class="nav"><button class="btn sec" id="fp" '+(fi===0?'disabled':'')+'>← Caso anterior</button><button class="btn" id="fn" '+(fi===FAILS.length-1?'disabled':'')+'>Caso siguiente →</button></div></div>';
+  document.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){
+    var i=+b.dataset.i;document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});
+    document.querySelectorAll(".opt")[f.a].classList.add("ok");if(i!==f.a)b.classList.add("no");
+    $("#fb").innerHTML='<div class="fb '+(i===f.a?'ok':'bad')+'"><strong>'+(i===f.a?'Correcto.':'No es esa.')+'</strong> Causa: «'+esc(f.o[f.a])+'».<br><strong>Consecuencia:</strong> '+esc(f.cons)+'<br><strong>Cómo se evita:</strong> '+esc(f.prev)+'</div>'}});
+  $("#fp").onclick=function(){fi--;renderFal()};$("#fn").onclick=function(){fi++;renderFal()};
+}
+
+var ex=null;
+function startExam(){ex={qs:shuffle(EXAM).slice(0,8).map(function(q){var idx=shuffle(q.o.map(function(_,i){return i}));return{q:q.q,o:idx.map(function(i){return q.o[i]}),a:idx.indexOf(q.a),e:q.e}}),i:0,s:0,ans:null}}
+function renderExa(){
+  if(!ex)startExam();
+  if(ex.i>=ex.qs.length){
+    var p=Math.round(ex.s/ex.qs.length*100);
+    $("#main").innerHTML='<div class="box"><h2>Resultado</h2><div class="score">'+ex.s+' / '+ex.qs.length+'</div><p>'+(p>=80?'Muy bien: dominas el orden y el porqué de cada paso.':p>=50?'Vas bien. Repasa en el recorrido los pasos donde has fallado.':'Conviene repasar el recorrido paso a paso y volver a intentarlo.')+'</p><div class="nav"><button class="btn sec" id="rv">Ir al recorrido</button><button class="btn" id="rt">Nuevo examen</button></div></div>';
+    $("#rt").onclick=function(){startExam();renderExa()};$("#rv").onclick=function(){mode="rec";cur=0;tabs();render()};return}
+  var q=ex.qs[ex.i];
+  $("#main").innerHTML='<div class="box"><div class="meta"><span>PREGUNTA '+(ex.i+1)+' / '+ex.qs.length+'</span><span>ACIERTOS '+ex.s+'</span></div><h2>'+esc(q.q)+'</h2><div class="opts">'+q.o.map(function(o,i){return '<button class="opt" data-i="'+i+'">'+esc(o)+'</button>'}).join("")+'</div><div id="fb"></div><div class="nav"><span></span><button class="btn" id="nx" style="visibility:hidden">'+(ex.i===ex.qs.length-1?'Ver resultado':'Siguiente →')+'</button></div></div>';
+  document.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){
+    var i=+b.dataset.i;document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});
+    document.querySelectorAll(".opt")[q.a].classList.add("ok");if(i!==q.a)b.classList.add("no");else ex.s++;
+    $("#fb").innerHTML='<div class="fb '+(i===q.a?'ok':'bad')+'"><strong>'+(i===q.a?'Correcto.':'Incorrecto.')+'</strong> '+esc(q.e)+'</div>';
+    $("#nx").style.visibility="visible"}});
+  $("#nx").onclick=function(){ex.i++;renderExa()};
+}
+
+function render(){ if(mode==="rec")renderRec(); else if(mode==="ord"){if(!order.length)newOrder();renderOrd(false)} else if(mode==="fal")renderFal(); else renderExa(); }
+tabs();render();
+</script>
+
+<script src="app.js"></script>
+<script src="apple-nav.js"></script>
+</body></html>
